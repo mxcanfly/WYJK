@@ -1,0 +1,44 @@
+﻿@charset "utf-8";
+/* 你自己的样式 */
+textarea {
+    -moz-resize:none;
+    -ms-resize:none;
+    -o-resize:none;
+    resize:none;
+}
+
+.select-box {
+    width: 32%;
+}
+
+.field-validation-error {
+    color: red;
+    font-size: 12px;
+}
+
+.uploader-list {
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.uploader-list .item {
+        width: 110px;
+        height: 110px;
+        float: left;
+        position: relative;
+        margin: 0 20px 20px 0;
+        padding: 4px;
+ }
+
+.uploader-list .uploader-remove {
+        position: absolute;
+        top: 2px;
+        right: 17px;
+        cursor: pointer;
+        color: red;
+}
+
+.uploader-list .upload-state-error {
+    :after{content:"\e6e1";font-family: "iconfont" !important;font-style: normal;font-weight: normal;line-height: 1;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;font-size: 32px;position: absolute;bottom: 0;right: 4px;color: red;z-index: 99}
+}

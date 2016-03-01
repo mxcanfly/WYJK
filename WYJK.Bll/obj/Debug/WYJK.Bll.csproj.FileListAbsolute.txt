@@ -1,0 +1,5 @@
+D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Bll\bin\Debug\WYJK.Bll.dll
+D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Bll\bin\Debug\WYJK.Bll.pdb
+D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Bll\obj\Debug\WYJK.Bll.csprojResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Bll\obj\Debug\WYJK.Bll.dll
+D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Bll\obj\Debug\WYJK.Bll.pdb

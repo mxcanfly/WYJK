@@ -1,0 +1,5 @@
+D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Dal\bin\Debug\WYJK.Dal.dll
+D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Dal\bin\Debug\WYJK.Dal.pdb
+D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Dal\obj\Debug\WYJK.Dal.csprojResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Dal\obj\Debug\WYJK.Dal.dll
+D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Dal\obj\Debug\WYJK.Dal.pdb
