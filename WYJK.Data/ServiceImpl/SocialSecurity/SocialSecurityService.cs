@@ -732,14 +732,14 @@ select @totalAmount";
         /// <returns></returns>
         public void UpdateRenewToNormalByMemberID(int MemberID, int MonthCount)
         {
-            string sqlstr = $@"update SocialSecurity set SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Normal},SocialSecurity.PayMonthCount={MonthCount} where socialsecurity.SocialSecurityID in
+            string sqlstr = $@"update SocialSecurity set SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Normal},SocialSecurity.PayMonthCount= case when SocialSecurity.PayMonthCount>{MonthCount} then SocialSecurity.PayMonthCount else {MonthCount} end where socialsecurity.SocialSecurityID in
   (select SocialSecurity.SocialSecurityID from SocialSecurity
 left join SocialSecurityPeople on SocialSecurity.SocialSecurityPeopleID = SocialSecurityPeople.SocialSecurityPeopleID
-  where SocialSecurityPeople.MemberID = {MemberID} and SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Renew}) and SocialSecurity.PayMonthCount<{MonthCount};
-update AccumulationFund set AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Normal},AccumulationFund.PayMonthCount={MonthCount} where AccumulationFund.AccumulationFundID in
+  where SocialSecurityPeople.MemberID = {MemberID} and SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Renew});
+update AccumulationFund set AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Normal},AccumulationFund.PayMonthCount= case when AccumulationFund.PayMonthCount> {MonthCount} then AccumulationFund.PayMonthCount else {MonthCount} end where AccumulationFund.AccumulationFundID in
   (select AccumulationFund.AccumulationFundID from AccumulationFund
 left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = SocialSecurityPeople.SocialSecurityPeopleID
-  where SocialSecurityPeople.MemberID = {MemberID} and AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Renew}) and AccumulationFund.PayMonthCount<{MonthCount}
+  where SocialSecurityPeople.MemberID = {MemberID} and AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Renew});
   ";
             DbHelper.ExecuteSqlCommand(sqlstr, null);
         }
