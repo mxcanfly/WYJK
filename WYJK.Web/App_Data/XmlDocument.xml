@@ -884,6 +884,12 @@
             <param name="height"></param>
             <returns></returns>
         </member>
+        <member name="M:WYJK.Web.Controllers.Mvc.Loan.LoanMemberController.GetLoanMemberList(WYJK.Entity.MemberLoanParameter)">
+            <summary>
+            获取借款用户列表
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:WYJK.Web.Controllers.Mvc.Loan.LoanSettingController">
             <summary>
             借款设置

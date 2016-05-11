@@ -63,10 +63,10 @@ namespace WYJK.Web.Controllers.Http
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
-        public JsonResult<dynamic> GetMemberValue(int MemberID)
+        public JsonResult<Decimal> GetMemberValue(int MemberID)
         {
             decimal value = _loanSubjectService.GetMemberValue(MemberID);
-            return new JsonResult<dynamic>
+            return new JsonResult<Decimal>
             {
                 status = true,
                 Message = "获取成功",

@@ -9,10 +9,10 @@ namespace WYJK.Entity
 {
     #region 调用服务时返回的数据结果,用于返回给第三方的结果信息
     /// <summary>
-    /// 调用服务时返回的数据结果,用于返回给第三方的结果信息
+    /// 调用服务时返回的数据结果,用于返回给第三方的结果信息  where TEntity : class
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class JsonResult<TEntity> where TEntity : class
+    public class JsonResult<TEntity>
     {
         /// <summary>
         /// 初始化对象的实例
