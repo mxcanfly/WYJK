@@ -1,5 +1,0 @@
-D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Model\bin\Debug\WYJK.Model.dll
-D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Model\bin\Debug\WYJK.Model.pdb
-D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Model\obj\Debug\WYJK.Model.csprojResolveAssemblyReference.cache
-D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Model\obj\Debug\WYJK.Model.dll
-D:\Documents\Visual Studio 2015\Projects\WYJK.Web\WYJK.Model\obj\Debug\WYJK.Model.pdb
