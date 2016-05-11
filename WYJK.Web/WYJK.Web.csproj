@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -90,18 +91,17 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -142,6 +142,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -234,6 +235,7 @@
     <Compile Include="Areas\HelpPage\ModelDescriptions\ParameterDescription.cs" />
     <Compile Include="Areas\HelpPage\ModelDescriptions\SimpleTypeModelDescription.cs" />
     <Compile Include="Areas\HelpPage\Models\HelpPageApiModel.cs" />
+    <Compile Include="Areas\HelpPage\MultiXmlDocumentationProvider.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleGenerator.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleKey.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\ImageSample.cs" />
@@ -261,31 +263,53 @@
     <Compile Include="Content\lib\ueditor\1.4.3\net\App_Code\NotSupportedHandler.cs" />
     <Compile Include="Content\lib\ueditor\1.4.3\net\App_Code\PathFormater.cs" />
     <Compile Include="Content\lib\ueditor\1.4.3\net\App_Code\UploadHandler.cs" />
-    <Compile Include="Controllers\Http\SocialSecurityController.cs" />
-    <Compile Include="Controllers\Http\UploadController.cs" />
-    <Compile Include="Controllers\Http\UserController.cs" />
-    <Compile Include="Controllers\Mvc\AccountController.cs" />
-    <Compile Include="Controllers\Mvc\SocialSecurityController.cs" />
-    <Compile Include="Controllers\Mvc\HomeController.cs" />
+    <Compile Include="Controllers\Http\Loan\LoanSettingController.cs" />
+    <Compile Include="Controllers\Http\SocialSecurity\OrderController.cs" />
+    <Compile Include="Controllers\Http\SocialSecurity\SocialSecurityController.cs" />
+    <Compile Include="Controllers\Http\SocialSecurity\UploadController.cs" />
+    <Compile Include="Controllers\Http\SocialSecurity\MemberController.cs" />
+    <Compile Include="Controllers\Mvc\Loan\LoanSettingController.cs" />
+    <Compile Include="Controllers\Mvc\SocialSecurity\AccumulationFundController.cs" />
+    <Compile Include="Controllers\Mvc\SocialSecurity\CustomerServiceController.cs" />
+    <Compile Include="Controllers\Mvc\SocialSecurity\EnterpriseController.cs" />
+    <Compile Include="Controllers\Mvc\SocialSecurity\InformationController.cs" />
+    <Compile Include="Controllers\Mvc\SocialSecurity\LoggerController.cs" />
+    <Compile Include="Controllers\Mvc\SocialSecurity\MemberController.cs" />
+    <Compile Include="Controllers\Mvc\SocialSecurity\OptionViewController.cs" />
+    <Compile Include="Controllers\Mvc\SocialSecurity\OrderController.cs" />
+    <Compile Include="Controllers\Mvc\SocialSecurity\ParameterSettingController.cs" />
+    <Compile Include="Controllers\Mvc\SocialSecurity\UserController.cs" />
+    <Compile Include="Controllers\Mvc\SocialSecurity\SocialSecurityController.cs" />
+    <Compile Include="Controllers\Mvc\SocialSecurity\HomeController.cs" />
+    <Compile Include="Core\HttpHeadersExtentions.cs" />
+    <Compile Include="Core\ModelStateExtensions.cs" />
     <Compile Include="Filters\AuthorizedAttribute.cs" />
     <Compile Include="Filters\ErrorAttribute.cs" />
+    <Compile Include="Filters\ValidationModelAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\RegionViewModel.cs" />
+    <Compile Include="Models\SubjectViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\XmlDocument.xml" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Content\bootstrap\bootstrap.css" />
+    <Content Include="Content\bootstrap\bootstrap.min.css" />
     <Content Include="Content\css\H-ui.admin.css" />
     <Content Include="Content\css\H-ui.css" />
     <Content Include="Content\css\H-ui.login.css" />
     <Content Include="Content\css\H-ui.min.css" />
     <Content Include="Content\css\H-ui.reset.css" />
     <Content Include="Content\css\style.css" />
+    <Content Include="Content\iconfont\iconfont.css" />
+    <Content Include="Content\iconfont\iconfont.svg" />
     <Content Include="Content\images\acrossTab-2.png" />
     <Content Include="Content\images\acrossTab-2bak.png" />
     <Content Include="Content\images\acrossTab-bg.png" />
@@ -311,9 +335,11 @@
     <Content Include="Content\images\sort_desc.png" />
     <Content Include="Content\images\totop.png" />
     <Content Include="Content\images\user.png" />
+    <Content Include="Content\js\common.js" />
     <Content Include="Content\js\de_DE.txt" />
     <Content Include="Content\js\H-ui.admin.js" />
     <Content Include="Content\js\H-ui.js" />
+    <Content Include="Content\js\layer.ext.js" />
     <Content Include="Content\lib\bootstrap-modal\2.2.4\bootstrap-modal.js" />
     <Content Include="Content\lib\bootstrap-modal\2.2.4\bootstrap-modalmanager.js" />
     <Content Include="Content\lib\bootstrap-Switch\bootstrapSwitch.css" />
@@ -632,20 +658,28 @@
     <Content Include="Content\lib\jquery.validation\1.14.0\validate-methods.js" />
     <Content Include="Content\lib\jquery\1.9.1\jquery.js" />
     <Content Include="Content\lib\jquery\1.9.1\jquery.min.js" />
-    <Content Include="Content\lib\layer\1.9.3\demo.html" />
-    <Content Include="Content\lib\layer\1.9.3\extend\layer.ext.js" />
-    <Content Include="Content\lib\layer\1.9.3\layer.js" />
-    <Content Include="Content\lib\layer\1.9.3\skin\default\icon-ext.png" />
-    <Content Include="Content\lib\layer\1.9.3\skin\default\icon.png" />
-    <Content Include="Content\lib\layer\1.9.3\skin\default\loading-0.gif" />
-    <Content Include="Content\lib\layer\1.9.3\skin\default\loading-1.gif" />
-    <Content Include="Content\lib\layer\1.9.3\skin\default\loading-2.gif" />
-    <Content Include="Content\lib\layer\1.9.3\skin\layer.css" />
-    <Content Include="Content\lib\layer\1.9.3\skin\layer.ext.css" />
-    <Content Include="Content\lib\layer\1.9.3\skin\mono\default.png" />
-    <Content Include="Content\lib\layer\1.9.3\skin\mono\style.css" />
-    <Content Include="Content\lib\layer\1.9.3\更新日志.txt" />
-    <Content Include="Content\lib\layer\2.1\demo.html" />
+    <Content Include="Content\lib\laydate-master\index.html" />
+    <Content Include="Content\lib\laydate-master\laydate.dev.js" />
+    <Content Include="Content\lib\laydate-master\laydate.js" />
+    <Content Include="Content\lib\laydate-master\need\laydate.css" />
+    <Content Include="Content\lib\laydate-master\skins\dahong\icon.png" />
+    <Content Include="Content\lib\laydate-master\skins\dahong\laydate.css" />
+    <Content Include="Content\lib\laydate-master\skins\danlan\icon.png" />
+    <Content Include="Content\lib\laydate-master\skins\danlan\laydate.css" />
+    <Content Include="Content\lib\laydate-master\skins\default\icon.png" />
+    <Content Include="Content\lib\laydate-master\skins\default\laydate.css" />
+    <Content Include="Content\lib\laydate-master\skins\molv\icon.png" />
+    <Content Include="Content\lib\laydate-master\skins\molv\laydate.css" />
+    <Content Include="Content\lib\laydate-master\skins\qianhuang\icon.png" />
+    <Content Include="Content\lib\laydate-master\skins\qianhuang\laydate.css" />
+    <Content Include="Content\lib\laydate-master\skins\yahui\icon.png" />
+    <Content Include="Content\lib\laydate-master\skins\yahui\laydate.css" />
+    <Content Include="Content\lib\laydate-master\skins\yalan\icon.png" />
+    <Content Include="Content\lib\laydate-master\skins\yalan\laydate.css" />
+    <Content Include="Content\lib\laydate-master\test\demo1.html" />
+    <Content Include="Content\lib\laydate-master\test\demo2.html" />
+    <Content Include="Content\lib\laydate-master\test\demo2.js" />
+    <Content Include="Content\lib\laydate-master\www.jq22.com.txt" />
     <Content Include="Content\lib\layer\2.1\extend\layer.ext.js" />
     <Content Include="Content\lib\layer\2.1\layer.js" />
     <Content Include="Content\lib\layer\2.1\skin\default\icon-ext.png" />
@@ -655,7 +689,6 @@
     <Content Include="Content\lib\layer\2.1\skin\default\loading-2.gif" />
     <Content Include="Content\lib\layer\2.1\skin\layer.css" />
     <Content Include="Content\lib\layer\2.1\skin\layer.ext.css" />
-    <Content Include="Content\lib\layer\2.1\更新日志.txt" />
     <Content Include="Content\lib\laypage\1.2\laypage.js" />
     <Content Include="Content\lib\laypage\1.2\skin\laypage.css" />
     <Content Include="Content\lib\laypage\1.3\laypage.js" />
@@ -703,6 +736,10 @@
     <Content Include="Content\lib\respond.min.js" />
     <Content Include="Content\lib\stickUp.min.js" />
     <Content Include="Content\lib\swfobject.js" />
+    <Content Include="Content\lib\treetable\css\jquery.treetable.css" />
+    <Content Include="Content\lib\treetable\css\jquery.treetable.theme.default.css" />
+    <Content Include="Content\lib\treetable\css\screen.css" />
+    <Content Include="Content\lib\treetable\jquery.treetable.js" />
     <Content Include="Content\lib\ueditor\1.4.3\asp\action_config.asp" />
     <Content Include="Content\lib\ueditor\1.4.3\asp\action_crawler.asp" />
     <Content Include="Content\lib\ueditor\1.4.3\asp\action_list.asp" />
@@ -1663,12 +1700,6 @@
     <Content Include="Content\lib\Hui-iconfont\1.0.6\iconfont.woff" />
     <Content Include="Content\lib\icheck\Thumbs.db" />
     <Content Include="Content\lib\jquery.validation\1.14.0\README.md" />
-    <Content Include="Content\lib\layer\1.9.3\doc\jquery下载.url" />
-    <Content Include="Content\lib\layer\1.9.3\doc\layer交流.url" />
-    <Content Include="Content\lib\layer\1.9.3\doc\layer官网.url" />
-    <Content Include="Content\lib\layer\2.1\doc\jquery下载.url" />
-    <Content Include="Content\lib\layer\2.1\doc\layer交流.url" />
-    <Content Include="Content\lib\layer\2.1\doc\layer官网.url" />
     <Content Include="Content\lib\lightbox2\2.8.1\images\Thumbs.db" />
     <Content Include="Content\lib\lightbox2\2.8.1\js\lightbox-plus-jquery.min.map" />
     <Content Include="Content\lib\lightbox2\2.8.1\js\lightbox.min.map" />
@@ -1736,10 +1767,17 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Fakes Include="Fakes\Newtonsoft.Json.fakes" />
+    <Content Include="Content\iconfont\iconfont.eot" />
+    <Content Include="Content\iconfont\iconfont.ttf" />
+    <Content Include="Content\iconfont\iconfont.woff" />
+    <Content Include="Content\lib\laydate-master\jquery插件库.url" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.form.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -1748,7 +1786,38 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <None Include="Views\SocialSecurity\SocialSecurityOverview.cshtml" />
+    <Content Include="Views\Information\GetInformationList.cshtml" />
+    <Content Include="Views\Information\InformationAdd.cshtml" />
+    <Content Include="Views\Information\InformationEdit.cshtml" />
+    <Content Include="Views\Order\GetOrderList.cshtml" />
+    <Content Include="Views\Order\GetSubOrderList.cshtml" />
+    <Content Include="Views\SocialSecurity\SocialSecurityNormal.cshtml" />
+    <Content Include="Views\SocialSecurity\SocialSecurityRenew.cshtml" />
+    <Content Include="Views\SocialSecurity\SocialSecurityAlreadyStop.cshtml" />
+    <Content Include="Views\AccumulationFund\AccumulationFundWaitingHandle.cshtml" />
+    <Content Include="Views\AccumulationFund\AccumulationFundNormal.cshtml" />
+    <Content Include="Views\AccumulationFund\AccumulationFundRenew.cshtml" />
+    <Content Include="Views\AccumulationFund\AccumulationFundWaitingStop.cshtml" />
+    <Content Include="Views\AccumulationFund\AccumulationFundAlreadyStop.cshtml" />
+    <Content Include="Views\SocialSecurity\SocialSecurityDetail.cshtml" />
+    <Content Include="Views\AccumulationFund\AccumulationFundDetail.cshtml" />
+    <Content Include="Views\CustomerService\GetCustomerServiceList.cshtml" />
+    <Content Include="Views\CustomerService\GetSocialSecurityPeopleDetail.cshtml" />
+    <Content Include="Views\Enterprise\GetEnterpriseList.cshtml" />
+    <Content Include="Views\ParameterSetting\GetSocialSecurityCostParameter.cshtml" />
+    <Content Include="Views\ParameterSetting\GetAccumulationFundCostParameter.cshtml" />
+    <Content Include="Views\Enterprise\AddEnterprise.cshtml" />
+    <Content Include="Views\CustomerService\GetOrderList.cshtml" />
+    <Content Include="Views\OptionView\RegionView.cshtml" />
+    <Content Include="Views\Enterprise\GetEnterpriseDetail.cshtml" />
+    <Content Include="Views\Enterprise\EditEnterprise.cshtml" />
+    <Content Include="Views\Member\GetMemberList.cshtml" />
+    <Content Include="Views\Member\EditMemberExtensionInformation.cshtml" />
+    <Content Include="Views\Logger\GetLogList.cshtml" />
+    <Content Include="Views\Loan\LoanSetting\GetSubjectList.cshtml" />
+    <Content Include="Views\Loan\LoanSetting\AddSubject.cshtml" />
+    <Content Include="Views\Loan\LoanSetting\EditSubject.cshtml" />
+    <None Include="Views\SocialSecurity\SocialSecurityWaitingHandle.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1767,18 +1836,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\ConfirmEmail.cshtml" />
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
-    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\ResetPassword.cshtml" />
-    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\SendCode.cshtml" />
-    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
     <Content Include="Views\Manage\ChangePassword.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
@@ -1787,9 +1845,15 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\User\GetAllRoles.cshtml" />
+    <Content Include="Views\User\RolesAdd.cshtml" />
+    <Content Include="Views\User\RolesEdit.cshtml" />
+    <Content Include="Views\User\GetAllPermissions.cshtml" />
+    <Content Include="Views\User\_PermissionEdit.cshtml" />
+    <Content Include="Views\SocialSecurity\SocialSecurityWaitingStop.cshtml" />
+    <Content Include="Views\User\GetUserList.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Content\lib\Highcharts\4.1.7\exporting-server\java\highcharts-export\highcharts-export-convert\target\generated-sources\annotations\" />
     <Folder Include="Content\lib\Highcharts\4.1.7\exporting-server\java\highcharts-export\highcharts-export-convert\target\surefire\" />
     <Folder Include="Content\lib\Highcharts\4.1.7\exporting-server\java\highcharts-export\highcharts-export-web\target\generated-sources\annotations\" />
@@ -1802,7 +1866,6 @@
     <Folder Include="Content\template\picture\" />
     <Folder Include="Content\template\product\" />
     <Folder Include="Content\template\shop\" />
-    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

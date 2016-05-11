@@ -34,6 +34,24 @@ namespace WYJK.Data
             }
         }
 
+        #region 连表查询语句
+        /// <summary>
+        /// 连表查询
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public static List<TReturn> CustomQuery<TFirst, TSecond, TReturn>(string sql, Func<TFirst, TSecond, TReturn> map, string splitOn, object parameters = null)
+        {
+            using (DbConnection connection = new SqlConnection(WebConfigurationManager.DefaultConnectionString))
+            {
+                connection.Open();
+                return connection.Query<TFirst, TSecond, TReturn>(sql, map, parameters, splitOn: splitOn) as List<TReturn>;
+            }
+        }
+        #endregion
+
         public static async Task<List<TEntity>> QueryAsync<TEntity>(string sql, object parameters = null)
         {
             using (DbConnection connection = new SqlConnection(WebConfigurationManager.DefaultConnectionString))
@@ -49,6 +67,15 @@ namespace WYJK.Data
             {
                 await connection.OpenAsync();
                 return await connection.QueryAsync<TEntity>(sql, parameters, null, null, commandType) as List<TEntity>;
+            }
+        }
+
+        public static TEntity QuerySingle<TEntity>(string sql, object parameters = null)
+        {
+            using (DbConnection connection = new SqlConnection(WebConfigurationManager.DefaultConnectionString))
+            {
+                connection.Open();
+                return (connection.Query<TEntity>(sql, parameters)).FirstOrDefault();
             }
         }
 
@@ -75,7 +102,7 @@ namespace WYJK.Data
                 connection.Open();
                 return connection.Query<TEntity>(sql, parameters);
             }
-        } 
+        }
         #endregion
 
         #region 获取多个结果集中的数据
@@ -89,7 +116,7 @@ namespace WYJK.Data
         /// <param name="parameters">参数</param>
         /// <param name="commandType"></param>
         /// <returns></returns>
-        public static async Task<Tuple<List<TFirst>, List<TSecond>>> QueryMultipleAsync<TFirst, TSecond>(string sql, IEnumerable<DbParameter> parameters = null,CommandType commandType = CommandType.Text)
+        public static async Task<Tuple<List<TFirst>, List<TSecond>>> QueryMultipleAsync<TFirst, TSecond>(string sql, IEnumerable<DbParameter> parameters = null, CommandType commandType = CommandType.Text)
         {
             using (DbConnection connection = DbConnectionFactory.Creator())
             using (DbCommand command = connection.CreateCommand())
@@ -134,7 +161,7 @@ namespace WYJK.Data
                 }
 
             }
-        } 
+        }
         #endregion
 
         #region 执行 DML 语句
@@ -189,7 +216,34 @@ namespace WYJK.Data
 
                 return await command.ExecuteNonQueryAsync();
             }
-        }  
+        }
+        #endregion
+
+        #region 执行插入语句并返回最后插入的ID标识
+        /// <summary>
+        /// 执行插入语句并返回最后插入的ID标识
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="commandType"></param>
+        /// <returns></returns>
+        public static int ExecuteSqlCommandScalar(string sql, DbParameter[] parameters, CommandType commandType = CommandType.Text)
+        {
+            using (DbConnection connection = new SqlConnection(WebConfigurationManager.DefaultConnectionString))
+            using (DbCommand command = connection.CreateCommand())
+            {
+
+                connection.Open();
+                command.CommandText = sql;
+                if (commandType == CommandType.Text)
+                {
+                    command.CommandText = command.CommandText + ";SELECT SCOPE_IDENTITY();";
+                }
+                command.CommandType = commandType;
+                command.Parameters.AddRange(parameters);
+                return int.Parse(command.ExecuteScalar() + "");
+            }
+        }
         #endregion
 
         #region 执行插入语句并返回最后插入的ID标识
@@ -224,14 +278,14 @@ namespace WYJK.Data
         public static Func<IDataReader, object> GetDeserializer(Type type, IDataReader reader, int startBound = 0,
             int length = -1, bool returnNullIfMissing = false)
         {
-            if (type == typeof (object))
+            if (type == typeof(object))
             {
                 return GetTypeDeserializer(type, reader);
             }
             if (type.IsEnum == false && type.FullName != "System.Data.Linq.Binary" && type.IsValueType)
             {
-                
-                    Type underlyingType = Nullable.GetUnderlyingType(type);
+
+                Type underlyingType = Nullable.GetUnderlyingType(type);
                 if (underlyingType != null && underlyingType.IsEnum)
                 {
                     return GetStructDeserializer(type, underlyingType, startBound);
@@ -240,8 +294,8 @@ namespace WYJK.Data
                 {
                     return GetStructDeserializer(type, type, startBound);
                 }
-                
-               
+
+
             }
             return GetTypeDeserializer(type, reader, startBound, length, returnNullIfMissing);
         }
@@ -289,7 +343,7 @@ namespace WYJK.Data
                 }
                 return Enum.ToObject(effectiveType, val);
             };
-        } 
+        }
         #endregion
     }
 }

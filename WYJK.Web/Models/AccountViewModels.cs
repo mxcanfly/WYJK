@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
+using WYJK.Entity;
+
 namespace WYJK.Web.Models
 {
     public class ExternalLoginConfirmationViewModel
@@ -113,12 +115,12 @@ namespace WYJK.Web.Models
     /// <summary>
     /// 员工的登录
     /// </summary>
-    public class EmployeeViewModel
+    public class UserViewModel
     {
         [Display(Name = "账号")]
         [Required(ErrorMessage = "账号不能为空")]
         [StringLength(20, ErrorMessage = "账号太长了", MinimumLength = 0)]
-        public string EmployeeName { get; set; }
+        public string UserName { get; set; }
 
         [Display(Name = "密码")]
         [Required(ErrorMessage = "密码不能为空")]
@@ -141,4 +143,43 @@ namespace WYJK.Web.Models
     //        RuleFor(entity => entity.VerificationCode).NotEmpty().WithMessage("验证码不能为空").Length(4).WithMessage("验证码必须是4个字");
     //    }
     //}
+
+
+    /// <summary>
+    /// 角色编辑
+    /// </summary>
+    public class RolesViewModel
+    {
+        public int RoleID { get; set; }
+        //[System.Web.Mvc.Remote("CheckRoleName", "User", ErrorMessage = "角色名称已存在")]
+        [Display(Name = "角色名称")]
+        [Required(ErrorMessage = "角色不能为空")]
+        public string RoleName { get; set; }
+        [Display(Name = "描述")]
+        public string Description { get; set; }
+    }
+
+    public static class RolesExtension
+    {
+        public static Roles ExtensionToModel(this RolesViewModel viewModel)
+        {
+
+            return new Roles()
+            {
+                RoleID = viewModel.RoleID,
+                RoleName = viewModel.RoleName,
+                Description = viewModel.Description
+            };
+        }
+        public static RolesViewModel ExtensionToViewModel(this Roles model)
+        {
+
+            return new RolesViewModel()
+            {
+                RoleID = model.RoleID,
+                RoleName = model.RoleName,
+                Description = model.Description
+            };
+        }
+    }
 }

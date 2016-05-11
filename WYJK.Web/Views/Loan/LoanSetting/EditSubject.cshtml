@@ -1,0 +1,147 @@
+﻿@model LoanSubject
+@section footer{
+    <script src="~/Content/lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            //$("form").validate({
+            //    rules: {
+            //        Subject: { required: true },
+            //        Sort: { required: true, digits: true },
+            //        Answer: { required: true },
+            //        LoanAmount: { required: true, number: true }
+            //    },
+            //    messages: {
+            //        Subject: { required: "请输入题目名称" },
+            //        Sort: { required: "请输入排序", digits: "必须是整数" },
+            //        Answer: { required: "请输入答案" },
+            //        LoanAmount: { required: "请输入可贷金额", number: "必须是合法的数字" }
+            //    }
+            //});
+
+            //添加模板行
+            $("#AddRow").click(function () {
+                $(this).closest(".row.cl").before($("#TemplateRow").clone().css("display", "block"));
+            });
+
+            $("form").submit(function () {
+                var flag = false;
+                //题目
+                if ($.trim($("[name='Subject']").val()) == '') {
+                    layer.msg("题目不能为空");
+                    return false;
+                }
+
+                //排序
+                if ($.trim($("[name='Sort']").val()) == '') {
+                    layer.msg("排序不能为空");
+                    return false;
+                }
+
+                if (isNaN($.trim($("[name='Sort']").val()))) {
+                    layer.msg("排序必须是数字");
+                    return false;
+                }
+
+                //回答
+                $("form [name='Answer']").each(function () {
+                    if ($.trim($(this).val()) == '') {
+                        layer.msg("回答不能为空");
+                        flag = true;
+                        return false;
+                    }
+                });
+
+                //可贷金额
+                $("form [name='LoanAmount']").each(function () {
+                    if ($.trim($(this).val()) == '') {
+                        layer.msg("可贷金额不能为空");
+                        flag = true;
+                        return false;
+                    }
+                    if (isNaN($.trim($(this).val()))) {
+                        layer.msg("可贷金额必须是数字");
+                        flag = true;
+                        return false;
+                    }
+                });
+
+                if (flag == true)
+                    return false;
+            });
+        });
+    </script>
+    <style type="text/css">
+        label.error {
+            color: red;
+        }
+    </style>
+}
+<div class="pd-20">
+    @using (Html.BeginForm("EditSubject", "LoanSetting", FormMethod.Post, new { id = "form-article-add", @class = "form form-horizontal" }))
+    {
+        if (string.IsNullOrWhiteSpace(ViewBag.ErrorMessage + "") == false)
+        {
+            <div class="Huialert Huialert-info">@(ViewBag.ErrorMessage)</div>
+        }
+        <input type="hidden" name="SubjectID" value="@Model.SubjectID" />
+        <div class="row cl">
+            <label class="form-label col-2">题目名称：</label>
+            <div class="formControls col-8">
+                <input type="text" name="Subject" value="@Model.Subject" class="input-text radius" placeholder="请输入题目" />
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">排序：</label>
+            <div class="formControls col-8">
+                <input type="text" name="Sort" value="@Model.Sort" class="input-text radius" placeholder="请输入排序" />
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">选择答案：</label>
+            <div class="formControls col-5">
+                答案
+            </div>
+            <div class="formControls col-2">
+                可贷金额
+            </div>
+        </div>
+        if (Model.LoanAnswerList != null & Model.LoanAnswerList.Count > 0)
+        {
+            foreach (var item in Model.LoanAnswerList)
+            {
+                <div class="row cl">
+                    <label class="form-label col-2"></label>
+                    <div class="formControls col-5">
+                        <input type="text" name="Answer" value="@item.Answer" class="input-text radius" placeholder="请输入答案" />
+                    </div>
+                    <div class="col-2">
+                        <input type="text" name="LoanAmount" value="@item.LoanAmount" class="input-text radius" placeholder="请输入可贷金额" />
+                    </div>
+                </div>
+            }
+        }
+
+        <div class="row cl">
+            <label class="form-label col-2"></label>
+            <a id="AddRow" href="javascript:;" class="btn btn-success radius"><i class="Hui-iconfont">&#xe600;</i></a>
+        </div>
+        <div class="row cl">
+            <div class="col-10 col-offset-2">
+                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+            </div>
+        </div>
+    }
+
+
+    <div id="TemplateRow" class="row cl" style="display:none">
+        <label class="form-label col-2"></label>
+        <div class="formControls col-5">
+            <input type="text" name="Answer" class="input-text radius" placeholder="请输入答案" />
+
+        </div>
+        <div class="col-2">
+            <input type="text" name="LoanAmount" class="input-text radius" placeholder="请输入可贷金额" />
+
+        </div>
+    </div>
+</div>

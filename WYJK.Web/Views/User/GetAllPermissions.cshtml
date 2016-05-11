@@ -1,0 +1,128 @@
+﻿@model List<Permissions>
+@{
+
+}
+@section Header
+{
+    <link href="~/Content/lib/treetable/css/jquery.treetable.css" rel="stylesheet" />
+
+    <link href="~/Content/lib/treetable/css/jquery.treetable.theme.default.css" rel="stylesheet" />
+    <style>
+        table th, table td {
+            line-height: 30px;
+        }
+    </style>
+}
+@section Footer
+{
+    <script type="text/javascript" src="/Content/lib/treetable/jquery.treetable.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            $("#permissions_tree").treetable({ expandable: true });
+
+            $(".action-add-permissions").click(function () {
+                //异步加载进来
+                $.get('@Url.Action("PermissionEdit")?editType=add', function (data) {
+
+                    $("#_editPermission").html(data);
+
+                    //显示
+                    $('#myModal').modal();
+                })
+            })
+
+            $(".action-edit-permissions").click(function () {
+                var $this = $(this);
+                //异步加载进来
+                $.get('@Url.Action("PermissionEdit")?editType=edit&PermissionID=' + $this.attr("data-id"), function (data) {
+                    $("#_editPermission").html(data);
+                    //显示
+                    $('#myModal').modal();
+                })
+            });
+        });
+
+
+        function success(data) {
+            if (data.status) {
+                layer.msg(data.message);
+                setTimeout(function () {
+                    $('#myModal').modal('hide'); window.location.reload(true);
+                }, 2000);
+
+            } else {
+                layer.msg(data.message);
+            }
+            layer.closeAll('loading');
+        }
+        function error() {
+            layer.msg("操作失败！");
+            layer.closeAll('loading');
+        }
+
+        function begin() {
+            layer.load();
+        }
+    </script>
+}
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 权限管理 <span class="c-gray en">&gt;</span> 权限列表 <a class="btn btn-success radius r mr-20" style="line-height: 1.6em; margin-top: 3px" href="javascript:refresh();" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+
+
+    <div class="mt-20">
+        <table id="permissions_tree">
+            <thead>
+                <tr class="text-c">
+                    <th style="width: 200px">编码</th>
+                    <th style="width: 200px">名称</th>
+                    <th style="width: 200px">Controller</th>
+                    <th style="width: 200px">Actioin</th>
+                    <th style="width: 200px">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    List<Permissions> topPermissions = Model.Where(n => n.ParentCode == "0").ToList();
+                }
+
+                @foreach (var permissions in topPermissions)
+                {
+                    <tr data-tt-id="@permissions.Code">
+                        <td>@(permissions.Code)</td>
+                        <td>@(permissions.Description)</td>
+                        <td>@(permissions.Controller)</td>
+                        <td>@(permissions.Action)</td>
+                        <td>
+                            <a style="text-decoration: none" class="ml-5 action-edit-permissions" href="javascript:;" title="编辑" data-id="@(permissions.PermissionID)"><i class="Hui-iconfont">&#xe6df;</i></a>
+                        </td>
+                    </tr>
+                    List<Permissions> Permissions = Model.Where(o => o.ParentCode == permissions.Code).ToList();
+                    if (Permissions.Count > 0)
+                    {
+                        foreach (var subPermission in Permissions)
+                        {
+                            <tr data-tt-id="@subPermission.Code" data-tt-parent-id="@(subPermission.ParentCode)">
+                                <td>@(subPermission.Code)</td>
+                                <td>@(subPermission.Description)</td>
+                                <td>@(subPermission.Controller)</td>
+                                <td>@(subPermission.Action)</td>
+                                <td>
+                                    <a style="text-decoration: none" class="ml-5 action-edit-permissions" href="javascript:;" title="编辑" data-id="@(subPermission.PermissionID)"><i class="Hui-iconfont">&#xe6df;</i></a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+        <div id="pager" style="margin-top: 20px;"></div>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <a href="javascript:;" class="btn btn-danger radius option-add" data-id="0"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" class="btn btn-primary radius action-add-permissions"><i class="Hui-iconfont">&#xe600;</i> 添加权限</a>
+        </span>
+        <span class="r">共有数据：<strong>@(Model.Count)</strong> 条</span>
+    </div>
+</div>
+<div id="_editPermission"></div>

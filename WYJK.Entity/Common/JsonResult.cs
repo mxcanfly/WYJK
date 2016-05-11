@@ -12,7 +12,6 @@ namespace WYJK.Entity
     /// 调用服务时返回的数据结果,用于返回给第三方的结果信息
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-
     public class JsonResult<TEntity> where TEntity : class
     {
         /// <summary>
@@ -22,7 +21,7 @@ namespace WYJK.Entity
         /// <summary>
         /// 初始化对象的实例
         /// </summary>
-        /// <param name="errorCode">错误码</param>
+        /// <param name="status">错误码</param>
         /// <param name="mssage">错误信息</param>
         public JsonResult(Boolean status, string mssage)
         {
@@ -57,7 +56,7 @@ namespace WYJK.Entity
     /// 分页参数接口
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public abstract class PagedParameter
+    public  class PagedParameter
     {
         /// <summary>
         /// 当前页码
@@ -142,7 +141,7 @@ namespace WYJK.Entity
         /// </summary>
         public PagedResult()
         {
-            PageSize = 10;
+            PageSize = 2;
             Items = new List<TEntity>();
         }
         /// <summary>

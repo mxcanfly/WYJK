@@ -1,0 +1,137 @@
+﻿@model Dictionary<int, LoanSubject>.ValueCollection
+@section footer{
+    <script>
+        $(function () {
+
+            $(".Huialert.Huialert-info").fadeOut(2000);
+
+            @*/*题目-添加*/
+            $(".action-add-subject").click(function () {
+                var save = 0;
+                var layerObject = layer.open({
+                    type: 2,
+                    title: "添加题目",
+                    area: ['600px', '600px'],
+                    content: "@Url.Action("AddSubject", "LoanSetting")",
+                    btn: ["保存", "关闭"],
+                    yes: function (index, layero) {
+                        //var childIndex = layer.load(1, { shade: [0.1, '#000'] });
+                        var form = layer.getChildFrame('form', index);
+                        form.submit();
+                        save = 1;
+                        //layer.close(childIndex);
+                        return false;
+                    },
+                    end: function (index, layero) {
+                        if (save === 1) {
+                            refresh();
+                        }
+                    },
+                    success: function (index, layero) {
+                        layer.iframeAuto(layero);
+                    }
+                });
+            })*@
+
+            /*题目-删除*/
+            $(".action-delete-subject").click(function () {
+                if ($("input[type='checkbox'][name='Subject']:checked").length <= 0) {
+                    layer.msg("请选择需要删除的题目");
+                    return;
+                }
+
+                layer.confirm('请选择需要删除的题目？',
+                   { btn: ['确定', '取消'] },
+                   function () {
+                       var SubjectIDs = [];
+                       $("input[type='checkbox'][name='Subject']:checked").each(function (i) {
+                           SubjectIDs[i] = $(this).val();
+                       });
+
+                       var index = layer.load(1, {
+                           shade: [0.1, '#000']
+                       });
+
+                       $.ajax({
+                           url: '@Url.Action("BatchDelete", "LoanSetting")',
+                           dataType: "json",
+                           data: { "SubjectIDs": SubjectIDs },
+                           type: "post",
+                           success: function (response) {
+                               layer.close(index);
+                               if (response.status) {
+                                   layer.msg(response.message);
+                                   refresh();
+                               } else {
+                                   layer.msg(response.message);
+                               }
+                           },
+                           error: function () {
+                               layer.close(index);
+                               layer.msg("服务器错误");
+                           }
+                       });
+                   });
+            });
+        })
+
+    </script>
+}
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 个人借款 <span class="c-gray en">&gt;</span> 身价计算设置 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+    <div class="text-c">
+        @using (Html.BeginForm("GetSubjectList", "LoanSetting", FormMethod.Get))
+        {
+
+            <label>题目：</label> @Html.TextBox("Subject", null, new { style = "width:250px", @class = "input-text", placeholder = "题目" })
+        <button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+        }
+    </div>
+    <div class="mt-20">
+        @if (!string.IsNullOrWhiteSpace(TempData["Message"] + ""))
+        {
+            <div class="Huialert Huialert-info">@(TempData["Message"])</div>
+        }
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <thead>
+                <tr class="text-c">
+                    <th width="25"><input type="checkbox" name="" value=""></th>
+                    <th width="300">题目</th>
+                    <th>答案</th>
+                    <th width="80">顺序</th>
+                    <th width="120">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="text-c">
+                        <td><input type="checkbox" value="@item.SubjectID" name="Subject"></td>
+                        <td>@item.Subject</td>
+                        <td>
+                            @{
+                                char[] prefix = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+                            }
+                            @for (int i = 0; i < item.LoanAnswerList.Count; i++)
+                            {
+                                @(prefix[i] + "." + item.LoanAnswerList[i].Answer);
+                                <br />
+                            }
+
+                        </td>
+                        <td>@item.Sort</td>
+                        <td>
+                            <a title="编辑" href='@Url.Action("EditSubject","LoanSetting")?SubjectID=@item.SubjectID' class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+                        </td>
+                    </tr>
+                                }
+            </tbody>
+        </table>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <a href="javascript:;" class="btn btn-danger radius action-delete-subject"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+            <a href="@Url.Action("AddSubject","LoanSetting")" class="btn btn-primary radius action-add-subject"><i class="Hui-iconfont">&#xe600;</i> 添加题目</a>
+        </span>
+    </div>
+</div>

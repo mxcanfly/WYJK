@@ -1,35 +1,21 @@
-/* -----------H-ui前端框架-------------
-* H-ui.admin.js v2.3.1
-* http://www.h-ui.net/
-* Created & Modified by guojunhui
-* Date modified 15:42 2015.08.19
-*
-* Copyright 2013-2015 北京颖杰联创科技有限公司 All rights reserved.
-* Licensed under MIT license.
-* http://opensource.org/licenses/MIT
-*
-*/
-var num=0,oUl=$("#min_title_list"),hide_nav=$("#Hui-tabNav");
-
+/*H-ui.admin.js v2.3.1 date:15:42 2015.08.19 by:guojunhui*/
 /*获取顶部选项卡总长度*/
 function tabNavallwidth(){
 	var taballwidth=0,
-		$tabNav = hide_nav.find(".acrossTab"),
-		$tabNavWp = hide_nav.find(".Hui-tabNav-wp"),
-		$tabNavitem = hide_nav.find(".acrossTab li"),
-		$tabNavmore =hide_nav.find(".Hui-tabNav-more");
+		$tabNav = $(".acrossTab"),
+		$tabNavWp = $(".Hui-tabNav-wp"),
+		$tabNavitem = $(".acrossTab li"),
+		$tabNavmore =$(".Hui-tabNav-more");
 	if (!$tabNav[0]){return}
 	$tabNavitem.each(function(index, element) {
-        taballwidth+=Number(parseFloat($(this).width()+60))
-    });
+        taballwidth+=Number(parseFloat($(this).width()+60))});
 	$tabNav.width(taballwidth+25);
 	var w = $tabNavWp.width();
 	if(taballwidth+25>w){
 		$tabNavmore.show()}
 	else{
 		$tabNavmore.hide();
-		$tabNav.css({left:0})
-	}
+		$tabNav.css({left:0})}
 }
 
 /*左侧菜单响应式*/
@@ -43,119 +29,7 @@ function getskincookie(){
 	if(v==null||v==""){
 		v="default";
 	}
-	$("#skin").attr("href","skin/"+v+"/skin.css");
-}
-function Hui_admin_tab(obj){
-	if($(obj).attr('_href')){
-		var bStop=false;
-		var bStopIndex=0;
-		var _href=$(obj).attr('_href');
-		var _titleName=$(obj).attr("data-title");
-		var topWindow=$(window.parent.document);
-		var show_navLi=topWindow.find("#min_title_list li");
-		show_navLi.each(function() {
-			if($(this).find('span').attr("data-href")==_href){
-				bStop=true;
-				bStopIndex=show_navLi.index($(this));
-				return false;
-			}
-		});
-		if(!bStop){
-			creatIframe(_href,_titleName);
-			min_titleList();
-		}
-		else{
-			show_navLi.removeClass("active").eq(bStopIndex).addClass("active");
-			var iframe_box=topWindow.find("#iframe_box");
-			iframe_box.find(".show_iframe").hide().eq(bStopIndex).show().find("iframe").attr("src",_href);
-		}
-	}
-
-}
-function min_titleList(){
-	var topWindow=$(window.parent.document);
-	var show_nav=topWindow.find("#min_title_list");
-	var aLi=show_nav.find("li");
-};
-function creatIframe(href,titleName){
-	var topWindow=$(window.parent.document);
-	var show_nav=topWindow.find('#min_title_list');
-	show_nav.find('li').removeClass("active");
-	var iframe_box=topWindow.find('#iframe_box');
-	show_nav.append('<li class="active"><span data-href="'+href+'">'+titleName+'</span><i></i><em></em></li>');
-	var taballwidth=0,
-		$tabNav = topWindow.find(".acrossTab"),
-		$tabNavWp = topWindow.find(".Hui-tabNav-wp"),
-		$tabNavitem = topWindow.find(".acrossTab li"),
-		$tabNavmore =topWindow.find(".Hui-tabNav-more");
-	if (!$tabNav[0]){return}
-	$tabNavitem.each(function(index, element) {
-        taballwidth+=Number(parseFloat($(this).width()+60))
-    });
-	$tabNav.width(taballwidth+25);
-	var w = $tabNavWp.width();
-	if(taballwidth+25>w){
-		$tabNavmore.show()}
-	else{
-		$tabNavmore.hide();
-		$tabNav.css({left:0})
-	}
-	var iframeBox=iframe_box.find('.show_iframe');
-	iframeBox.hide();
-	iframe_box.append('<div class="show_iframe"><div class="loading"></div><iframe frameborder="0" src='+href+'></iframe></div>');
-	var showBox=iframe_box.find('.show_iframe:visible');
-	showBox.find('iframe').load(function(){
-		showBox.find('.loading').hide();
-	});
-}
-function removeIframe(){
-	var topWindow = $(window.parent.document);
-	var iframe = topWindow.find('#iframe_box .show_iframe');
-	var tab = topWindow.find(".acrossTab li");
-	var showTab = topWindow.find(".acrossTab li.active");
-	var showBox=topWindow.find('.show_iframe:visible');
-	var i = showTab.index();
-	tab.eq(i-1).addClass("active");
-	iframe.eq(i-1).show();
-	tab.eq(i).remove();
-	iframe.eq(i).remove();
-}
-/*弹出层*/
-/*
-	参数解释：
-	title	标题
-	url		请求的url
-	id		需要操作的数据id
-	w		弹出层宽度（缺省调默认值）
-	h		弹出层高度（缺省调默认值）
-*/
-function layer_show(title,url,w,h){
-	if (title == null || title == '') {
-		title=false;
-	};
-	if (url == null || url == '') {
-		url="404.html";
-	};
-	if (w == null || w == '') {
-		w=800;
-	};
-	if (h == null || h == '') {
-		h=($(window).height() - 50);
-	};
-	layer.open({
-		type: 2,
-		area: [w+'px', h +'px'],
-		fix: false, //不固定
-		maxmin: true,
-		shade:0.4,
-		title: title,
-		content: url
-	});
-}
-/*关闭弹出框口*/
-function layer_close(){
-	var index = parent.layer.getFrameIndex(window.name);
-	parent.layer.close(index);
+	$("#skin").attr("href","/Content/skin/"+v+"/skin.css");
 }
 $(function(){
 	getskincookie();
@@ -180,11 +54,58 @@ $(function(){
 	/*左侧菜单*/
 	$.Huifold(".menu_dropdown dl dt",".menu_dropdown dl dd","fast",1,"click");
 	/*选项卡导航*/
-
+	
 	$(".Hui-aside").on("click",".menu_dropdown a",function(){
-		Hui_admin_tab(this);
+		if($(this).attr('_href')){
+			var bStop=false;
+			var bStopIndex=0;
+			var _href=$(this).attr('_href');
+			var _titleName=$(this).html();
+			var topWindow=$(window.parent.document);
+			var show_navLi=topWindow.find("#min_title_list li");
+			show_navLi.each(function() {
+				if($(this).find('span').attr("data-href")==_href){
+					bStop=true;
+					bStopIndex=show_navLi.index($(this));
+					return false;
+				}
+			});
+			if(!bStop){
+				creatIframe(_href,_titleName);
+				min_titleList();
+			}
+			else{
+				show_navLi.removeClass("active").eq(bStopIndex).addClass("active");
+				var iframe_box=topWindow.find("#iframe_box");
+				iframe_box.find(".show_iframe").hide().eq(bStopIndex).show().find("iframe").attr("src",_href);
+			}
+		}
 	});
 	
+	function min_titleList(){
+		var topWindow=$(window.parent.document);
+		var show_nav=topWindow.find("#min_title_list");
+		var aLi=show_nav.find("li");
+	};
+	function creatIframe(href,titleName){
+		var topWindow=$(window.parent.document);
+		var show_nav=topWindow.find('#min_title_list');
+		show_nav.find('li').removeClass("active");
+		var iframe_box=topWindow.find('#iframe_box');
+		show_nav.append('<li class="active"><span data-href="'+href+'">'+titleName+'</span><i></i><em></em></li>');
+		tabNavallwidth();
+		var iframeBox=iframe_box.find('.show_iframe');
+		iframeBox.hide();
+		iframe_box.append('<div class="show_iframe"><div class="loading"></div><iframe frameborder="0" src='+href+'></iframe></div>');
+		var showBox=iframe_box.find('.show_iframe:visible');
+		showBox.find('iframe').attr("src",href).load(function(){
+			showBox.find('.loading').hide();
+		});
+	}
+
+	var num=0;
+	var oUl=$("#min_title_list");
+	var hide_nav=$("#Hui-tabNav");
 	$(document).on("click","#min_title_list li",function(){
 		var bStopIndex=$(this).index();
 		var iframe_box=$("#iframe_box");
@@ -232,6 +153,42 @@ $(function(){
 		var v = $(this).attr("data-val");
 		setCookie("Huiskin", v);
 		$("#skin").attr("href","skin/"+v+"/skin.css");
-		$(window.frames.document).contents().find("#skin").attr("href","skin/"+v+"/skin.css");
 	});
 }); 
+/*弹出层*/
+/*
+	参数解释：
+	title	标题
+	url		请求的url
+	id		需要操作的数据id
+	w		弹出层宽度（缺省调默认值）
+	h		弹出层高度（缺省调默认值）
+*/
+function layer_show(title,url,w,h){
+	if (title == null || title == '') {
+		title=false;
+	};
+	if (url == null || url == '') {
+		url="404.html";
+	};
+	if (w == null || w == '') {
+		w=800;
+	};
+	if (h == null || h == '') {
+		h=($(window).height() - 50);
+	};
+	layer.open({
+		type: 2,
+		area: [w+'px', h +'px'],
+		fix: false, //不固定
+		maxmin: true,
+		shade:0.4,
+		title: title,
+		content: url
+	});
+}
+/*关闭弹出框口*/
+function layer_close(){
+	var index = parent.layer.getFrameIndex(window.name);
+	parent.layer.close(index);
+}

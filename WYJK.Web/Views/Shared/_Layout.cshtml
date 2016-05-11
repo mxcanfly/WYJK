@@ -16,23 +16,33 @@
     <link href="/Content/css/H-ui.min.css" rel="stylesheet" type="text/css" />
     <link href="/Content/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
     <link href="/Content/lib/Hui-iconfont/1.0.6/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="/Content/iconfont/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="/Content/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <link href="/Content/css/style.css" rel="stylesheet" type="text/css" />
     <!--[if IE 6]>
     <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
+    <script type="text/javascript">window.config = {};</script>
+
     <title>无忧借款</title>
-    @RenderSection("Header", required: false)
+        @RenderSection("Header", required: false)
+        <script type="text/javascript" src="/Content/lib/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
     @RenderBody()
-    <script type="text/javascript" src="/Content/lib/jquery/1.9.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/Content/lib/layer/2.1/layer.js"></script>
+    <script type="text/javascript" src="/Content/lib/Validform/5.3.2/Validform.min.js"></script>
+    <script type="text/javascript" src="/Content/lib/bootstrap-modal/2.2.4/bootstrap-modalmanager.js"></script>
+    <script type="text/javascript" src="/Content/lib/bootstrap-modal/2.2.4/bootstrap-modal.js"></script>
     <script type="text/javascript" src="/Content/js/H-ui.js"></script>
     <script type="text/javascript" src="/Content/js/H-ui.admin.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/jquery.form.js"></script>
+
     @RenderSection("Footer", required: false)
+    <script type="text/javascript" src="~/Content/lib/layer/2.1/layer.js"></script>
+    <script type="text/javascript"  src="/Content/js/common.js"></script>
 </body>
 </html>

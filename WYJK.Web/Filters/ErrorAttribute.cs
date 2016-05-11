@@ -55,6 +55,7 @@ namespace WYJK.Web.Filters
             HttpResponseMessage response = new HttpResponseMessage
             {
                Content = new ObjectContent(typeof(JsonResult<string>), result, formatter)
+               
             };
 
             return response;

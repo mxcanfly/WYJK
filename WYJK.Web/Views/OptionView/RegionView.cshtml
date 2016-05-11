@@ -1,0 +1,31 @@
+﻿@model RegionViewModel
+<div id="region-container">
+    <span class="select-box">
+        @Html.DropDownListFor(m=>m.ProvinceCode, Model.ProvinceList, new { @class = "select", @size = "1" ,id="province-input"})
+    </span>
+    <span class="select-box">
+        @Html.DropDownListFor(m => m.CityCode, Model.CityList, new { @class = "select", @size = "1",id="city-input" })
+    </span>
+    <span class="select-box">
+        @Html.DropDownListFor(m=>m.CountyCode, Model.CountyList, new { @class = "select", @size = "1",id="county-input" })
+    </span>   
+</div>
+<div class="col-4">@Html.ValidationMessageFor(m => m.ProvinceCode)</div>
+<div class="col-4">@Html.ValidationMessageFor(m => m.CityCode)</div>
+<div class="col-4">@Html.ValidationMessageFor(m => m.CountyCode)</div>
+<script type="text/javascript">
+    $("#region-container").on("change", "#province-input,#city-input", function () {
+        
+        var proname = $("#province-input").find("option:selected").text();
+        var cityname = $("#city-input").find("option:selected").text();
+
+        $.get("@Url.Action("RegionView", "OptionView")", {
+            "pname": proname,
+            "cname": cityname,
+            "coname":""
+        }, function(response) {
+            var html = $(response).filter("#region-container").html();
+            $("#region-container").html(html);
+        }, "html");
+    });
+</script>

@@ -1,0 +1,171 @@
+﻿@model PagedResult<WYJK.Entity.Roles>
+@{
+    ViewBag.Title = "角色管理";
+    string RoleName = Request.Params["RoleName"];
+}
+@section Header
+{
+    <script type="text/javascript" src="/Content/lib/laypage/1.3/laypage.js"></script>
+
+}
+@section Footer
+{
+    <script type="text/javascript">
+        laypage({
+            cont: $('#pager'),
+            skin: '#AF0000', //皮肤
+            pages: '@Model.TotalPageCount', //可以叫服务端把总页数放在某一个隐藏域，再获取。假设我们获取到的是18
+            curr: function () { //通过url获取当前页，也可以同上（pages）方式获取
+                var page = location.search.match(/PageIndex=(\d+)/);
+                return page ? page[1] : 1;
+            }(),
+            jump: function (e, first) { //触发分页后的回调
+                if (!first) { //一定要加此判断，否则初始时会无限刷新
+                    location.href = '?PageIndex=' + e.curr + "&RoleName=" + '@RoleName';
+                }
+            }
+        });
+
+        $(function () {
+            /*角色-添加*/
+            $(".action-add-role").click(function () {
+                var save = 0;
+                //alert("添加角色");
+                var layerObject = layer.open({
+                    type: 2,
+                    title: "添加角色",
+                    area: ['600px', '600px'],
+                    content: "@Url.Action("RolesAdd", "User")",
+                    btn: ["保存", "关闭"],
+                    yes: function (index, layero) {
+                        //var childIndex = layer.load(1, { shade: [0.1, '#000'] });
+                        var form = layer.getChildFrame('form', index);
+                        form.submit();
+                        save = 1;
+                        //layer.close(childIndex);
+                        return false;
+                    },
+                    end: function (index, layero) {
+                        if (save === 1) {
+                            refresh();
+                        }
+                    },
+                    success: function (index, layero) {
+                        layer.iframeAuto(layero);
+                    }
+                });
+            })
+
+            //编辑角色
+            $(".action-edit-role").click(function () {
+                debugger;
+                var rid = $(this).attr("data-rid");
+                var save = 0;
+                var layerObject = layer.open({
+                    type: 2,
+                    title: "编辑角色",
+                    area: ['600px', '600px'],
+                    content: '@Url.Action("RolesEdit", "User")?roldID=' + rid,
+                    btn: ["保存", "关闭"],
+                    yes: function (index, layero) {
+                        var form = layer.getChildFrame('form', index);
+                        form.submit();
+                        save = 1;
+                        return false;
+                    },
+                    end: function (index, layero) {
+                        if (save === 1) {
+                            refresh();
+                        }
+                    },
+                    success: function (index, layero) {
+                        layer.iframeAuto(layero);
+                    }
+                });
+            });
+
+            $(".action-delete-role").click(function () {
+
+                if ($("input[type='checkbox']:checked").length <= 0) {
+                    layer.msg("请选择需要操作的信息");
+                    return;
+                }
+
+                if (!confirm("确定要删除该项吗？"))
+                    return;
+
+                var roleids = [];
+                $("input[type='checkbox']:checked").each(function (i) {
+                    roleids[i] = $(this).val();
+                });
+                var index = layer.load(1, {
+                    shade: [0.1, '#000']
+                });
+
+                $.ajax({
+                    url: "@Url.Action("BatchDeleteRoles","User")",
+                    data: { "roleids": roleids },
+                    dataType: "json",
+                    type: "POST",
+                    success: function (response) {
+                        layer.close(index);
+                        if (response.status) {
+                            layer.msg("删除成功");
+                            refresh();
+                        } else {
+                            layer.msg("删除失败");
+                        }
+                    },
+                    error: function () {
+                        layer.close(index);
+                        layer.msg("出现异常");
+                    }
+                });
+            });
+        })
+    </script>
+}
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 角色管理 <span class="c-gray en">&gt;</span> 角色列表 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+    <div class="text-c">
+        @using (Html.BeginForm("GetAllRoles", "User", FormMethod.Get))
+        {
+            @Html.Label("角色名称:") @Html.TextBox("RoleName", null, new { style = "width:250px", @class = "input-text", placeholder = "角色名称" })
+
+            <button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+
+        }
+    </div>
+    
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <thead>
+                <tr class="text-c">
+                    <th width="25"><input type="checkbox" name="" value="" ></th>
+                    <th width="80">ID</th>
+                    <th width="80">角色名称</th>
+                    <th width="80">角色描述</th>
+                    <th width="120">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr class="text-c">
+                        <td><input type="checkbox" value="@item.RoleID" name=""></td>
+                        <td>@item.RoleID</td>
+                        <td>@item.RoleName</td>
+                        <td>@item.Description</td>
+                        <td class="f-14 td-manage">
+                            <a style="text-decoration: none" class="ml-5 action-edit-role" data-rid="@item.RoleID" href="javascript:;" title="角色编辑">
+                                <i class="Hui-iconfont">&#xe6df;</i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div id="pager" style="margin-top: 20px;"></div>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" class="btn btn-danger radius action-delete-role"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" class="btn btn-primary radius action-add-role"><i class="Hui-iconfont">&#xe600;</i> 添加角色</a></span> <span class="r">共有数据：<strong>@Model.TotalItemCount</strong> 条</span> </div>
+</div>

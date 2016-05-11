@@ -1,0 +1,35 @@
+﻿@model RolesViewModel
+@{
+    ViewBag.Title = "角色添加";
+}
+@section Header
+{
+
+}
+@section Footer{
+    <script type="text/javascript">
+    </script>
+}
+<div class="pd-20">
+    @using (Html.BeginForm("RolesAdd", "User", FormMethod.Post, new { id = "form-article-add", @class = "form form-horizontal" }))
+    {
+        if (string.IsNullOrWhiteSpace(ViewBag.ErrorMessage + "") == false)
+        {
+            <div class="Huialert Huialert-info">@(ViewBag.ErrorMessage)</div>
+        }
+        <div class="row cl">
+            <label class="form-label col-2">角色名称：</label>
+            <div class="formControls col-8">
+                @Html.TextBoxFor(m => m.RoleName, new { @class = "input-text radius" })
+            </div>
+            <div class="col-2">@Html.ValidationMessageFor(m => m.RoleName)</div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">描述：</label>
+            <div class="formControls col-8">
+                @Html.TextBoxFor(m => m.Description, "", new { @class = "input-text radius", placeholder = "描述" })
+            </div>
+            <div class="col-2"></div>
+        </div>
+    }
+</div>

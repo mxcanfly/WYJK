@@ -1,0 +1,62 @@
+﻿@model UserViewModel
+@{
+    ViewBag.Title = "用户登录";
+}
+@section Header
+{
+    <link href="/Content/css/H-ui.login.css" rel="stylesheet" type="text/css" />
+}
+@section Footer
+{
+    <script type="text/javascript">
+        $(function () {
+            $(".refreshCaptcha").click(function () {
+                $("#captcha-image").attr("src", "@Url.Action("Captcha", "User", new { }, "http")?_=" + new Date().getTime());
+            });
+        })
+    </script>
+}
+
+<div class="header"></div>
+<div class="loginWraper">
+    <div id="loginform" class="loginBox">
+        <div class="row cl dz-error-message">
+            <label class="formControls col-2"></label>
+            <div class="formControls col-7">@ViewBag.ErrorMessage</div>
+        </div>
+
+        @using (Html.BeginForm("Login", "User", FormMethod.Post, new { @class = "form form-horizontal" }))
+        {
+            <div class="row cl">
+                <label class="form-label col-3"><i class="Hui-iconfont">&#xe60d;</i></label>
+                <div class="formControls col-7">
+                    @Html.TextBoxFor(m => m.UserName, new { placeholder = "账户", @class = "input-text size-L", maxlength = 20 })
+                </div>
+                <div class="col-2">@Html.ValidationMessageFor(m => m.UserName)</div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3"><i class="Hui-iconfont">&#xe60e;</i></label>
+                <div class="formControls col-7">
+                    @Html.PasswordFor(m => m.Password, new { placeholder = "密码", @class = "input-text size-L", maxlength = 20 })
+                </div>
+                <div class="col-2">@Html.ValidationMessageFor(m => m.Password)</div>
+            </div>
+            <div class="row cl">
+                <div class="formControls col-7 col-offset-3">
+                    @Html.TextBoxFor(m => m.VerificationCode, new { style = "width:150px;", placeholder = "验证码", @class = "input-text", maxlength = 4 })
+                    
+                    <img src="@Url.Action("Captcha", "User", new {}, "http")" class="refreshCaptcha" id="captcha-image" title="点击刷新" />
+                </div>
+                <div class="col-2">@Html.ValidationMessageFor(m => m.VerificationCode)</div>
+            </div>
+            <div class="row">
+                <div class="formControls col-8 col-offset-3">
+                    <input name="" type="submit" class="btn btn-success radius size-L" value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">
+                    <input name="" type="reset" class="btn btn-default radius size-L" value="&nbsp;取&nbsp;&nbsp;&nbsp;&nbsp;消&nbsp;">
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+<div class="footer">Copyright 你的公司名称 by 青岛递国之道信息科技有限公司</div>
