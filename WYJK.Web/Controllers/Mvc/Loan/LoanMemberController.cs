@@ -15,7 +15,7 @@ namespace WYJK.Web.Controllers.Mvc.Loan
         private ILoanSubjectService _loanSubjectService = new LoanSubjectService();
 
         /// <summary>
-        /// 获取借款用户列表
+        /// 获取借款用户列表1
         /// </summary>
         /// <returns></returns>
         public ActionResult GetLoanMemberList(MemberLoanParameter parameter)
