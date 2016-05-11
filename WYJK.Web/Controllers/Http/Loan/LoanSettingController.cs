@@ -54,7 +54,7 @@ namespace WYJK.Web.Controllers.Http
             return new JsonResult<LoanSubject>
             {
                 status = flag,
-                Message = flag == true ? "计算成功" : "计算失败1"
+                Message = flag == true ? "计算成功" : "计算失败"
             };
         }
 
