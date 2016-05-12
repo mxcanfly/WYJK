@@ -25,7 +25,7 @@ namespace WYJK.Data.ServiceImpl
 
             builder.Append($" and Members.MemberName like '%{parameter.MemberName}%'");
 
-            string innersqlstr = $@"select Members.MemberID,Members.MemberName,members.MemberPhone,
+            string innersqlstr = $@"select MemberLoanAudit.ID,Members.MemberID,Members.MemberName,members.MemberPhone,
 MemberLoan.TotalAmount,memberloan.AlreadyUsedAmount,memberloan.AvailableAmount,
 MemberLoanAudit.ApplyAmount,MemberLoanAudit.Status,MemberLoanAudit.ApplyDate,MemberLoanAudit.AuditDate
 from MemberLoanAudit
@@ -51,6 +51,19 @@ left join Members on  MemberLoanAudit.MemberID = Members.MemberID"
                 TotalItemCount = totalCount,
                 Items = list
             };
+        }
+
+        /// <summary>
+        /// 用户借款审核
+        /// </summary>
+        /// <param name="MembersStr"></param>
+        /// <param name="Status"></param>
+        /// <returns></returns>
+        public bool MemberLoanAudit(string IDsStr, string Status)
+        {
+            string sqlstr = $"update MemberLoanAudit set Status={Status} ,AuditDate=getdate() where ID in({IDsStr})";
+            int result = DbHelper.ExecuteSqlCommand(sqlstr, null);
+            return result > 0;
         }
     }
 }

@@ -17,5 +17,13 @@ namespace WYJK.Data.IService
         /// </summary>
         /// <returns></returns>
         PagedResult<MemberLoanAuditList> GetLoanAuditList(MemberLoanAuditListParameter parameter);
+
+        /// <summary>
+        /// 借款审核
+        /// </summary>
+        /// <param name="MembersStr"></param>
+        /// <param name="Status"></param>
+        /// <returns></returns>
+        bool MemberLoanAudit(string MembersIDsStr,string Status);
     }
 }

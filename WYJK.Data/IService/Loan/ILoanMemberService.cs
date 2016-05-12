@@ -36,5 +36,12 @@ namespace WYJK.Data.IService
         /// <param name="MemberID"></param>
         /// <returns></returns>
         decimal GetTotalAuditAmountByMemberID(int MemberID);
+
+        /// <summary>
+        /// 修改用户借款
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        bool UpdateMemberLoan(MemberLoan model);
     }
 }

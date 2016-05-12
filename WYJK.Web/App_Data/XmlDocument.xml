@@ -921,6 +921,18 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:WYJK.Web.Controllers.Mvc.Loan.LoanAuditController.BatchAudit(System.Int32[],System.String)">
+            <summary>
+            批量审核
+            1、修改审核状态和审核时间
+            2、修改用户借款表的已用额度和可用额度
+            3、修改用户账户额度
+            4、记录流水
+            </summary>
+            <param name="IDs"></param>
+            <param name="Status"></param>
+            <returns></returns>
+        </member>
         <member name="T:WYJK.Web.Controllers.Mvc.Loan.LoanMemberController">
             <summary>
             借款用户

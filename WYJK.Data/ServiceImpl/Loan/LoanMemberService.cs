@@ -78,5 +78,15 @@ namespace WYJK.Data.ServiceImpl
             return result;
         }
 
+        /// <summary>
+        /// 修改用户借款
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool UpdateMemberLoan(MemberLoan model)
+        {
+            //string sqlstr = "update MemberLoan set ";
+            return true;
+        }
     }
 }
