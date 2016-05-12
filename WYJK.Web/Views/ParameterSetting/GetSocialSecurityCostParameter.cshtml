@@ -1,0 +1,128 @@
+﻿@model CostParameterSetting
+@section Header
+{
+    <link href="~/Content/bootstrap/bootstrap.css" rel="stylesheet" />
+}
+@section Footer{
+    <style>
+        span.lineheight {
+            line-height: 31px;
+        }
+    </style>
+    <script>
+        $(function () {
+            $(".Huialert.Huialert-info").fadeOut(2000);
+
+            //添加模板行
+            $("#AddRow").click(function () {
+                $(this).closest(".row.cl").before($("#TemplateRow").clone().css("display", "block"));
+            });
+        })
+    </script>
+}
+<div class="pd-20">
+    <form action='@Url.Action("SaveCostParameter", "ParameterSetting")' method="post" class="form form-horizontal" id="form-article-add">
+
+        @Html.HiddenFor(m => m.Status)
+        @if (!string.IsNullOrWhiteSpace(ViewBag.Message + ""))
+        {
+            <div class="Huialert Huialert-info">@(ViewBag.Message)</div>
+        }
+        <div class="row cl" style="text-align:center;">
+            <label style="font-size:24px;font-weight:bold;">社保收费标准</label>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">代办费：</label>
+            <div class="input-group" style="width:200px">
+                @Html.TextBoxFor(m => m.BacklogCost, new { @class = "form-control" })
+                <span class="input-group-addon">元</span>
+            </div>
+            @*<div class="col-2">@Html.ValidationMessageFor(m => m.BacklogCost)</div>*@
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">冻结金额：</label>
+            <div class="input-group" style="width:200px">
+                @Html.TextBoxFor(m => m.FreezingAmount, new { @class = "form-control" })
+                <span class="input-group-addon">元/月</span>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">补办服务费：</label>
+            <div class="input-group" style="width:200px">
+                @Html.TextBoxFor(m => m.PayBeforeServiceCost, new { @class = "form-control" })
+                <span class="input-group-addon">元/月</span>
+            </div>
+        </div>
+        @if (Model.StartTime != null)
+        {
+            for (int i = 0; i < Model.StartTime.Count(); i++)
+            {
+                <div class="row cl">
+                    <label class="form-label col-3">@(i == 0 ? "续费服务费：" : "")</label>
+                    <div class="input-group" style="width:200px;float:left;">
+                        <input name="StartTime" value="@Model.StartTime[i]" pattern="\d{3}-\d{4}-\d{4}" class="form-control" />
+                        <span class="input-group-addon">号</span> 
+                    </div>
+                    <label class="form-label col-1" style="text-align:center">~</label>
+                    <div class="input-group" style="width:200px;float:left;">
+                        <input name="EndTime" value="@Model.EndTime[i]" class="form-control" />
+                        <span class="input-group-addon">号</span>
+                    </div>
+                    <label class="form-label col-1"></label>
+                    <div class="input-group" style="width:200px;float:left;">
+                        <input name="ServiceCost" value="@Model.ServiceCost[i]" class="form-control" />
+                        <span class="input-group-addon">元</span>
+                    </div>
+                </div>
+
+            }
+        }
+        else {
+            <div class="row cl">
+                <label class="form-label col-3">续费服务费：</label>
+                <div class="input-group" style="width:200px;float:left;">
+                    <input name="StartTime" value="" class="form-control" />
+                    <span class="input-group-addon">号</span>
+                </div>
+                <label class="form-label col-1" style="text-align:center">~</label>
+                <div class="input-group" style="width:200px;float:left;">
+                    <input name="EndTime" value="" class="form-control" />
+                    <span class="input-group-addon">号</span>
+                </div>
+                <label class="form-label col-1"></label>
+                <div class="input-group" style="width:200px;float:left;">
+                    <input name="ServiceCost" value="" class="form-control" />
+                    <span class="input-group-addon">元</span>
+                </div>
+            </div>
+        }
+
+        <div class="row cl">
+            <label class="form-label col-3"></label>
+            <a id="AddRow"  href="javascript:;" class="btn btn-success radius"><i class="Hui-iconfont">&#xe600;</i></a>
+        </div>
+        <div class="row cl">
+            <div class="col-10 col-offset-3">
+                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+            </div>
+        </div>
+    </form>
+    <!--行模板-->
+    <div id="TemplateRow" class="row cl" style="display:none;">
+        <label class="form-label col-3"></label>
+        <div class="input-group" style="width:200px;float:left;">
+            <input name="StartTime" value="" class="form-control" />
+            <span class="input-group-addon">号</span>
+        </div>
+        <label class="form-label col-1" style="text-align:center">~</label>
+        <div class="input-group" style="width:200px;float:left;">
+            <input name="EndTime" value="" class="form-control" />
+            <span class="input-group-addon">号</span>
+        </div>
+        <label class="form-label col-1"></label>
+        <div class="input-group" style="width:200px;float:left;">
+            <input name="ServiceCost" value="" class="form-control" />
+            <span class="input-group-addon">元</span>
+        </div>
+    </div>
+</div>

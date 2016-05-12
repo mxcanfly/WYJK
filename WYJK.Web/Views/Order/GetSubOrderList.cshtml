@@ -1,0 +1,115 @@
+﻿@model List<FinanceSubOrder>
+
+@section Footer{
+    <style>
+        #Summary span {
+            padding: 0px 20px;
+        }
+    </style>
+    <script>
+        //$(function () {
+        //    var ssAmount = 0;
+        //    $("[name='ssAmount']").each(function () { ssAmount +=Number($(this).text()); });
+
+        //    //$("#ssAmount").text();
+
+        //$(function () {
+        //    //审核通过
+        //    $(".action-pass").click(function () {
+
+        //    });
+
+        //    //审核通过
+        //    $(".action-fail").click(function () {
+
+        //    });
+        //})
+        //})
+    </script>
+}
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 财务审核 <span class="c-gray en">&gt;</span> 子订单列表 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <thead>
+                <tr class="text-c">
+                    <th width="80">姓名</th>
+                    <th width="80">户籍性质</th>
+                    <th width="80">社保起缴月份</th>
+                    <th width="80">社保结束月份</th>
+                    <th width="80">社保基数</th>
+                    <th width="80">社保金额</th>
+                    <th width="80">社保服务费</th>
+                    <th width="80">社保代办费</th>
+                    <th width="80">社保冻结费</th>
+                    <th width="80">公积金起缴月份</th>
+                    <th width="80">公积金结束月份</th>
+                    <th width="80">公积金金额</th>
+                    <th width="80">公积金服务费</th>
+                    <th width="80">公积金代办费</th>
+                    <th width="80">总金额</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    decimal ssAmount = 0;
+                    decimal SocialSecurityServiceCost = 0;
+                    decimal SocialSecurityFirstBacklogCost = 0;
+                    decimal SocialSecurityBuCha = 0;
+                    decimal afAmount = 0;
+                    decimal AccumulationFundServiceCost = 0;
+                    decimal AccumulationFundFirstBacklogCost = 0;
+                    decimal totalAmount = 0;
+                }
+                @foreach (var item in Model)
+                {
+                    ssAmount += item.ssAmount;
+                    SocialSecurityServiceCost += item.SocialSecurityServiceCost;
+                    SocialSecurityFirstBacklogCost += item.SocialSecurityFirstBacklogCost;
+                    SocialSecurityBuCha += item.SocialSecurityBuCha;
+                    afAmount += item.afAmount;
+                    AccumulationFundServiceCost += item.AccumulationFundServiceCost;
+                    AccumulationFundFirstBacklogCost += item.AccumulationFundFirstBacklogCost;
+                    totalAmount += item.totalAmount;
+                    <tr class="text-c">
+                        <td>@item.SocialSecurityPeopleName</td>
+                        <td>@item.HouseholdProperty</td>
+                        <td>@(item.ssStartTime == null ? "无" : item.ssStartTime.Value.ToShortDateString())</td>
+                        <td>@(item.ssEndTime == null ? "无" : item.ssStartTime.Value.ToShortDateString())</td>
+                        <td>@item.SocialSecurityBase</td>
+                        <td name="ssAmount">@item.ssAmount.ToString("N2")</td>
+                        <td name="SocialSecurityServiceCost">@item.SocialSecurityServiceCost.ToString("N2")</td>
+                        <td name="SocialSecurityFirstBacklogCost">@item.SocialSecurityFirstBacklogCost.ToString("N2")</td>
+                        <td name="SocialSecurityBuCha">@item.SocialSecurityBuCha.ToString("N2")</td>
+                        <td>@(item.afStartTime == null ? "无" : item.ssStartTime.Value.ToShortDateString())</td>
+                        <td>@(item.afEndTime == null ? "无" : item.ssStartTime.Value.ToShortDateString())</td>
+                        <td name="afAmount">@item.afAmount.ToString("N2")</td>
+                        <td name="AccumulationFundServiceCost">@item.AccumulationFundServiceCost.ToString("N2")</td>
+                        <td name="AccumulationFundFirstBacklogCost">@item.AccumulationFundFirstBacklogCost.ToString("N2")</td>
+                        <td name="totalAmount">@item.totalAmount.ToString("N2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20" id="Summary">
+        <span class="l">社保金额：@ssAmount.ToString("N2")</span>
+        <span class="l">社保服务费：@SocialSecurityServiceCost.ToString("N2")</span>
+        <span class="l">社保代办费：@SocialSecurityFirstBacklogCost.ToString("N2")</span>
+        <span class="l">社保冻结费：@SocialSecurityBuCha.ToString("N2")</span>
+        <span class="l">公积金金额：@afAmount.ToString("N2")</span>
+        <span class="l">公积金服务费：@AccumulationFundServiceCost.ToString("N2")</span>
+        <span class="l">公积金待办费：@AccumulationFundFirstBacklogCost.ToString("N2")</span>
+        <span class="l">总金额：@totalAmount.ToString("N2")</span>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            @{
+                var OrderCode = Model.Count > 0 ? Model[0].OrderCode.ToString() : string.Empty;
+            }
+            <a href="@Url.Action("BatchAuditing","Order")?OrderCodes=@OrderCode&Type=1" class="btn btn-primary radius action-pass"><i class="Hui-iconfont">&#xe6e1;</i>审核通过</a>
+            @*<a href="javascript:;" class="btn btn-danger radius action-fail"><i class="Hui-iconfont">&#xe6dd;</i>不通过</a>*@
+        </span>
+    </div>
+</div>

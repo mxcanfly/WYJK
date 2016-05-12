@@ -1,0 +1,69 @@
+﻿@model SocialSecurity
+@section Footer{
+    <style>
+        span.lineheight {
+            line-height: 31px;
+        }
+    </style>
+    <script>
+        $(function () {
+            $(".Huialert.Huialert-info").fadeOut(2000);
+        })
+    </script>
+}
+<div class="pd-20">
+    <form action='@Url.Action("SaveSocialSecurityNo","SocialSecurity")' method="post" class="form form-horizontal" id="form-article-add">
+
+        @Html.HiddenFor(n => n.SocialSecurityPeopleID)
+        @if (!string.IsNullOrWhiteSpace(TempData["Message"] + ""))
+        {
+            <div class="Huialert Huialert-info">@(TempData["Message"])</div>
+        }
+        <div class="row cl" style="text-align:center;">
+            <label style="font-size:24px;font-weight:bold;"> @(Model.SocialSecurityPeopleName)的社保业务信息</label>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">客户社保号：</label>
+            <div class="formControls col-2">
+                <input type="text" class="input-text" value="@Model.SocialSecurityNo" placeholder="请填写社保号" id="" name="SocialSecurityNo">
+            </div>
+            <label class="form-label col-3">基数：</label>
+            <div class="formControls col-2">
+                <span class="lineheight">@Model.SocialSecurityBase</span>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">比例：</label>
+            <div class="formControls col-2">
+                <span class="lineheight">@Model.PayProportion%</span>
+            </div>
+            <label class="form-label col-3">参保地：</label>
+            <div class="formControls col-2">
+                <span class="lineheight">@Model.InsuranceArea.Replace("|", "")</span>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">每月交：</label>
+            <div class="formControls col-2">
+                <span class="lineheight">@Convert.ToDecimal(Model.SocialSecurityBase * Model.PayProportion / 100)</span>
+            </div>
+            <label class="form-label col-3">起缴时间：</label>
+            <div class="formControls col-2">
+                <span class="lineheight">@Model.PayTime</span>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">当前状态：</label>
+            <div class="formControls col-2">
+                <span class="lineheight">@EnumExt.GetEnumCustomDescription((SocialSecurityStatusEnum)Convert.ToInt32(Model.Status))</span>
+            </div>
+
+        </div>
+
+        <div class="row cl">
+            <div class="col-10 col-offset-3">
+                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,136 @@
+﻿@model ExtensionInformationParameter
+@{
+
+}
+@section Footer{
+    <script src="~/Content/lib/laydate-master/laydate.dev.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            if ('@Request.Params["type"]' == 1)
+                $('input,select,textarea', $('form')).attr('disabled', true);
+        })
+
+        laydate({
+            elem: '#J-xl'
+        });
+    </script>
+    <style>
+        span.lineheight {
+            line-height: 31px;
+        }
+    </style>
+}
+<div class="pd-20">
+    <form action='@Url.Action("EditMemberExtensionInformation", "Member")' method="post" class="form form-horizontal" id="form-article-add">
+        @Html.HiddenFor(n => n.MemberID)
+        <div class="row cl">
+            <label class="form-label col-2">真实姓名：</label>
+            <div class="formControls col-6">
+                @Html.TextBoxFor(m => m.TrueName, new { @class = "input-text" })
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">证件类型：</label>
+            <div class="formControls col-2">
+                @Html.DropDownListFor(m => m.CertificateType, ViewData["CertificateType"] as List<SelectListItem>, new { @class = "input-text" })
+
+            </div>
+            <label class="form-label col-2">证件号码：</label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.CertificateNo, new { @class = "input-text" })
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">政治面貌：</label>
+            <div class="formControls col-2">
+                @Html.DropDownListFor(m => m.PoliticalStatus, ViewData["PoliticalStatus"] as List<SelectListItem>, new { @class = "input-text" })
+            </div>
+            <label class="form-label col-2">学历：</label>
+            <div class="formControls col-2">
+                @Html.DropDownListFor(m => m.Education, ViewData["Education"] as List<SelectListItem>, new { @class = "input-text" })
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">生日：</label>
+            <div class="formControls col-2">
+                @Html.TextBox("Birthday", Model.Birthday.Value.ToShortDateString(), new { id = "J-xl", @class = "input-text" })
+            </div>
+            <label class="form-label col-2">性别：</label>
+            <div class="formControls col-5 skin-minimal">
+                <div class="radio-box">
+                    @Html.RadioButtonFor(m => m.Sex, 0, new { id = "sex-1" })
+                    <label for="sex-1">男</label>
+                </div>
+                <div class="radio-box">
+                    @Html.RadioButtonFor(m => m.Sex, 1, new { id = "sex-2" })
+                    <label for="sex-2">女</label>
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">居住地址：</label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.Address, new { @class = "input-text" })
+            </div>
+            <label class="form-label col-2">手机号码：</label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.Phone, new { @class = "input-text" })
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">邮箱：</label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.Email, new { @class = "input-text" })
+            </div>
+            <label class="form-label col-2">QQ：</label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.QQ, new { @class = "input-text" })
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">支付宝账号：</label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.Alipay, new { @class = "input-text" })
+            </div>
+            <label class="form-label col-2">银行卡号：</label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.BankCardNo, new { @class = "input-text" })
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">开户行：</label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.BankAccount, new { @class = "input-text" })
+            </div>
+            <label class="form-label col-2">开户人：</label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.UserAccount, new { @class = "input-text" })
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">第二联系人：</label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.SecondContact, new { @class = "input-text" })
+            </div>
+            <label class="form-label col-2">第二联系人手机：</label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.SecondContactPhone, new { @class = "input-text" })
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">投保地：</label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.InsuranceArea, new { @class = "input-text", placeholder = "格式如:山东省|青岛市" })
+            </div>
+            <label class="form-label col-2">户口性质：</label>
+            <div class="formControls col-2">
+                @Html.DropDownListFor(m => m.HouseholdType, ViewData["HouseholdType"] as List<SelectListItem>, new { @class = "input-text" })
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-10 col-offset-2">
+                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+            </div>
+        </div>
+    </form>
+</div>

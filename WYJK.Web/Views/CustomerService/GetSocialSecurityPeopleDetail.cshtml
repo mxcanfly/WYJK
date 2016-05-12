@@ -1,0 +1,415 @@
+﻿@model SocialSecurityPeople
+@{
+    var member = ViewData["member"] as Members;
+    var accountRecordList = ViewData["accountRecordList"] as List<AccountRecord>;
+    var type = Request.Params["Type"];
+}
+@section Footer{
+    <style>
+        span.lineheight {
+            line-height: 31px;
+        }
+    </style>
+    <script>
+        $(function () {
+            $("#HouseholdProperty").change(function () {
+                var HouseholdProperty= $(this).find("option:selected").text();
+                if ('@Model.socialSecurity' != 'null') {
+                    //ssEnterpriseName ssSocialSecurityBase ssPayProportion
+                    $.ajax({
+                        url: '@Url.Action("GetDefaultEnterpriseSocialSecurityByArea", "Enterprise")?area='+'@Model.socialSecurity.InsuranceArea'+'&HouseholdProperty=' + HouseholdProperty,
+                        type: "get",
+                        dataType: "json",
+                        success: function (data) {
+                            $("#ssEnterpriseName").text(data.EnterpriseName);
+                        },
+                        error: function (err) {
+                            alert("服务器错误");
+                        }
+                    });
+                }
+                if (!'@Model.accumulationFund == null') {
+                    //ssEnterpriseName ssSocialSecurityBase ssPayProportion
+                    
+                }
+            });
+        })
+    </script>
+    
+}
+<div class="pd-20">
+    <form action='' method="post" class="form form-horizontal" id="form-article-add">
+        <div class="row cl" style="text-align:center;">
+            <label style="font-size:24px;font-weight:bold;">@(Model.SocialSecurityPeopleName)的基本信息</label>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">用户类型：</label>
+            <div class="formControls col-2">
+                <span class="lineheight">@EnumExt.GetEnumCustomDescription((UserTypeEnum)Convert.ToInt32(member.UserType))</span>
+            </div>
+            <label class="form-label col-3">代理机构：</label>
+            <div class="formControls col-2">
+                <span class="lineheight">@member.MemberName</span>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">身份证：</label>
+            <div class="formControls col-2">
+                @if (type == "0")
+                {
+                    <span class="lineheight">@Model.IdentityCard</span>
+                }
+                else if (type == "1")
+                {
+                    @Html.TextBoxFor(m => m.IdentityCard, new { @class = "input-text" })
+                }
+            </div>
+            <label class="form-label col-3">业务专员：</label>
+            <div class="formControls col-2">
+                @if (type == "0")
+                {
+                    <span class="lineheight">
+                        @if (!string.IsNullOrEmpty(member.InviteCode))
+                        {
+                            WYJK.Data.IService.IUserService _userService = new WYJK.Data.ServiceImpl.UserService();
+                            WYJK.Entity.Users user = _userService.GetUserInfo(member.InviteCode);
+                            @(user != null ? user.TrueName : "客服");
+                        }
+                        else {
+                            @:客服
+                    }
+                    </span>
+                }
+                else if (type == "1")
+                {
+                    if (!string.IsNullOrEmpty(member.InviteCode))
+                    {
+                        WYJK.Data.IService.IUserService _userService = new WYJK.Data.ServiceImpl.UserService();
+
+                        WYJK.Entity.Users user = _userService.GetUserInfo(member.InviteCode);
+
+                        List<WYJK.Entity.Users> userList = _userService.GetUserList();
+                        var list = new List<SelectListItem> { new SelectListItem { Text = "客服", Value = "" } };
+                        list.AddRange(userList.Select(item => new SelectListItem
+                        {
+                            Value = item.UserID.ToString(),
+                            Text = item.TrueName,
+                            Selected = item.UserID == (user == null ? 0 : user.UserID)
+                        }));
+
+                        @Html.DropDownList("InviteCode", list, new { @class = "input-text" });
+                    }
+                    else {
+                        WYJK.Data.IService.IUserService _userService = new WYJK.Data.ServiceImpl.UserService();
+                        List<WYJK.Entity.Users> userList = _userService.GetUserList();
+                        var list = new List<SelectListItem> { new SelectListItem { Text = "客服", Value = "" } };
+                        list.AddRange(userList.Select(item => new SelectListItem
+                        {
+                            Value = item.UserID.ToString(),
+                            Text = item.TrueName
+                        }));
+
+                        @Html.DropDownList("InviteCode", list, new { @class = "input-text" });
+                    }
+
+                }
+            </div>
+            @{
+                var imgs = Model.IdentityCardPhoto.Split(';');
+            }
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">户籍性质：</label>
+            <div class="formControls col-2">
+                @if (type == "0")
+                {
+                    <span class="lineheight">
+                        @Model.HouseholdProperty
+                    </span>
+                }
+                else if (type == "1")
+                {
+                    @Html.DropDownList("HouseholdProperty", ViewData["HouseholdProperty"] as List<SelectListItem>, new { @class = "input-text" });
+                }
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">身份证照：</label>
+            <div class="formControls col-2">
+
+                <img src="/@imgs[0]" height="100" />
+            </div>
+            <div class="formControls col-2">
+                <span class="lineheight"><img src="/@imgs[1]" height="100" /></span>
+            </div>
+        </div>
+        <br />
+        @if (Model.socialSecurity != null)
+        {
+            <div class="row cl" style="text-align:center;">
+                <label style="font-size:24px;font-weight:bold;">@(Model.SocialSecurityPeopleName)的社保业务信息</label>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">客户社保号：</label>
+                <div class="formControls col-2">
+                    @if (type == "0")
+                    {
+                        <span class="lineheight">
+                            @if (string.IsNullOrWhiteSpace(Model.socialSecurity.SocialSecurityNo))
+                            {
+                                @:无
+                    }
+                            else {
+                                @Model.socialSecurity.SocialSecurityNo
+                            }
+                        </span>
+                    }
+                    else if (type == "1")
+                    {
+                        @Html.TextBoxFor(m => m.socialSecurity.SocialSecurityNo, new { @class = "input-text" })
+                    }
+
+                </div>
+                <label class="form-label col-3">签约单位：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight" id="ssEnterpriseName">
+                        @{
+                            WYJK.Data.IService.IEnterpriseService _enterpriseService = new WYJK.Data.ServiceImpl.EnterpriseService();
+                            EnterpriseSocialSecurity enterpriseSocialSecurity = _enterpriseService.GetEnterpriseSocialSecurity(Model.socialSecurity.RelationEnterprise);
+                            @enterpriseSocialSecurity.EnterpriseName
+                        }
+                    </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">基数：</label>
+                <div class="formControls col-2">
+                    @if (type == "0")
+                    {
+                        <span class="lineheight" id="ssSocialSecurityBase">
+                            @Model.socialSecurity.SocialSecurityBase
+                        </span>
+                    }
+                    else if (type == "1")
+                    {
+                        @Html.TextBoxFor(m => m.socialSecurity.SocialSecurityBase, new { @class = "input-text" })
+                    }
+                    
+                </div>
+                <label class="form-label col-3">比例：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight" id="ssPayProportion">
+                        @Model.socialSecurity.PayProportion%
+                    </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">参保地：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.socialSecurity.InsuranceArea.Replace("|", "")
+                    </span>
+                </div>
+                <label class="form-label col-3">每月交：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Convert.ToDecimal(Model.socialSecurity.SocialSecurityBase * Model.socialSecurity.PayProportion / 100).ToString("N2")
+                    </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">起缴时间：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.socialSecurity.PayTime
+                    </span>
+                </div>
+                <label class="form-label col-3">业务当前状态：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @EnumExt.GetEnumCustomDescription((SocialSecurityStatusEnum)Convert.ToInt32(Model.socialSecurity.Status))
+                    </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">业务申请时间：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.socialSecurity.PayTime
+                    </span>
+                </div>
+                <label class="form-label col-3">交费至：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.socialSecurity.PayTime.AddMonths(Model.socialSecurity.PayMonthCount - 1)
+                    </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">业务办停时间：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.socialSecurity.StopDate
+                    </span>
+                </div>
+                <label class="form-label col-3">业务办理时间：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.socialSecurity.HandleDate
+                    </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">备注：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.socialSecurity.Note
+                    </span>
+                </div>
+            </div>
+                            }
+        @if (Model.accumulationFund != null)
+        {
+            <div class="row cl" style="text-align:center;">
+                <label style="font-size:24px;font-weight:bold;">@(Model.SocialSecurityPeopleName)的公积金业务信息</label>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">客户公积金号：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @if (string.IsNullOrWhiteSpace(Model.accumulationFund.AccumulationFundNo))
+                        {
+                            @:无
+                    }
+                        else {
+                            @Model.accumulationFund.AccumulationFundNo
+                        }
+                    </span>
+                </div>
+                <label class="form-label col-3">签约单位：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight" id="afEnterpriseName">
+                        @{
+                            WYJK.Data.IService.IEnterpriseService _enterpriseService = new WYJK.Data.ServiceImpl.EnterpriseService();
+                            EnterpriseSocialSecurity enterpriseSocialSecurity = _enterpriseService.GetEnterpriseSocialSecurity(Model.accumulationFund.RelationEnterprise);
+                            @enterpriseSocialSecurity.EnterpriseName
+                        }
+                    </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">基数：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight" id="afAccumulationFundBase">
+                        @Model.accumulationFund.AccumulationFundBase
+                    </span>
+                </div>
+                <label class="form-label col-3">比例：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight" id="afPayProportion">
+                        @Model.accumulationFund.PayProportion%
+                    </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">参保地：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.accumulationFund.AccumulationFundArea.Replace("|", "")
+                    </span>
+                </div>
+                <label class="form-label col-3">每月交：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Convert.ToDecimal(Model.accumulationFund.AccumulationFundBase * Model.accumulationFund.PayProportion / 100).ToString("N2")
+                    </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">起缴时间：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.accumulationFund.PayTime
+                    </span>
+                </div>
+                <label class="form-label col-3">业务当前状态：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @EnumExt.GetEnumCustomDescription((SocialSecurityStatusEnum)Convert.ToInt32(Model.accumulationFund.Status))
+                    </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">业务申请时间：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.accumulationFund.PayTime
+                    </span>
+                </div>
+                <label class="form-label col-3">交费至：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.accumulationFund.PayTime.AddMonths(Model.accumulationFund.PayMonthCount - 1)
+                    </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">业务办停时间：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.accumulationFund.StopDate
+                    </span>
+                </div>
+                <label class="form-label col-3">业务办理时间：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.accumulationFund.HandleDate
+                    </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-3">备注：</label>
+                <div class="formControls col-2">
+                    <span class="lineheight">
+                        @Model.accumulationFund.Note
+                    </span>
+                </div>
+            </div>
+                            }
+        <div class="row cl">
+            <div class="col-10 col-offset-2">
+                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+            </div>
+        </div>
+    </form>
+    <div class="row cl" style="text-align:center;">
+        <label style="font-size:24px;font-weight:bold;">@(member.MemberName)的账户信息</label>
+    </div>
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <thead>
+                <tr class="text-c">
+                    <th width="80">收支类型</th>
+                    <th width="80">来源</th>
+                    <th width="80">备注</th>
+                    <th width="80">费用</th>
+                    <th width="80">时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var accountRecord in accountRecordList)
+                {
+                    <tr class="text-c">
+                        <td>@accountRecord.ShouZhiType</td>
+                        <td>@accountRecord.LaiYuan</td>
+                        <td>@accountRecord.OperationType</td>
+                        <td>@accountRecord.Cost</td>
+                        <td>@accountRecord.CreateTime.ToString("yyyy/MM/dd HH:mm")</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    </form>
+</div>

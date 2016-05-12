@@ -1,0 +1,174 @@
+﻿@model EnterpriseSocialSecurity
+@section Footer{
+    <style>
+        .form-horizontal .formControls {
+            line-height: 31px;
+        }
+
+        /*.select-box {
+            width: 100%;
+        }*/
+
+        .text-align-center {
+            text-align: center !important;
+        }
+    </style>
+}
+<div class="pd-20">
+    <form action='' method="post" class="form form-horizontal" id="form-article-add">
+
+        <div class="row cl" style="text-align:center;">
+            <label style="font-size:24px;font-weight:bold;">企业信息</label>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">企业名称：</label>
+            <div class="formControls col-8">
+                @Model.EnterpriseName
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">企业地址：</label>
+            <div class="formControls col-8">
+                @Model.EnterpriseArea.Replace("|", "")
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">联系人：</label>
+            <div class="formControls col-2">
+                @Model.ContactUser
+            </div>
+            <label class="form-label col-2">联系电话：</label>
+            <div class="formControls col-2">
+                @Model.ContactTel
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">传真：</label>
+            <div class="formControls col-2">
+                @Model.Fax
+            </div>
+            <label class="form-label col-2">邮箱：</label>
+            <div class="formControls col-2">
+                @Model.Email
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">办公电话：</label>
+            <div class="formControls col-2">
+                @Model.OfficeTel
+            </div>
+            <label class="form-label col-2">户口类型：</label>
+            <div class="formControls col-2">
+               @EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)(Convert.ToInt32(Model.HouseholdProperty)))
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">机构地址：</label>
+            <div class="formControls col-8">
+                @Model.OrgAddress
+            </div>
+        </div>
+
+        <div class="row cl" style="text-align:center;">
+            <label style="font-size:24px;font-weight:bold;">社保信息</label>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">社平工资：</label>
+            <div class="formControls col-2">
+                @Model.SocialAvgSalary
+            </div>
+            <label class="form-label col-2">百分比：</label>
+            <div class="formControls col-2">
+                @Model.MinSocial~@Model.MaxSocial
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-2" style="font-size:22px;">单位信息</label>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">养老：</label>
+            <div class="formControls col-2">
+                @Model.CompYangLao
+            </div>
+            <label class="form-label col-2">医疗：</label>
+            <div class="formControls col-2">
+                @Model.CompYiLiao
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">失业：</label>
+            <div class="formControls col-2">
+                @Model.CompShiYe
+            </div>
+            <label class="form-label col-2">工伤：</label>
+            <div class="formControls col-2">
+                @Model.CompGongShang
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">生育：</label>
+            <div class="formControls col-2">
+                @Model.CompShengYu
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-2" style="font-size:22px;">个人信息</label>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">养老：</label>
+            <div class="formControls col-2">
+                @Model.PersonalYangLao
+            </div>
+            <label class="form-label col-2">医疗：</label>
+            <div class="formControls col-2">
+                @Model.PersonalYiLiao
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">失业(城镇)：</label>
+            <div class="formControls col-2">
+                @Model.PersonalShiYeTown
+            </div>
+            <label class="form-label col-2">失业(农村)：</label>
+            <div class="formControls col-2">
+                @Model.PersonalShiYeRural
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">工伤：</label>
+            <div class="formControls col-2">
+                @Model.PersonalGongShang
+            </div>
+            <label class="form-label col-2">生育：</label>
+            <div class="formControls col-2">
+                @Model.PersonalShengYu
+            </div>
+        </div>
+        <div class="row cl" style="text-align:center;">
+            <label style="font-size:24px;font-weight:bold;">公积金信息</label>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">基数范围：</label>
+            <div class="formControls col-2">
+                @Model.MinAccumulationFund~@Model.MaxAccumulationFund
+            </div>
+            <label class="form-label col-2">单位比例：</label>
+            <div class="formControls col-2">
+                @Model.CompProportion
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">个人比例：</label>
+            <div class="formControls col-2">
+                @Model.PersonalProportion
+            </div>
+            <label class="form-label col-2">默认企业：</label>
+            <div class="formControls col-2">
+                @(Model.IsDefault ? "是":"否")
+            </div>
+        </div>
+    </form>
+</div>
+

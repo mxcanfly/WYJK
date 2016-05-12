@@ -263,7 +263,7 @@
     <Compile Include="Content\lib\ueditor\1.4.3\net\App_Code\NotSupportedHandler.cs" />
     <Compile Include="Content\lib\ueditor\1.4.3\net\App_Code\PathFormater.cs" />
     <Compile Include="Content\lib\ueditor\1.4.3\net\App_Code\UploadHandler.cs" />
-    <Compile Include="Controllers\Http\Loan\LoanSettingController.cs" />
+    <Compile Include="Controllers\Http\Loan\LoanController.cs" />
     <Compile Include="Controllers\Http\SocialSecurity\OrderController.cs" />
     <Compile Include="Controllers\Http\SocialSecurity\SocialSecurityController.cs" />
     <Compile Include="Controllers\Http\SocialSecurity\UploadController.cs" />
