@@ -44,8 +44,7 @@ namespace WYJK.Web.Controllers.Mvc.Loan
         /// <returns></returns>
         public ActionResult BatchAudit(int[] IDs, string Status)
         {
-            //判断是否已经审核，只有没有进行审核，才能进行下面操作
-
+            //如果未审核，则进行下面的操作
 
             //1、修改审核状态和审核时间
             string IDsStr = string.Join(",", IDs);
