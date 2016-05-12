@@ -159,6 +159,15 @@ namespace WYJK.Web.Controllers.Http
                     item.AccumulationFundFirstBacklogCost = _parameterSettingService.GetCostParameter((int)PayTypeEnum.AccumulationFund).BacklogCost;
                 }
 
+                if (item.SSStatus != (int)SocialSecurityStatusEnum.UnInsured) {
+                    item.SSStatus = 0;
+                }
+
+                if (item.AFStatus != (int)SocialSecurityStatusEnum.UnInsured)
+                {
+                    item.AFStatus = 0;
+                }
+
             });
             return new JsonResult<List<UnInsuredPeople>>
             {
@@ -623,14 +632,14 @@ namespace WYJK.Web.Controllers.Http
                 n.AFRemainingMonthCount = monthCount;//待修改
                 if (n.SSStatus != Status)
                 {
-                    n.SSStatus = null;
+                    n.SSStatus = 0;
                     n.SSPayTime = null;
                     n.SSAlreadyPayMonthCount = null;
                     n.SSRemainingMonthCount = null;
                 }
                 if (n.AFStatus != Status)
                 {
-                    n.AFStatus = null;
+                    n.AFStatus = 0;
                     n.AFPayTime = null;
                     n.AFAlreadyPayMonthCount = null;
                     n.AFRemainingMonthCount = null;
@@ -666,11 +675,22 @@ namespace WYJK.Web.Controllers.Http
             //剩余月数计算 --ToDo
             int monthCount = _socialSecurityService.GetRemainingMonth(MemberID);
 
+
+
             //查询剩余月数
             socialSecurityPeopleList.ForEach(n =>
             {
                 n.SSRemainingMonthCount = monthCount;
                 n.AFRemainingMonthCount = monthCount;
+
+                if (n.SSStatus != (int)SocialSecurityStatusEnum.WaitingStop)
+                {
+                    n.SSStatus = 0;
+                }
+                if (n.AFStatus != (int)SocialSecurityStatusEnum.WaitingStop)
+                {
+                    n.AFStatus = 0;
+                }
             });
 
             return new JsonResult<List<TopSocialSecurityPeoples>>
@@ -754,13 +774,14 @@ namespace WYJK.Web.Controllers.Http
 
             socialSecurityPeopleList.ForEach(n =>
             {
+                
                 if (n.SSStatus != (int)SocialSecurityStatusEnum.Normal && n.SSStatus != (int)SocialSecurityStatusEnum.Renew)
                 {
-                    n.SSStatus = null;
+                    n.SSStatus = 0;
                 }
                 if (n.AFStatus != (int)SocialSecurityStatusEnum.Normal && n.AFStatus != (int)SocialSecurityStatusEnum.Renew)
                 {
-                    n.AFStatus = null;
+                    n.AFStatus = 0;
                 }
             });
 
@@ -828,14 +849,14 @@ namespace WYJK.Web.Controllers.Http
                 n.AFRemainingMonthCount = 0;//待修改
                 if (n.SSStatus != (int)SocialSecurityStatusEnum.AlreadyStop)
                 {
-                    n.SSStatus = null;
+                    n.SSStatus = 0;
                     n.SSPayTime = null;
                     n.SSAlreadyPayMonthCount = null;
                     n.SSRemainingMonthCount = null;
                 }
                 if (n.AFStatus != (int)SocialSecurityStatusEnum.AlreadyStop)
                 {
-                    n.AFStatus = null;
+                    n.AFStatus = 0;
                     n.AFPayTime = null;
                     n.AFAlreadyPayMonthCount = null;
                     n.AFRemainingMonthCount = null;

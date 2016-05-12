@@ -544,6 +544,32 @@
             <param name="MemberID"></param>
             <returns></returns>
         </member>
+        <member name="M:WYJK.Web.Controllers.Http.LoanController.GetLoanTermList">
+            <summary>
+            获取还款期限类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Http.LoanController.GetLoanMethodList">
+            <summary>
+            获取还款方式
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Http.LoanController.GetApplyloan(System.Int32)">
+            <summary>
+            申请借款
+            </summary>
+            <param name="MemberID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Http.LoanController.SubmitLoanApply(WYJK.Entity.MemberLoanAuditParameter)">
+            <summary>
+            提交借款申请
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
         <member name="T:WYJK.Web.Controllers.Http.OrderController">
             <summary>
             订单接口
@@ -883,6 +909,22 @@
             <param name="mg"></param>
             <param name="height"></param>
             <returns></returns>
+        </member>
+        <member name="T:WYJK.Web.Controllers.Mvc.Loan.LoanAuditController">
+            <summary>
+            借款审核
+            </summary>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Mvc.Loan.LoanAuditController.GetLoanAuditList(WYJK.Entity.MemberLoanAuditListParameter)">
+            <summary>
+            获取借款审核列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:WYJK.Web.Controllers.Mvc.Loan.LoanMemberController">
+            <summary>
+            借款用户
+            </summary>
         </member>
         <member name="M:WYJK.Web.Controllers.Mvc.Loan.LoanMemberController.GetLoanMemberList(WYJK.Entity.MemberLoanParameter)">
             <summary>

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using WYJK.Framework.EnumHelper;
 
 namespace WYJK.Framework.EnumHelper
 {
@@ -139,44 +136,63 @@ namespace WYJK.Framework.EnumHelper
     }
 
     /// <summary>
-    /// 缴费类型
+    /// 还款期限
     /// </summary>
-    public enum LoanStatusEnum
+    public enum LoanTermEnum
     {
-        [EnumDisplayName("未借款")]
-        SocialSecurity = 1,
-        [EnumDisplayName("还款中")]
-        AccumulationFund = 1,
+        [EnumDisplayName("随借随还")]
+        InThreeMonths = 1,
+        [EnumDisplayName("半年期")]
+        HalfYear = 2,
+        [EnumDisplayName("一年期")]
+        OneYearPeriod = 3
+    }
+
+    /// <summary>
+    /// 还款方式
+    /// </summary>
+    public enum LoanMethodEnum
+    {
+        [EnumDisplayName("等额本息")]
+        DengEBenXi = 1
+    }
+
+    /// <summary>
+    /// 借款审核
+    /// </summary>
+    public enum LoanAuditEnum
+    {
+        [EnumDisplayName("未审核")]
+        NoAudited = 1,
+        [EnumDisplayName("已通过")]
+        Pass = 2,
+        [EnumDisplayName("未通过")]
+        NoPass = 3
     }
 
 
 
-
-    public class HouseholdPropertyClass
+    public class SelectListClass
     {
-        public static List<HouseholdProperty> GetList(Type enumType)
-
+        public static List<Property> GetSelectList(Type enumType)
         {
-
-            List<HouseholdProperty> list = new List<HouseholdProperty>();
+            List<Property> list = new List<Property>();
 
             foreach (object e in Enum.GetValues(enumType))
-
             {
 
-                list.Add(new HouseholdProperty() { Text = EnumExt.GetEnumCustomDescription(e), Value = ((int)e) });
-
+                list.Add(new Property { Text = EnumExt.GetEnumCustomDescription(e), Value = ((int)e) });
             }
 
             return list;
-
         }
     }
+
 
     /// <summary>
     /// 户籍属性类
     /// </summary>
-    public class HouseholdProperty
+    public class Property
     {
         public int Value { get; set; }
         public string Text { get; set; }

@@ -64,11 +64,5 @@ namespace WYJK.Data.IService
         /// <returns></returns>
         decimal GetMemberValue(int MemberID);
 
-        /// <summary>
-        /// 获取用户借款列表
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        PagedResult<MemberLoan> GetMemberLoanList(MemberLoanParameter parameter);
     }
 }

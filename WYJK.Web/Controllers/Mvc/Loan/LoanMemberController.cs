@@ -9,10 +9,13 @@ using WYJK.Entity;
 
 namespace WYJK.Web.Controllers.Mvc.Loan
 {
+    /// <summary>
+    /// 借款用户
+    /// </summary>
     [Authorize]
     public class LoanMemberController : Controller
     {
-        private ILoanSubjectService _loanSubjectService = new LoanSubjectService();
+        private ILoanMemberService _LoanMemberService = new LoanMemberService();
 
         /// <summary>
         /// 获取借款用户列表
@@ -20,9 +23,10 @@ namespace WYJK.Web.Controllers.Mvc.Loan
         /// <returns></returns>
         public ActionResult GetLoanMemberList(MemberLoanParameter parameter)
         {
-            PagedResult<MemberLoan> memberLoanList = _loanSubjectService.GetMemberLoanList(parameter);
+            PagedResult<MemberLoanList> memberLoanList = _LoanMemberService.GetMemberLoanList(parameter);
 
             return View("/Views/Loan/LoanMember/GetLoanMemberList.cshtml", memberLoanList);
         }
+
     }
 }

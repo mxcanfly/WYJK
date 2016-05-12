@@ -137,7 +137,7 @@ namespace WYJK.Data.ServiceImpl
 
             subjectModel.LoanAnswerList.AddRange(answerList);
 
-            string sqlNextSubject = $"select top 1 * from LoanSubject where Sort > (select Sort from LoanSubject where SubjectID={subjectModel.SubjectID}) order by Sort";
+            string sqlNextSubject = $"select top 1 SubjectID from LoanSubject where Sort > (select Sort from LoanSubject where SubjectID={subjectModel.SubjectID}) order by Sort";
             int NextSubjectID = DbHelper.QuerySingle<int>(sqlNextSubject);
             subjectModel.NextSubjectID = NextSubjectID;
 
@@ -160,9 +160,11 @@ namespace WYJK.Data.ServiceImpl
             decimal value = DbHelper.QuerySingle<decimal>(sqlstr);
             string sqlstr1 = $@"INSERT INTO MemberLoan
                                            (MemberID
-                                           , TotalAmount)
+                                           , TotalAmount
+                                           ,AvailableAmount)
                                      VALUES
                                            ({MemberID}
+                                           ,{value}
                                            ,{value})";
             int result = DbHelper.ExecuteSqlCommandScalar(sqlstr1, new DbParameter[] { });
             return result > 0;
@@ -178,36 +180,6 @@ namespace WYJK.Data.ServiceImpl
             string strsql = $"select TotalAmount from MemberLoan where MemberID={MemberID}";
             decimal value = DbHelper.QuerySingle<decimal>(strsql);
             return value;
-        }
-
-
-        /// <summary>
-        /// 获取用户借款列表
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public PagedResult<MemberLoan> GetMemberLoanList(MemberLoanParameter parameter)
-        {
-            string innersqlstr = $"select Members.MemberID,Members.MemberName,members.MemberPhone,MemberLoan.TotalAmount,memberloan.AlreadyUsedAmount,memberloan.AvailableAmount from MemberLoan left join Members on members.MemberID= MemberLoan.MemberID where Members.MemberName like '%{parameter.MemberName}%'";
-
-            string sqlstr = "select * from (select ROW_NUMBER() OVER(ORDER BY t.MemberID )AS Row,t.* from"
-                             + $" ({innersqlstr}) t) tt"
-                             + " where tt.Row BETWEEN @StartIndex AND @EndIndex";
-
-            List<MemberLoan> memberLoanList = DbHelper.Query<MemberLoan>(sqlstr, new
-            {
-                StartIndex = parameter.SkipCount,
-                EndIndex = parameter.TakeCount
-            });
-            int totalCount = DbHelper.QuerySingle<int>($"select count(0) from ({innersqlstr}) t");
-
-            return new PagedResult<MemberLoan>
-            {
-                PageIndex = parameter.PageIndex,
-                PageSize = parameter.PageSize,
-                TotalItemCount = totalCount,
-                Items = memberLoanList
-            };
         }
     }
 }
