@@ -361,5 +361,24 @@ namespace WYJK.Entity
 
     }
 
+    /// <summary>
+    /// 社保计算器
+    /// </summary>
+    public class SocialSecurityCalculation
+    {
+        /// <summary>
+        /// 社保金额
+        /// </summary>
+        public decimal SocialSecuritAmount { get; set; }
+        /// <summary>
+        /// 公积金金额
+        /// </summary>
+        public decimal AccumulationFundAmount { get; set; }
+        /// <summary>
+        /// 总金额
+        /// </summary>
+        public decimal TotalAmount { get { return SocialSecuritAmount + AccumulationFundAmount; } set { } }
+    }
+
 }
 

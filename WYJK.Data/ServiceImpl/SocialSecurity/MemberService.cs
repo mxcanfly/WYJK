@@ -414,5 +414,21 @@ namespace WYJK.Data.ServiceImpl
             List<Members> memberList = DbHelper.Query<Members>(sql);
             return memberList;
         }
+
+        /// <summary>
+        /// 获取账户状态
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        public bool GetAccountStatus(int MemberID)
+        {
+            string sqlstr = $@"select count(1) from Members
+left join SocialSecurityPeople on SocialSecurityPeople.MemberID = members.MemberID
+left join SocialSecurity on SocialSecurity.SocialSecurityPeopleID = socialsecuritypeople.SocialSecurityPeopleID
+left join AccumulationFund on AccumulationFund.SocialSecurityPeopleID = socialsecuritypeople.SocialSecurityPeopleID
+where (SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Renew} or AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Renew}) and members.MemberID={MemberID}";
+            int result = DbHelper.QuerySingle<int>(sqlstr);
+            return result > 0;
+        }
     }
 }

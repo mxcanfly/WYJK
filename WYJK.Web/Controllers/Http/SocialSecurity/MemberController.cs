@@ -15,6 +15,7 @@ using WYJK.Entity;
 using WYJK.Web.Filters;
 using System.Text.RegularExpressions;
 using WYJK.Data;
+using WYJK.Framework.EnumHelper;
 
 namespace WYJK.Web.Controllers.Http
 {
@@ -125,6 +126,26 @@ namespace WYJK.Web.Controllers.Http
                     IsComplete = member.IsComplete,
                     UserType = member.UserType
                 }
+            };
+        }
+
+        /// <summary>
+        /// 信息编辑提交
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <param name="TrueName"></param>
+        /// <param name="MemberName"></param>
+        /// <param name="MemberPhone"></param>
+        /// <returns></returns>
+        [System.Web.Http.HttpGet]
+        public JsonResult<dynamic> SubmitMemberInfo(int MemberID, string TrueName, string MemberName, string MemberPhone)
+        {
+            string sqlstr = $"update Members set TrueName ='{TrueName}',MemberName='{MemberName}',MemberPhone='{MemberPhone}' where MemberID={MemberID}";
+            int result = DbHelper.ExecuteSqlCommand(sqlstr, null);
+            return new JsonResult<dynamic>
+            {
+                status = result > 0,
+                Message = result > 0 ? "更新成功" : "更新失败"
             };
         }
 
@@ -395,19 +416,27 @@ namespace WYJK.Web.Controllers.Http
         }
 
         /// <summary>
-        /// 获取账户状态 --待确定
+        /// 获取账户状态   待续费/正常
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
-        private JsonResult<dynamic> GetAccountStatus(int MemberID)
+        public JsonResult<string> GetAccountStatus(int MemberID)
         {
+            string status = string.Empty;
+            bool flag = _memberService.GetAccountStatus(MemberID);
+            if (flag == true)
+                status = EnumExt.GetEnumCustomDescription((SocialSecurityStatusEnum)Convert.ToInt32(SocialSecurityStatusEnum.Renew));
+            else
+                status = EnumExt.GetEnumCustomDescription((SocialSecurityStatusEnum)Convert.ToInt32(SocialSecurityStatusEnum.Normal));
 
-            return new JsonResult<dynamic>
+            return new JsonResult<string>
             {
                 status = true,
-                Message = "获取状态成功"
+                Message = "获取状态成功",
+                Data = status
             };
         }
+
 
 
         /// <summary>

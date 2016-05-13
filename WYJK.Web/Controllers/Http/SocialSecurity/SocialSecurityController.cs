@@ -80,7 +80,7 @@ namespace WYJK.Web.Controllers.Http
         /// <param name="area">区域:省市名称之间用|隔开，如:山东省|青岛市</param>
         /// <returns></returns>
         [System.Web.Http.HttpGet]
-        public  JsonResult<dynamic> GetSocialSecurityBase(string area, string HouseholdProperty)
+        public JsonResult<dynamic> GetSocialSecurityBase(string area, string HouseholdProperty)
         {
             EnterpriseSocialSecurity model = _socialSecurityService.GetDefaultEnterpriseSocialSecurityByArea(area, HouseholdProperty);
             if (model == null)
@@ -108,7 +108,7 @@ namespace WYJK.Web.Controllers.Http
         /// </summary>
         /// <param name="area">区域:省市名称之间用|隔开，如:山东省|青岛市</param>
         /// <returns></returns>
-        public JsonResult<dynamic> GetAccumulationFundBase(string area,string HouseholdProperty)
+        public JsonResult<dynamic> GetAccumulationFundBase(string area, string HouseholdProperty)
         {
             EnterpriseSocialSecurity model = _socialSecurityService.GetDefaultEnterpriseSocialSecurityByArea(area, HouseholdProperty);
             if (model == null)
@@ -159,7 +159,8 @@ namespace WYJK.Web.Controllers.Http
                     item.AccumulationFundFirstBacklogCost = _parameterSettingService.GetCostParameter((int)PayTypeEnum.AccumulationFund).BacklogCost;
                 }
 
-                if (item.SSStatus != (int)SocialSecurityStatusEnum.UnInsured) {
+                if (item.SSStatus != (int)SocialSecurityStatusEnum.UnInsured)
+                {
                     item.SSStatus = 0;
                 }
 
@@ -209,21 +210,21 @@ namespace WYJK.Web.Controllers.Http
                 };
 
 
-            ////验证身份证
-            //if (!Regex.IsMatch(socialSecurityPeople.IdentityCard, @"(^\d{18}$)|(^\d{15}$)"))
-            //    return new JsonResult<dynamic>
-            //    {
-            //        status = false,
-            //        Message = "身份证号填写错误"
-            //    };
+            //验证身份证
+            if (!Regex.IsMatch(socialSecurityPeople.IdentityCard, @"(^\d{18}$)|(^\d{15}$)"))
+                return new JsonResult<dynamic>
+                {
+                    status = false,
+                    Message = "身份证号填写错误"
+                };
 
-            ////判断身份证是否已存在
-            //if (_socialSecurityService.IsExistsSocialSecurityPeopleIdentityCard(socialSecurityPeople.IdentityCard))
-            //    return new JsonResult<dynamic>
-            //    {
-            //        status = false,
-            //        Message = "身份证已存在"
-            //    };
+            //判断身份证是否已存在
+            if (_socialSecurityService.IsExistsSocialSecurityPeopleIdentityCard(socialSecurityPeople.IdentityCard))
+                return new JsonResult<dynamic>
+                {
+                    status = false,
+                    Message = "身份证已存在"
+                };
 
             bool flag = await _socialSecurityService.AddSocialSecurityPeople(socialSecurityPeople);
             return new JsonResult<dynamic>
@@ -233,7 +234,7 @@ namespace WYJK.Web.Controllers.Http
             };
         }
 
-        
+
         /// <summary>
         /// 修改提交参保人  需要传参：参保人ID，社保ID，公积金ID
         /// </summary>
@@ -774,7 +775,7 @@ namespace WYJK.Web.Controllers.Http
 
             socialSecurityPeopleList.ForEach(n =>
             {
-                
+
                 if (n.SSStatus != (int)SocialSecurityStatusEnum.Normal && n.SSStatus != (int)SocialSecurityStatusEnum.Renew)
                 {
                     n.SSStatus = 0;
@@ -871,6 +872,26 @@ namespace WYJK.Web.Controllers.Http
                 Data = socialSecurityPeopleList
             };
         }
+
+        /// <summary>
+        /// 获取社保计算结果
+        /// </summary>
+        /// <param name="InsuranceArea"></param>
+        /// <param name="HouseholdProperty"></param>
+        /// <param name="SocialSecurityBase"></param>
+        /// <param name="AccountRecordBase"></param>
+        /// <returns></returns>
+        public JsonResult<SocialSecurityCalculation> GetSocialSecurityCalculation(string InsuranceArea, string HouseholdProperty, decimal SocialSecurityBase, decimal AccountRecordBase)
+        {
+            SocialSecurityCalculation model = _socialSecurityService.GetSocialSecurityCalculationResult(InsuranceArea, HouseholdProperty, SocialSecurityBase, AccountRecordBase);
+            return new JsonResult<SocialSecurityCalculation>
+            {
+                status = true,
+                Message = "获取成功",
+                Data = model
+            };
+        }
+
 
 
 

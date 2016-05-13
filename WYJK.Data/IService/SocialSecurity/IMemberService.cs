@@ -131,5 +131,12 @@ namespace WYJK.Data.IServices
         /// </summary>
         /// <returns></returns>
         List<Members> GetMembersList();
+
+        /// <summary>
+        /// 获取账户状态
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        bool GetAccountStatus(int MemberID);
     }
 }

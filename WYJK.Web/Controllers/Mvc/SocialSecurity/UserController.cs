@@ -94,16 +94,16 @@ namespace WYJK.Web.Controllers
                 Users users = await DbHelper.QuerySingleAsync<Users>(sql);
 
                 #region 权限缓存
-                Entity.Roles roles = _userService.GetRoles(users.UserID);
-                List<Permissions> permissionsList = null;
-                if (roles != null)
-                {
-                    permissionsList = _userService.GetPermissions(roles.RoleID);
-                }
-                if (permissionsList != null)
-                {
-                    users.roles.PermissionList.AddRange(permissionsList);
-                }
+                //Entity.Roles roles = _userService.GetRoles(users.UserID);
+                //List<Permissions> permissionsList = null;
+                //if (roles != null)
+                //{
+                //    permissionsList = _userService.GetPermissions(roles.RoleID);
+                //}
+                //if (permissionsList != null)
+                //{
+                //    users.roles.PermissionList.AddRange(permissionsList);
+                //}
                 #endregion
 
                 if (users != null)

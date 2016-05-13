@@ -103,8 +103,8 @@
                     <th width="80">可用循环额度</th>
                     <th width="80">申请额度</th>
                     <th width="80">状态</th>
-                    <th width="80">提交时间</th>
-                    <th width="80">审核时间</th>
+                    <th width="100">提交时间</th>
+                    <th width="100">审核时间</th>
                 </tr>
             </thead>
             <tbody>
@@ -119,8 +119,8 @@
                         <td>@item.AvailableAmount</td>
                         <td>@item.ApplyAmount</td>
                         <td>@EnumExt.GetEnumCustomDescription((LoanAuditEnum)Convert.ToInt32(item.Status)) </td>
-                        <td>@item.ApplyDate</td>
-                        <td>@item.AuditDate</td>
+                        <td>@(item.ApplyDate == null ? "无": Convert.ToString(item.ApplyDate))</td>
+                        <td>@(item.AuditDate == null ? "无" : Convert.ToString(item.AuditDate))</td>
                     </tr>
                 }
             </tbody>

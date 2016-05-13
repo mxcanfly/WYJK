@@ -193,6 +193,21 @@ namespace WYJK.Data.IServices
         /// <returns></returns>
         SocialSecurityPeople GetSocialSecurityPeopleForAdmin(int SocialSecurityPeopleID);
 
+        /// <summary>
+        /// 获取社保计算结果
+        /// </summary>
+        /// <param name="InsuranceArea"></param>
+        /// <param name="HouseholdProperty"></param>
+        /// <param name="SocialSecurityBase"></param>
+        /// <param name="AccountRecordBase"></param>
+        /// <returns></returns>
+        SocialSecurityCalculation GetSocialSecurityCalculationResult(string InsuranceArea, string HouseholdProperty, decimal SocialSecurityBase, decimal AccountRecordBase);
 
+        /// <summary>
+        /// 根据用户ID获取月社保公积金总金额（待办与正常）
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        decimal GetMonthTotalAmountByMemberID(int MemberID);
     }
 }

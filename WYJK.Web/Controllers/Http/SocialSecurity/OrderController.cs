@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using WYJK.Data;
 using WYJK.Data.IService;
+using WYJK.Data.IServices;
 using WYJK.Data.ServiceImpl;
 using WYJK.Entity;
 using WYJK.Framework.EnumHelper;
@@ -20,7 +21,7 @@ namespace WYJK.Web.Controllers.Http
     public class OrderController : ApiController
     {
         private readonly IOrderService _orderService = new OrderService();
-
+        private readonly ISocialSecurityService _socialSecurityService = new SocialSecurityService();
         /// <summary>
         /// 生成订单 Data里头是订单编号
         /// </summary>
@@ -47,6 +48,35 @@ namespace WYJK.Web.Controllers.Http
                 Data = dic.First().Value
             };
         }
+
+        /// <summary>
+        /// 是否可以自动付款  判断待办与正常的参保人所有所要缴纳金额+本次金额之和与账户金额作比较
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public JsonResult<dynamic> IsCanAutoPayment(GenerateOrderParameter parameter) {
+            //待办与正常的参保人所有所要缴纳金额
+            decimal totalAmount =  _socialSecurityService.GetMonthTotalAmountByMemberID(parameter.MemberID);
+            //本次订单金额
+
+
+            return new JsonResult<dynamic>
+            {
+                status = true,
+                Message =""
+            };
+        }
+
+
+        ///// <summary>
+        ///// 自动扣款  首先弹窗之前需要检查一下是否符合自动扣款的标准：
+        ///// </summary>
+        ///// <param name="parameter"></param>
+        ///// <returns></returns>
+        //[System.Web.Http.HttpPost]
+        //public JsonResult<dynamic> AutoPayment(GenerateOrderParameter parameter) {
+
+        //}
 
         /// <summary>
         /// 获取订单列表 0：待付款、1：审核中、2：已完成

@@ -588,5 +588,54 @@ namespace WYJK.Data.ServiceImpl
 
             return DbHelper.QuerySingle<string>(strsql);
         }
+
+
+        /// <summary>
+        /// 保费计算器
+        /// </summary>
+        /// <returns></returns>
+        public SocialSecurityCalculation GetSocialSecurityCalculationResult(string InsuranceArea, string HouseholdProperty, decimal SocialSecurityBase, decimal AccountRecordBase)
+        {
+            EnterpriseSocialSecurity model = GetDefaultEnterpriseSocialSecurityByArea(InsuranceArea, HouseholdProperty);
+            decimal value = 0;
+            //model.PersonalShiYeTown
+            if (HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.InRural)) ||
+    HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.OutRural)))
+            {
+                value = model.PersonalShiYeRural;
+            }
+            else if (HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.InTown)) ||
+              HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.OutTown)))
+            {
+                value = model.PersonalShiYeTown;
+            }
+
+            decimal SSPayProportion = model.CompYangLao + model.CompYiLiao + model.CompShiYe + model.CompGongShang + model.CompShengYu
+                + model.PersonalYangLao + model.PersonalYiLiao + value + model.PersonalGongShang + model.PersonalShengYu;
+
+            decimal AFPayProportion = model.CompProportion + model.PersonalProportion;
+
+            return new SocialSecurityCalculation { SocialSecuritAmount = SocialSecurityBase * SSPayProportion / 100, AccumulationFundAmount = AccountRecordBase * AFPayProportion / 100 };
+        }
+
+        /// <summary>
+        /// 根据用户ID获取月社保公积金总金额（待办与正常）
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        public decimal GetMonthTotalAmountByMemberID(int MemberID)
+        {
+            string sqlstr = $@"declare @SocialSecurityAmount decimal = 0, @AccumulationFundAmount decimal = 0,@totalAmount decimal =0
+select @SocialSecurityAmount += SocialSecurity.SocialSecurityBase * SocialSecurity.PayProportion / 100 from SocialSecurityPeople
+      left join SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID
+      where SocialSecurityPeople.MemberID = {MemberID} and SocialSecurity.Status in(2,3);
+            select @AccumulationFundAmount += AccumulationFund.AccumulationFundBase * AccumulationFund.PayProportion / 100 from SocialSecurityPeople
+                  left join AccumulationFund on socialsecuritypeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID
+                  where SocialSecurityPeople.MemberID = {MemberID} and AccumulationFund.Status in(2,3);
+            select @totalAmount = @SocialSecurityAmount + @AccumulationFundAmount; ";
+
+            decimal result = DbHelper.QuerySingle<decimal>(sqlstr);
+            return result;
+        }
     }
 }

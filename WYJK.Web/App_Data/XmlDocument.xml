@@ -581,6 +581,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:WYJK.Web.Controllers.Http.OrderController.IsCanAutoPayment(WYJK.Entity.GenerateOrderParameter)">
+            <summary>
+            是否可以自动付款  判断待办与正常的参保人所有所要缴纳金额+本次金额之和与账户金额作比较
+            </summary>
+            <param name="parameter"></param>
+            <returns></returns>
+        </member>
         <member name="M:WYJK.Web.Controllers.Http.OrderController.GetOrderList(System.Int32,System.Int32)">
             <summary>
             获取订单列表 0：待付款、1：审核中、2：已完成
@@ -750,6 +757,16 @@
             <param name="MemberID"></param>
             <returns></returns>
         </member>
+        <member name="M:WYJK.Web.Controllers.Http.SocialSecurityController.GetSocialSecurityCalculation(System.String,System.String,System.Decimal,System.Decimal)">
+            <summary>
+            获取社保计算结果
+            </summary>
+            <param name="InsuranceArea"></param>
+            <param name="HouseholdProperty"></param>
+            <param name="SocialSecurityBase"></param>
+            <param name="AccountRecordBase"></param>
+            <returns></returns>
+        </member>
         <member name="T:WYJK.Web.Controllers.Http.MemberController">
             <summary>
             用户接口
@@ -778,6 +795,16 @@
             获取用户信息 IsAuthentication:是否认证 0/未认证 1/已认证，IsComplete：是否信息补全 0/未补全 1/已补全,UserType 用户类型  0：普通用户、1：企业用户、2：个体用户
             </summary>
             <param name="MemberID">MemberID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Http.MemberController.SubmitMemberInfo(System.Int32,System.String,System.String,System.String)">
+            <summary>
+            信息编辑提交
+            </summary>
+            <param name="MemberID"></param>
+            <param name="TrueName"></param>
+            <param name="MemberName"></param>
+            <param name="MemberPhone"></param>
             <returns></returns>
         </member>
         <member name="M:WYJK.Web.Controllers.Http.MemberController.ModifyPassword(WYJK.Entity.MemberMidifyPassword)">
@@ -872,7 +899,7 @@
         </member>
         <member name="M:WYJK.Web.Controllers.Http.MemberController.GetAccountStatus(System.Int32)">
             <summary>
-            获取账户状态 --待确定
+            获取账户状态   待续费/正常
             </summary>
             <param name="MemberID"></param>
             <returns></returns>
