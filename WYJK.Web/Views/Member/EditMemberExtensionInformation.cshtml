@@ -53,7 +53,7 @@
         <div class="row cl">
             <label class="form-label col-2">生日：</label>
             <div class="formControls col-2">
-                @Html.TextBox("Birthday", Model.Birthday.Value.ToShortDateString(), new { id = "J-xl", @class = "input-text" })
+                @Html.TextBox("Birthday", Model.Birthday == null ? "" : Model.Birthday.Value.ToShortDateString(), new { id = "J-xl", @class = "input-text" })
             </div>
             <label class="form-label col-2">性别：</label>
             <div class="formControls col-5 skin-minimal">

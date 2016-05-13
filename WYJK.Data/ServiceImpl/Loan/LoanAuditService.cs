@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WYJK.Data.IService;
 using WYJK.Entity;
+using WYJK.Framework.EnumHelper;
 
 namespace WYJK.Data.ServiceImpl
 {
@@ -53,17 +54,40 @@ left join Members on  MemberLoanAudit.MemberID = Members.MemberID"
             };
         }
 
+
         /// <summary>
         /// 用户借款审核
         /// </summary>
         /// <param name="MembersStr"></param>
         /// <param name="Status"></param>
         /// <returns></returns>
-        public bool MemberLoanAudit(string IDsStr, string Status)
+        public bool MemberLoanAudit(int[] IDs, string Status)
         {
-            string sqlstr = $"update MemberLoanAudit set Status={Status} ,AuditDate=getdate() where ID in({IDsStr})";
+            string sqlstr = string.Empty;
+            foreach (var ID in IDs)
+            {
+                sqlstr+= $"update MemberLoanAudit set Status={Status} ,AuditDate=getdate() where ID ={ID};";
+                if (Status == Convert.ToString((int)LoanAuditEnum.Pass)) {
+                    string sqlstr1 = $"select ApplyAmount from MemberLoanAudit where ID={ID}";
+                    sqlstr += $"update MemberLoan set AlreadyUsedAmount+=({sqlstr1}),AvailableAmount-=({sqlstr1}) where MemberID=(select MemberID from MemberLoanAudit where ID={ID});";
+                }
+            }
+
             int result = DbHelper.ExecuteSqlCommand(sqlstr, null);
             return result > 0;
+        }
+
+        /// <summary>
+        /// 查找未审核列表
+        /// </summary>
+        /// <param name="IDsStr"></param>
+        /// <param name="Status"></param>
+        /// <returns></returns>
+        public List<MemberLoanAudit> GetNoAuditedList(string IDsStr, string Status)
+        {
+            string sqlstr = $"select * from MemberLoanAudit where ID in({IDsStr}) and Status = {Status}";
+            List<MemberLoanAudit> list = DbHelper.Query<MemberLoanAudit>(sqlstr);
+            return list;
         }
     }
 }

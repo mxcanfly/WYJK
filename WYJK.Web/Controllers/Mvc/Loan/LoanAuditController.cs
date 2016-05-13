@@ -44,18 +44,28 @@ namespace WYJK.Web.Controllers.Mvc.Loan
         /// <returns></returns>
         public ActionResult BatchAudit(int[] IDs, string Status)
         {
-            //如果未审核，则进行下面的操作
-
-            //1、修改审核状态和审核时间
             string IDsStr = string.Join(",", IDs);
-            bool flag = _loanAuditService.MemberLoanAudit(IDsStr, Status);
-            if (flag == false) throw new Exception("审核失败");
+            //如果未审核，则进行下面的操作
+            List<MemberLoanAudit> NoAuditedList = _loanAuditService.GetNoAuditedList(IDsStr, Convert.ToString((int)LoanAuditEnum.NoAudited));
+            if (NoAuditedList != null && NoAuditedList.Count > 0)
+            {
+                int[] IDs1 = new int[NoAuditedList.Count];
 
-            //只有审核通过才能继续下面操作
-            //2、修改用户借款表的已用额度和可用额度
+                for (int i = 0; i < NoAuditedList.Count; i++) {
+                    IDs1[i] = NoAuditedList[i].ID;
+                }
 
+                bool flag = _loanAuditService.MemberLoanAudit(IDs1, Status);
+                if (flag == false)
+                    return Json(new { status = false, message = "审核失败" });
+
+            }
+            else {
+                return Json(new { status = false, message = "此选项已经审核过" });
+            }
 
             return Json(new { status = true, message = "审核成功" });
+
         }
     }
 }
