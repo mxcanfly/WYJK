@@ -21,7 +21,7 @@ namespace WYJK.Data.ServiceImpl
         /// <param name="MemberID"></param>
         /// <param name="orderCode"></param>
         /// <returns></returns>
-        public async Task<Dictionary<bool, string>> GenerateOrder(string SocialSecurityPeopleIDStr, int MemberID, string orderCode)
+        public Dictionary<bool, string> GenerateOrder(string SocialSecurityPeopleIDStr, int MemberID, string orderCode)
         {
             Dictionary<bool, string> dic = new Dictionary<bool, string>();
             DbParameter[] parameters = new DbParameter[] {
@@ -31,7 +31,7 @@ namespace WYJK.Data.ServiceImpl
                 new SqlParameter("@SocialSecurityPeopleIDS",SocialSecurityPeopleIDStr)
             };
 
-            await DbHelper.ExecuteSqlCommandAsync("Order_Generate", parameters, CommandType.StoredProcedure);
+            DbHelper.ExecuteSqlCommand("Order_Generate", parameters, CommandType.StoredProcedure);
             dic.Add((bool)parameters[0].Value, (string)parameters[1].Value);
             return dic;
         }

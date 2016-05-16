@@ -588,6 +588,13 @@
             <param name="parameter"></param>
             <returns></returns>
         </member>
+        <member name="M:WYJK.Web.Controllers.Http.OrderController.AutoPayment(WYJK.Entity.GenerateOrderParameter)">
+            <summary>
+            自动扣款
+            </summary>
+            <param name="parameter"></param>
+            <returns></returns>
+        </member>
         <member name="M:WYJK.Web.Controllers.Http.OrderController.GetOrderList(System.Int32,System.Int32)">
             <summary>
             获取订单列表 0：待付款、1：审核中、2：已完成

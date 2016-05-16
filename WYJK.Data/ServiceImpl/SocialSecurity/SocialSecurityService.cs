@@ -632,7 +632,8 @@ select @SocialSecurityAmount += SocialSecurity.SocialSecurityBase * SocialSecuri
             select @AccumulationFundAmount += AccumulationFund.AccumulationFundBase * AccumulationFund.PayProportion / 100 from SocialSecurityPeople
                   left join AccumulationFund on socialsecuritypeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID
                   where SocialSecurityPeople.MemberID = {MemberID} and AccumulationFund.Status in(2,3);
-            select @totalAmount = @SocialSecurityAmount + @AccumulationFundAmount; ";
+            select @totalAmount = @SocialSecurityAmount + @AccumulationFundAmount;
+select @totalAmount";
 
             decimal result = DbHelper.QuerySingle<decimal>(sqlstr);
             return result;

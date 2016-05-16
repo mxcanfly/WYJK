@@ -194,6 +194,25 @@ namespace WYJK.Data
                 return connection.Execute(sql, parameters, null, null, commandType);
             }
         }
+
+        public static int ExecuteSqlCommand(string sql, DbParameter[] parameters, CommandType commandType)
+        {
+            using (DbConnection connection = new SqlConnection(WebConfigurationManager.DefaultConnectionString))
+            using (DbCommand command = connection.CreateCommand())
+            {
+
+                connection.Open();
+                command.CommandText = sql;
+                if (commandType == CommandType.Text)
+                {
+                    command.CommandText = command.CommandText ;
+                }
+                command.CommandType = commandType;
+                command.Parameters.AddRange(parameters);
+                return int.Parse(command.ExecuteNonQuery() + "");
+            }
+        }
+
         /// <summary>
         /// 异步执行一条数据库操作语句并返回受影响的行数
         /// </summary>

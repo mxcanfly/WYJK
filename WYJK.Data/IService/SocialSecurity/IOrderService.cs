@@ -19,7 +19,7 @@ namespace WYJK.Data.IService
         /// <param name="MemberID"></param>
         /// <param name="orderCode"></param>
         /// <returns></returns>
-        Task<Dictionary<bool, string>> GenerateOrder(string SocialSecurityPeopleIDStr, int MemberID, string orderCode);
+        Dictionary<bool, string> GenerateOrder(string SocialSecurityPeopleIDStr, int MemberID, string orderCode);
 
         /// <summary>
         /// 获取订单列表(Mobile)

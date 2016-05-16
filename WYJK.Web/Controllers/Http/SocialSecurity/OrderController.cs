@@ -27,7 +27,7 @@ namespace WYJK.Web.Controllers.Http
         /// </summary>
         /// <returns></returns>
         [System.Web.Http.HttpPost]
-        public async Task<JsonResult<dynamic>> GenerateOrder(GenerateOrderParameter parameter)
+        public JsonResult<dynamic> GenerateOrder(GenerateOrderParameter parameter)
         {
             ////参保人ID数组
             //string[] SocialSecurityPeopleIDS = HttpContext.Current.Request.Form.GetValues("SocialSecurityPeopleIDS");
@@ -39,7 +39,7 @@ namespace WYJK.Web.Controllers.Http
 
             string orderCode = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000).ToString().PadLeft(3, '0');
 
-            Dictionary<bool, string> dic = await _orderService.GenerateOrder(SocialSecurityPeopleIDStr, parameter.MemberID, orderCode);
+            Dictionary<bool, string> dic =  _orderService.GenerateOrder(SocialSecurityPeopleIDStr, parameter.MemberID, orderCode);
 
             return new JsonResult<dynamic>
             {
@@ -54,29 +54,112 @@ namespace WYJK.Web.Controllers.Http
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public JsonResult<dynamic> IsCanAutoPayment(GenerateOrderParameter parameter) {
+        public JsonResult<dynamic> IsCanAutoPayment(GenerateOrderParameter parameter)
+        {
             //待办与正常的参保人所有所要缴纳金额
-            decimal totalAmount =  _socialSecurityService.GetMonthTotalAmountByMemberID(parameter.MemberID);
+            decimal totalAmount = _socialSecurityService.GetMonthTotalAmountByMemberID(parameter.MemberID);
             //本次订单金额
+            string SocialSecurityPeopleIDsStr = string.Join(",", parameter.SocialSecurityPeopleIDS);
+            string sqlstr = $@"select SUM(ISNULL(dbo.SocialSecurity.SocialSecurityBase*SocialSecurity.PayProportion/100,0)*ISNULL(dbo.SocialSecurity.PayMonthCount,0)+
+ISNULL(dbo.AccumulationFund.AccumulationFundBase*AccumulationFund.PayProportion/100,0)*ISNULL(dbo.AccumulationFund.PayMonthCount,0))
+from dbo.SocialSecurityPeople 
+left join dbo.SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID 
+left join dbo.AccumulationFund on SocialSecurityPeople.SocialSecurityPeopleID=AccumulationFund.SocialSecurityPeopleID 
+where SocialSecurityPeople.SocialSecurityPeopleID in({SocialSecurityPeopleIDsStr})";
+            decimal SSAF_Amount = DbHelper.QuerySingle<decimal>(sqlstr);
 
+            int SSNum = DbHelper.QuerySingle<int>($@"select count(1) from SocialSecurityPeople 
+                left join SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID
+where SocialSecurityPeople.SocialSecurityPeopleID in({SocialSecurityPeopleIDsStr})");
+            decimal SSBacklogCost = DbHelper.QuerySingle<decimal>("select BacklogCost from CostParameterSetting where Status =0 ") * SSNum;
+
+
+            int AFNum = DbHelper.QuerySingle<int>($@"select count(1) from SocialSecurityPeople 
+                left join AccumulationFund on SocialSecurityPeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID
+where SocialSecurityPeople.SocialSecurityPeopleID in({SocialSecurityPeopleIDsStr})");
+            decimal AFBacklogCost = DbHelper.QuerySingle<decimal>("select BacklogCost from CostParameterSetting where Status =1 ") * SSNum;
+
+            decimal ThisAmount = SSAF_Amount + SSBacklogCost + AFBacklogCost;
+
+            decimal AccountAmount = DbHelper.QuerySingle<decimal>($"select ISNULL(Account,0) from Members where MemberID = {parameter.MemberID}");
+
+
+            if (totalAmount + ThisAmount < AccountAmount)
+                return new JsonResult<dynamic>
+                {
+                    status = true,
+                    Message = "可以自动扣款"
+                };
+            else
+                return new JsonResult<dynamic>
+                {
+                    status = false,
+                    Message = "不可以自动扣款"
+                };
+        }
+
+
+        /// <summary>
+        /// 自动扣款
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [System.Web.Http.HttpPost]
+        public JsonResult<dynamic> AutoPayment(GenerateOrderParameter parameter)
+        {
+            using (TransactionScope transaction = new TransactionScope())
+            {
+                try
+                {
+                    #region 生成订单
+                    string SocialSecurityPeopleIDStr = string.Join(",", parameter.SocialSecurityPeopleIDS);
+
+                    string orderCode = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000).ToString().PadLeft(3, '0');
+
+                    Dictionary<bool, string> dic =  _orderService.GenerateOrder(SocialSecurityPeopleIDStr, parameter.MemberID, orderCode);
+                    #endregion
+
+                    if (!dic.First().Key) throw new Exception("自动扣款失败");
+
+                    string sqlOrderDetail = $"select * from OrderDetails where OrderCode ={dic.First().Value}";
+                    List<OrderDetails> orderDetailList = DbHelper.Query<OrderDetails>(sqlOrderDetail);
+
+                    string sqlAccountRecord = "";
+                    //支出记录
+                    foreach (var orderDetail in orderDetailList)
+                    {
+                        sqlAccountRecord += orderDetail.SocialSecurityFirstBacklogCost != 0 ? $"insert into AccountRecord(MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,OperationType,Cost,CreateTime) values({parameter.MemberID},{orderDetail.SocialSecurityPeopleID},'{orderDetail.SocialSecurityPeopleName}','支出','余额','社保代办',{orderDetail.SocialSecurityFirstBacklogCost},getdate());" : string.Empty;
+                        sqlAccountRecord += orderDetail.AccumulationFundFirstBacklogCost != 0 ? $"insert into AccountRecord(MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,OperationType,Cost,CreateTime) values({parameter.MemberID},{orderDetail.SocialSecurityPeopleID},'{orderDetail.SocialSecurityPeopleName}','支出','余额','公积金代办',{orderDetail.AccumulationFundFirstBacklogCost},getdate());" : string.Empty;
+                    }
+
+                    //更新记录
+                    DbHelper.ExecuteSqlCommand(sqlAccountRecord, null);
+
+                    //更新订单
+                    string sqlUpdateOrder = $"update [Order] set Status = {(int)OrderEnum.completed},PaymentMethod='余额扣款',PayTime=getdate() where OrderCode={dic.First().Value}";
+                    DbHelper.ExecuteSqlCommand(sqlUpdateOrder, null);
+                    transaction.Complete();
+                }
+                catch (Exception ex)
+                {
+                    return new JsonResult<dynamic>
+                    {
+                        status = false,
+                        Message = "自动扣款失败"
+                    };
+                }
+                finally
+                {
+                    transaction.Dispose();
+                }
+            }
 
             return new JsonResult<dynamic>
             {
                 status = true,
-                Message =""
+                Message = "自动扣款成功"
             };
         }
-
-
-        ///// <summary>
-        ///// 自动扣款  首先弹窗之前需要检查一下是否符合自动扣款的标准：
-        ///// </summary>
-        ///// <param name="parameter"></param>
-        ///// <returns></returns>
-        //[System.Web.Http.HttpPost]
-        //public JsonResult<dynamic> AutoPayment(GenerateOrderParameter parameter) {
-
-        //}
 
         /// <summary>
         /// 获取订单列表 0：待付款、1：审核中、2：已完成
