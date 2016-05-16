@@ -39,7 +39,7 @@ namespace WYJK.Web.Controllers.Http
 
             string orderCode = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000).ToString().PadLeft(3, '0');
 
-            Dictionary<bool, string> dic =  _orderService.GenerateOrder(SocialSecurityPeopleIDStr, parameter.MemberID, orderCode);
+            Dictionary<bool, string> dic = _orderService.GenerateOrder(SocialSecurityPeopleIDStr, parameter.MemberID, orderCode);
 
             return new JsonResult<dynamic>
             {
@@ -50,12 +50,14 @@ namespace WYJK.Web.Controllers.Http
         }
 
         /// <summary>
-        /// 是否可以自动付款  判断待办与正常的参保人所有所要缴纳金额+本次金额之和与账户金额作比较
+        /// 是否可以自动付款  
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
         public JsonResult<dynamic> IsCanAutoPayment(GenerateOrderParameter parameter)
         {
+            //判断待办与正常的参保人所有所要缴纳金额+本次金额之和与账户金额作比较
+
             //待办与正常的参保人所有所要缴纳金额
             decimal totalAmount = _socialSecurityService.GetMonthTotalAmountByMemberID(parameter.MemberID);
             //本次订单金额
@@ -107,6 +109,7 @@ where SocialSecurityPeople.SocialSecurityPeopleID in({SocialSecurityPeopleIDsStr
         [System.Web.Http.HttpPost]
         public JsonResult<dynamic> AutoPayment(GenerateOrderParameter parameter)
         {
+            Dictionary<bool, string> dic = null;
             using (TransactionScope transaction = new TransactionScope())
             {
                 try
@@ -116,7 +119,7 @@ where SocialSecurityPeople.SocialSecurityPeopleID in({SocialSecurityPeopleIDsStr
 
                     string orderCode = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000).ToString().PadLeft(3, '0');
 
-                    Dictionary<bool, string> dic =  _orderService.GenerateOrder(SocialSecurityPeopleIDStr, parameter.MemberID, orderCode);
+                    dic = _orderService.GenerateOrder(SocialSecurityPeopleIDStr, parameter.MemberID, orderCode);
                     #endregion
 
                     if (!dic.First().Key) throw new Exception("自动扣款失败");
@@ -157,7 +160,8 @@ where SocialSecurityPeople.SocialSecurityPeopleID in({SocialSecurityPeopleIDsStr
             return new JsonResult<dynamic>
             {
                 status = true,
-                Message = "自动扣款成功"
+                Message = "自动扣款成功",
+                Data = dic.First<KeyValuePair<bool, string>>().Value
             };
         }
 

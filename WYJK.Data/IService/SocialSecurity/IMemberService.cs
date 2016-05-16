@@ -138,5 +138,19 @@ namespace WYJK.Data.IServices
         /// <param name="MemberID"></param>
         /// <returns></returns>
         bool GetAccountStatus(int MemberID);
+
+        /// <summary>
+        /// 获取冻结金额介绍
+        /// </summary>
+        /// <returns></returns>
+        string GetFreezingAmountInstruction();
+
+        /// <summary>
+        /// 保存头像
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <param name="HeadPortrait"></param>
+        /// <returns></returns>
+        bool SaveHeadPortrait(int MemberID, string HeadPortrait);
     }
 }

@@ -179,7 +179,7 @@ namespace WYJK.Data.ServiceImpl
         /// <returns></returns>
         public AccountInfo GetAccountInfo(int MemberID)
         {
-            string sql = "select MemberName, Account,Bucha from Members where MemberID=@MemberID";
+            string sql = "select MemberName, Account,Bucha,HeadPortrait from Members where MemberID=@MemberID";
             return DbHelper.QuerySingle<AccountInfo>(sql, new { MemberID = MemberID });
         }
 
@@ -428,6 +428,29 @@ left join SocialSecurity on SocialSecurity.SocialSecurityPeopleID = socialsecuri
 left join AccumulationFund on AccumulationFund.SocialSecurityPeopleID = socialsecuritypeople.SocialSecurityPeopleID
 where (SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Renew} or AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Renew}) and members.MemberID={MemberID}";
             int result = DbHelper.QuerySingle<int>(sqlstr);
+            return result > 0;
+        }
+
+        /// <summary>
+        /// 获取冻结金额介绍
+        /// </summary>
+        /// <returns></returns>
+        public string GetFreezingAmountInstruction()
+        {
+            string sqlstr = "select FreezingAmountNote from FreezingAmountInstruction";
+            string note = DbHelper.QuerySingle<string>(sqlstr);
+            return note;
+        }
+
+        /// <summary>
+        /// 保存头像
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <param name="HeadPortrait"></param>
+        /// <returns></returns>
+        public bool SaveHeadPortrait(int MemberID,string HeadPortrait) {
+            string sqlstr = $"update Members set HeadPortrait='{HeadPortrait}' where MemberID={MemberID}";
+            int result = DbHelper.ExecuteSqlCommand(sqlstr, null);
             return result > 0;
         }
     }

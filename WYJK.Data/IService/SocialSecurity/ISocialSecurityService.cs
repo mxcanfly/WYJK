@@ -209,5 +209,26 @@ namespace WYJK.Data.IServices
         /// <param name="MemberID"></param>
         /// <returns></returns>
         decimal GetMonthTotalAmountByMemberID(int MemberID);
+
+
+        /// <summary>
+        /// 是否存在续费
+        /// </summary>
+        /// <param name="MemberID"></param>
+        bool IsExistsRenew(int MemberID);
+
+        /// <summary>
+        /// 根据MemberID获取参保数(待办与正常)
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        List<SocialSecurityPeople> GetSocialSecurityListByMemberID(int MemberID);
+
+        /// <summary>
+        /// 根据MemberID获取参公积金数(待办与正常)
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        List<SocialSecurityPeople> GetAccumulationFundListByMemberID(int MemberID);
     }
 }

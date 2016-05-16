@@ -638,5 +638,50 @@ select @totalAmount";
             decimal result = DbHelper.QuerySingle<decimal>(sqlstr);
             return result;
         }
+
+        /// <summary>
+        /// 是否存在续费
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        public bool IsExistsRenew(int MemberID)
+        {
+            string sqlstr = $@"select count(1) from SocialSecurityPeople 
+  left join SocialSecurity on socialsecuritypeople.SocialSecurityPeopleID = socialsecurity.SocialSecurityPeopleID
+  left join AccumulationFund on SocialSecurityPeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID
+  where SocialSecurityPeople.MemberID = {MemberID} and(SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Renew} or AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Renew})";
+            int result = DbHelper.QuerySingle<int>(sqlstr);
+            return result > 0;
+        }
+
+        /// <summary>
+        /// 根据MemberID获取参保数（待办与正常）
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        public List<SocialSecurityPeople> GetSocialSecurityListByMemberID(int MemberID)
+        {
+            string sqlstr = $@"select SocialSecurityPeople.* from SocialSecurity
+  left join SocialSecurityPeople on SocialSecurity.SocialSecurityPeopleID = SocialSecurityPeople.SocialSecurityPeopleID
+  where SocialSecurityPeople.MemberID ={MemberID}
+            and(SocialSecurity.Status in({(int)SocialSecurityStatusEnum.WaitingHandle},{(int)SocialSecurityStatusEnum.Normal}))";
+
+            return DbHelper.Query<SocialSecurityPeople>(sqlstr);
+        }
+
+        /// <summary>
+        /// 根据MemberID获取参公积金数（待办与正常）
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        public List<SocialSecurityPeople> GetAccumulationFundListByMemberID(int MemberID)
+        {
+            string sqlstr = $@"select 1 from AccumulationFund
+  left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = SocialSecurityPeople.SocialSecurityPeopleID
+  where SocialSecurityPeople.MemberID ={MemberID}
+            and(AccumulationFund.Status in({(int)SocialSecurityStatusEnum.WaitingHandle},{(int)SocialSecurityStatusEnum.Normal}))";
+
+            return DbHelper.Query<SocialSecurityPeople>(sqlstr); ;
+        }
     }
 }

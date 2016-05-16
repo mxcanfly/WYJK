@@ -583,7 +583,7 @@
         </member>
         <member name="M:WYJK.Web.Controllers.Http.OrderController.IsCanAutoPayment(WYJK.Entity.GenerateOrderParameter)">
             <summary>
-            是否可以自动付款  判断待办与正常的参保人所有所要缴纳金额+本次金额之和与账户金额作比较
+            是否可以自动付款  
             </summary>
             <param name="parameter"></param>
             <returns></returns>
@@ -911,17 +911,37 @@
             <param name="MemberID"></param>
             <returns></returns>
         </member>
-        <member name="M:WYJK.Web.Controllers.Http.MemberController.CreateRenewalService(System.Int32)">
+        <member name="M:WYJK.Web.Controllers.Http.MemberController.GetRenewalServiceList(System.Int32)">
             <summary>
-            创建续费服务
+            获取续费服务集合
             </summary>
             <param name="MemberID"></param>
             <returns></returns>
         </member>
-        <member name="M:WYJK.Web.Controllers.Http.MemberController.SaveRenewalService">
+        <member name="M:WYJK.Web.Controllers.Http.MemberController.SubmitRenewalService(WYJK.Entity.RenewalServiceParameters)">
             <summary>
-            续费充值
+            充值(提交续费服务)
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Http.MemberController.SubmitRechargeAmount(WYJK.Entity.RechargeParameters)">
+            <summary>
+            提交充值
+            </summary>
+            <param name="parameter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Http.MemberController.GetFreezingAmountInstruction">
+            <summary>
+            获取冻结金额说明
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Http.MemberController.SaveHeadPortrait(WYJK.Entity.HeadPortraitParameters)">
+            <summary>
+            保存头像
+            </summary>
+            <param name="parameter"></param>
             <returns></returns>
         </member>
         <member name="T:WYJK.Web.Controllers.UploadController">

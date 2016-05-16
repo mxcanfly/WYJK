@@ -892,10 +892,20 @@ namespace WYJK.Web.Controllers.Http
             };
         }
 
-
-
-
-
-        //private const decimal FirstBacklogCost = 30;//第一次代办费，需要从数据库取
+        ///// <summary>
+        ///// 是否存在续费
+        ///// </summary>
+        ///// <param name="MemberID"></param>
+        ///// <returns></returns>
+        //[System.Web.Http.HttpGet]
+        //public JsonResult<dynamic> IsExistsRenew(int MemberID)
+        //{
+        //    bool flag = _socialSecurityService.IsExistsRenew(MemberID);
+        //    return new JsonResult<dynamic>
+        //    {
+        //        status = flag,
+        //        Message = flag ? "存在" : "不存在"
+        //    };
+        //}
     }
 }

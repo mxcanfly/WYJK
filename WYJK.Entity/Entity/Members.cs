@@ -447,6 +447,11 @@ namespace WYJK.Entity
         /// 补差（冻结金额）
         /// </summary>		
         public decimal Bucha { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string HeadPortrait { get; set; }
     }
 
 
@@ -600,5 +605,59 @@ namespace WYJK.Entity
         public string SocialSecurityPeopleName { get; set; }
     }
 
+
+    /// <summary>
+    /// 续费服务参数
+    /// </summary>
+    public class RenewalServiceParameters
+    {
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        public int MemberID { get; set; }
+        /// <summary>
+        /// 支付方式
+        /// </summary>
+        public string PayMethod { get; set; }
+        /// <summary>
+        /// 金额
+        /// </summary>
+        public decimal Amount { get; set; }
+    }
+
+    /// <summary>
+    /// 充值服务参数
+    /// </summary>
+    public class RechargeParameters
+    {
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        public int MemberID { get; set; }
+        /// <summary>
+        /// 支付方式
+        /// </summary>
+        public string PayMethod { get; set; }
+        /// <summary>
+        /// 金额
+        /// </summary>
+        public decimal Amount { get; set; }
+    }
+
+    /// <summary>
+    /// 头像
+    /// </summary>
+    public class HeadPortraitParameters
+    {
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        public int MemberID { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string HeadPortrait { get; set; }
+    }
 }
 
