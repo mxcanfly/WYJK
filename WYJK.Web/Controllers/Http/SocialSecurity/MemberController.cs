@@ -671,8 +671,6 @@ values({parameter.MemberID},'','','支出','余额','公积金服务费',{AFServ
         private JsonResult<dynamic> SubmitRechargeAmount(RechargeParameters parameter)
         {
 
-
-
             return new JsonResult<dynamic>
             {
                 status = true,

@@ -624,13 +624,13 @@ namespace WYJK.Web.Controllers.Http
             List<SocialSecurityPeoples> socialSecurityPeopleList = _socialSecurityService.GetSocialSecurityPeopleList(Status, MemberID);
 
             //剩余月数计算 --ToDo
-            int monthCount = _socialSecurityService.GetRemainingMonth(MemberID);
+            //int monthCount = _socialSecurityService.GetRemainingMonth(MemberID);
 
             //查询剩余月数
             socialSecurityPeopleList.ForEach(n =>
             {
-                n.SSRemainingMonthCount = monthCount;//待修改
-                n.AFRemainingMonthCount = monthCount;//待修改
+                //n.SSRemainingMonthCount = monthCount;//待修改
+                //n.AFRemainingMonthCount = monthCount;//待修改
                 if (n.SSStatus != Status)
                 {
                     n.SSStatus = 0;
@@ -664,7 +664,7 @@ namespace WYJK.Web.Controllers.Http
         /// <returns></returns>
         public JsonResult<List<TopSocialSecurityPeoples>> GetWaitingTopList(int Status, int MemberID)
         {
-            string sql = "select ssp.SocialSecurityPeopleID,ssp.SocialSecurityPeopleName,ss.PayTime SSPayTime,ISNULL(ss.AlreadyPayMonthCount,0) SSAlreadyPayMonthCount,ss.Status SSStatus,ss.ApplyStopDate SSApplyStopDate, af.PayTime AFPayTime,ISNULL(af.AlreadyPayMonthCount,0) AFAlreadyPayMonthCount,af.Status AFStatus,af.ApplyStopDate AFApplyStopDate"
+            string sql = "select ssp.SocialSecurityPeopleID,ssp.SocialSecurityPeopleName,ss.PayTime SSPayTime,ISNULL(ss.AlreadyPayMonthCount,0) SSAlreadyPayMonthCount,ss.Status SSStatus,ss.ApplyStopDate SSApplyStopDate,ss.PayMonthCount SSRemainingMonthCount,af.PayTime AFPayTime,ISNULL(af.AlreadyPayMonthCount,0) AFAlreadyPayMonthCount,af.Status AFStatus,af.ApplyStopDate AFApplyStopDate,af.PayMonthCount AFRemainingMonthCount"
             + " from SocialSecurityPeople ssp"
             + " left join SocialSecurity ss on ssp.SocialSecurityPeopleID = ss.SocialSecurityPeopleID"
             + " left join AccumulationFund af on ssp.SocialSecurityPeopleID = af.SocialSecurityPeopleID"
@@ -674,15 +674,15 @@ namespace WYJK.Web.Controllers.Http
 
 
             //剩余月数计算 --ToDo
-            int monthCount = _socialSecurityService.GetRemainingMonth(MemberID);
+            //int monthCount = _socialSecurityService.GetRemainingMonth(MemberID);
 
 
 
             //查询剩余月数
             socialSecurityPeopleList.ForEach(n =>
             {
-                n.SSRemainingMonthCount = monthCount;
-                n.AFRemainingMonthCount = monthCount;
+                //n.SSRemainingMonthCount = monthCount;
+                //n.AFRemainingMonthCount = monthCount;
 
                 if (n.SSStatus != (int)SocialSecurityStatusEnum.WaitingStop)
                 {
@@ -763,9 +763,9 @@ namespace WYJK.Web.Controllers.Http
         public JsonResult<List<SocialSecurityPeoples>> GetApplyTopList(string SocialSecurityPeopleName, int MemberID)
         {
             //剩余月数计算 --ToDo
-            int monthCount = _socialSecurityService.GetRemainingMonth(MemberID);
+            //int monthCount = _socialSecurityService.GetRemainingMonth(MemberID);
 
-            string sql = "select ssp.SocialSecurityPeopleID,ssp.SocialSecurityPeopleName,ss.PayTime SSPayTime,ISNULL(ss.AlreadyPayMonthCount,0) SSAlreadyPayMonthCount,ss.Status SSStatus,af.PayTime AFPayTime,ISNULL(af.AlreadyPayMonthCount,0) AFAlreadyPayMonthCount,af.Status AFStatus"
+            string sql = "select ssp.SocialSecurityPeopleID,ssp.SocialSecurityPeopleName,ss.PayTime SSPayTime,ISNULL(ss.AlreadyPayMonthCount,0) SSAlreadyPayMonthCount,ss.Status SSStatus,ss.PayMonthCount SSRemainingMonthCount,af.PayTime AFPayTime,ISNULL(af.AlreadyPayMonthCount,0) AFAlreadyPayMonthCount,af.Status AFStatus,af.PayMonthCount AFRemainingMonthCount"
             + " from SocialSecurityPeople ssp"
             + " left join SocialSecurity ss on ssp.SocialSecurityPeopleID = ss.SocialSecurityPeopleID"
             + " left join AccumulationFund af on ssp.SocialSecurityPeopleID = af.SocialSecurityPeopleID"
@@ -835,7 +835,7 @@ namespace WYJK.Web.Controllers.Http
         /// <returns></returns>
         public JsonResult<List<TopSocialSecurityPeoples>> GetAlreadyStop(int MemberID)
         {
-            string sql = "select ssp.SocialSecurityPeopleID,ssp.SocialSecurityPeopleName,ss.PayTime SSPayTime,ISNULL(ss.AlreadyPayMonthCount,0) SSAlreadyPayMonthCount,ss.Status SSStatus,ss.ApplyStopDate SSApplyStopDate, af.PayTime AFPayTime,ISNULL(af.AlreadyPayMonthCount,0) AFAlreadyPayMonthCount,af.Status AFStatus,af.ApplyStopDate AFApplyStopDate"
+            string sql = "select ssp.SocialSecurityPeopleID,ssp.SocialSecurityPeopleName,ss.PayTime SSPayTime,ISNULL(ss.AlreadyPayMonthCount,0) SSAlreadyPayMonthCount,ss.Status SSStatus,ss.ApplyStopDate SSApplyStopDate,ss.PayMonthCount SSRemainingMonthCount, af.PayTime AFPayTime,ISNULL(af.AlreadyPayMonthCount,0) AFAlreadyPayMonthCount,af.Status AFStatus,af.ApplyStopDate AFApplyStopDate,af.PayMonthCount AFRemainingMonthCount"
             + " from SocialSecurityPeople ssp"
             + " left join SocialSecurity ss on ssp.SocialSecurityPeopleID = ss.SocialSecurityPeopleID"
             + " left join AccumulationFund af on ssp.SocialSecurityPeopleID = af.SocialSecurityPeopleID"
@@ -846,8 +846,8 @@ namespace WYJK.Web.Controllers.Http
             //查询剩余月数
             socialSecurityPeopleList.ForEach(n =>
             {
-                n.SSRemainingMonthCount = 0;//待修改
-                n.AFRemainingMonthCount = 0;//待修改
+                //n.SSRemainingMonthCount = 0;//待修改
+                //n.AFRemainingMonthCount = 0;//待修改
                 if (n.SSStatus != (int)SocialSecurityStatusEnum.AlreadyStop)
                 {
                     n.SSStatus = 0;
