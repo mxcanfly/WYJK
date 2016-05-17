@@ -717,8 +717,8 @@ namespace WYJK.Web.Controllers.Http
                 model.InsuranceArea = model.InsuranceArea.Replace("|", "");
             if (!string.IsNullOrEmpty(model.AccumulationFundArea))
                 model.AccumulationFundArea = model.AccumulationFundArea.Replace("|", "");
-            model.SSRemainingMonths = _socialSecurityService.GetRemainingMonth(MemberID);
-            model.AFRemainingMonths = _socialSecurityService.GetRemainingMonth(MemberID);
+            //model.SSRemainingMonths = _socialSecurityService.GetRemainingMonth(MemberID);
+            //model.AFRemainingMonths = _socialSecurityService.GetRemainingMonth(MemberID);
 
             if (!string.IsNullOrEmpty(model.SocialSecurityBase))
                 model.IsSocialSecurity = true;
@@ -891,6 +891,8 @@ namespace WYJK.Web.Controllers.Http
                 Data = model
             };
         }
+
+
 
         ///// <summary>
         ///// 是否存在续费

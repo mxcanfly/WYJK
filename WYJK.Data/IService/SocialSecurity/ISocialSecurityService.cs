@@ -218,18 +218,18 @@ namespace WYJK.Data.IServices
         bool IsExistsRenew(int MemberID);
 
         /// <summary>
-        /// 根据MemberID获取参保列表(待办与正常)
+        /// 根据MemberID获取社保待续费列表
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
-        List<SocialSecurityPeople> GetSocialSecurityListByMemberID(int MemberID);
+        List<SocialSecurityPeople> GetSocialSecurityRenewListByMemberID(int MemberID);
 
         /// <summary>
-        /// 根据MemberID获取参公积列表(待办与正常)
+        /// 根据MemberID获取公积金待续费列表
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
-        List<SocialSecurityPeople> GetAccumulationFundListByMemberID(int MemberID);
+        List<SocialSecurityPeople> GetAccumulationFundRenewListByMemberID(int MemberID);
         
         /// <summary>
         /// 更新用户ID下的所有待续费的社保和公积金变成正常
@@ -237,6 +237,6 @@ namespace WYJK.Data.IServices
         /// <param name="MemberID"></param>
         /// <returns></returns>
 
-        void UpdateRenewToNormalByMemberID(int MemberID);
+        void UpdateRenewToNormalByMemberID(int MemberID,int MonthCount);
     }
 }

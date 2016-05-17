@@ -406,8 +406,8 @@ namespace WYJK.Data.ServiceImpl
         /// <returns></returns>
         public SocialSecurityDetail GetSocialSecurityAndAccumulationFundDetail(int SocialSecurityPeopleID)
         {
-            string sql = $"select SocialSecurity.SocialSecurityBase,SocialSecurity.InsuranceArea,SocialSecurity.PayTime SSPayTime, ISNULL(SocialSecurity.AlreadyPayMonthCount, 0) SSAlreadyPayMonthCount,"
-                            + " AccumulationFund.AccumulationFundBase,AccumulationFund.AccumulationFundArea,AccumulationFund.PayTime AFPayTime, ISNULL(AccumulationFund.AlreadyPayMonthCount, 0) AFAlreadyPayMonthCount"
+            string sql = $"select SocialSecurityPeople.SocialSecurityPeopleName,SocialSecurity.SocialSecurityBase,SocialSecurity.InsuranceArea,SocialSecurity.PayTime SSPayTime, ISNULL(SocialSecurity.AlreadyPayMonthCount, 0) SSAlreadyPayMonthCount,SocialSecurity.PayMonthCount SSRemainingMonths"
+                            + " AccumulationFund.AccumulationFundBase,AccumulationFund.AccumulationFundArea,AccumulationFund.PayTime AFPayTime, ISNULL(AccumulationFund.AlreadyPayMonthCount, 0) AFAlreadyPayMonthCount,AccumulationFund.PayMonthCount AFRemainingMonths"
                             + " from SocialSecurityPeople"
                             + " left join SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID"
                             + " left join AccumulationFund on SocialSecurityPeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID"
@@ -655,31 +655,31 @@ select @totalAmount";
         }
 
         /// <summary>
-        /// 根据MemberID获取参保列表（待办与正常）
+        /// 根据MemberID获取社保待续费列表
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
-        public List<SocialSecurityPeople> GetSocialSecurityListByMemberID(int MemberID)
+        public List<SocialSecurityPeople> GetSocialSecurityRenewListByMemberID(int MemberID)
         {
             string sqlstr = $@"select SocialSecurityPeople.* from SocialSecurity
   left join SocialSecurityPeople on SocialSecurity.SocialSecurityPeopleID = SocialSecurityPeople.SocialSecurityPeopleID
   where SocialSecurityPeople.MemberID ={MemberID}
-            and(SocialSecurity.Status in({(int)SocialSecurityStatusEnum.WaitingHandle},{(int)SocialSecurityStatusEnum.Normal}))";
+            and(SocialSecurity.Status in({(int)SocialSecurityStatusEnum.Renew}))";
 
             return DbHelper.Query<SocialSecurityPeople>(sqlstr);
         }
 
         /// <summary>
-        /// 根据MemberID获取参公积金列表（待办与正常）
+        /// 根据MemberID获取公积金待续费列表
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
-        public List<SocialSecurityPeople> GetAccumulationFundListByMemberID(int MemberID)
+        public List<SocialSecurityPeople> GetAccumulationFundRenewListByMemberID(int MemberID)
         {
             string sqlstr = $@"select 1 from AccumulationFund
   left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = SocialSecurityPeople.SocialSecurityPeopleID
   where SocialSecurityPeople.MemberID ={MemberID}
-            and(AccumulationFund.Status in({(int)SocialSecurityStatusEnum.WaitingHandle},{(int)SocialSecurityStatusEnum.Normal}))";
+            and(AccumulationFund.Status in({(int)SocialSecurityStatusEnum.Renew}))";
 
             return DbHelper.Query<SocialSecurityPeople>(sqlstr); ;
         }
@@ -689,13 +689,13 @@ select @totalAmount";
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
-        public void UpdateRenewToNormalByMemberID(int MemberID)
+        public void UpdateRenewToNormalByMemberID(int MemberID,int MonthCount)
         {
-            string sqlstr = $@"update SocialSecurity set SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Normal} where socialsecurity.SocialSecurityID in
+            string sqlstr = $@"update SocialSecurity set SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Normal},SocialSecurity.PayMonthCount={MonthCount} where socialsecurity.SocialSecurityID in
   (select SocialSecurity.SocialSecurityID from SocialSecurity
 left join SocialSecurityPeople on SocialSecurity.SocialSecurityPeopleID = SocialSecurityPeople.SocialSecurityPeopleID
   where SocialSecurityPeople.MemberID = {MemberID} and SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Renew});
-update AccumulationFund set AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Normal} where AccumulationFund.AccumulationFundID in
+update AccumulationFund set AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Normal},AccumulationFund.PayMonthCount={MonthCount} where AccumulationFund.AccumulationFundID in
   (select AccumulationFund.AccumulationFundID from AccumulationFund
 left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = SocialSecurityPeople.SocialSecurityPeopleID
   where SocialSecurityPeople.MemberID = {MemberID} and AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Renew})

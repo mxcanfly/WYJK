@@ -480,7 +480,7 @@ namespace WYJK.Web.Controllers.Http
                         if (Convert.ToInt32(str1[0]) <= day && day <= Convert.ToInt32(str1[1]))
                         {
                             //社保待办与正常的人数
-                            SSServiceCost = _socialSecurityService.GetSocialSecurityListByMemberID(MemberID).Count * Convert.ToDecimal(str1[2]);
+                            SSServiceCost = _socialSecurityService.GetSocialSecurityRenewListByMemberID(MemberID).Count * Convert.ToDecimal(str1[2]);
                             break;
                         }
 
@@ -498,7 +498,7 @@ namespace WYJK.Web.Controllers.Http
                         if (Convert.ToInt32(str1[0]) <= day && day <= Convert.ToInt32(str1[1]))
                         {
                             //社保待办与正常的人数
-                            AFServiceCost = _socialSecurityService.GetAccumulationFundListByMemberID(MemberID).Count * Convert.ToDecimal(str1[2]);
+                            AFServiceCost = _socialSecurityService.GetAccumulationFundRenewListByMemberID(MemberID).Count * Convert.ToDecimal(str1[2]);
                             break;
                         }
 
@@ -575,7 +575,7 @@ namespace WYJK.Web.Controllers.Http
 
                                 if (Convert.ToInt32(str1[0]) <= day && day <= Convert.ToInt32(str1[1]))
                                 {
-                                    List<SocialSecurityPeople> SocialSecurityPeopleList = _socialSecurityService.GetSocialSecurityListByMemberID(parameter.MemberID);
+                                    List<SocialSecurityPeople> SocialSecurityPeopleList = _socialSecurityService.GetSocialSecurityRenewListByMemberID(parameter.MemberID);
                                     //社保待办与正常的人数
                                     SSServiceCost = SocialSecurityPeopleList.Count * Convert.ToDecimal(str1[2]);
                                     //记录支出
@@ -605,7 +605,7 @@ values({parameter.MemberID},'','','支出','余额','社保服务费',{SSService
 
                                 if (Convert.ToInt32(str1[0]) <= day && day <= Convert.ToInt32(str1[1]))
                                 {
-                                    List<SocialSecurityPeople> SocialSecurityPeopleList = _socialSecurityService.GetAccumulationFundListByMemberID(parameter.MemberID);
+                                    List<SocialSecurityPeople> SocialSecurityPeopleList = _socialSecurityService.GetAccumulationFundRenewListByMemberID(parameter.MemberID);
                                     //社保待办与正常的人数
                                     AFServiceCost = SocialSecurityPeopleList.Count * Convert.ToDecimal(str1[2]);
                                     //记录支出
@@ -636,16 +636,9 @@ values({parameter.MemberID},'','','支出','余额','公积金服务费',{AFServ
                     //更新记录
                     DbHelper.ExecuteSqlCommand(sqlAccountRecord, null);
 
-                    //将所有的待续费变成正常
-                    _socialSecurityService.UpdateRenewToNormalByMemberID(parameter.MemberID);
-                    //将待办与正常的剩余月数+服务月份(如果剩余月数小于服务月数，则更新剩余月数为服务月数)
-  //                  string sqlstr = @"update SocialSecurity set SocialSecurity.PayMonthCount = 0
-  //where SocialSecurity.SocialSecurityID in(
-  //select SocialSecurity.SocialSecurityID
-  //from SocialSecurity
-  //left join SocialSecurityPeople on SocialSecurityPeople.SocialSecurityPeopleID = socialsecurity.SocialSecurityPeopleID
-  //where SocialSecurityPeople.MemberID = 1 and(SocialSecurity.Status in(2, 3))
-  //)";
+                    //将所有的待续费变成正常,并将剩余月数变成服务月数  --待修改
+                    _socialSecurityService.UpdateRenewToNormalByMemberID(parameter.MemberID,parameter.MonthCount);
+                    
 
                     transaction.Complete();
                 }

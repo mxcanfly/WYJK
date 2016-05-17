@@ -214,6 +214,10 @@ namespace WYJK.Entity
         /// </summary>
         public bool IsAccumulationFund { get; set; }
         /// <summary>
+        /// 参保人姓名
+        /// </summary>
+        public string SocialSecurityPeopleName { get; set; }
+        /// <summary>
         /// 社保基数
         /// </summary>
         public string SocialSecurityBase { get; set; }
