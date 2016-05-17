@@ -31,6 +31,8 @@
                     $("#PersonalShiYeTown").attr("disabled", false);
                     $("#PersonalShiYeRural").attr("disabled", true);
                 }
+
+                $('.proportion:not(:disabled)').blur();
             });
 
             if ('@Convert.ToInt32(Model.HouseholdProperty)' == '@Convert.ToInt32(HouseholdPropertyEnum.InRural)' || '@Convert.ToInt32(Model.HouseholdProperty)' == '@Convert.ToInt32(HouseholdPropertyEnum.OutRural)') {
@@ -40,6 +42,22 @@
                 $("#PersonalShiYeTown").attr("disabled", false);
                 $("#PersonalShiYeRural").attr("disabled", true);
             }
+
+            //社保基数计算
+            $(".base").blur(function () {
+                $("#baseScope").text(parseFloat($(".base").eq(0).val()) * parseFloat($(".base").eq(1).val()) / 100 + "~" + parseFloat($(".base").eq(0).val()) * parseFloat($(".base").eq(2).val()) / 100);
+            });
+
+            //社保缴费比例计算
+            $(document).on('blur', '.proportion:not(:disabled)', function () {
+
+                var proportion = 0;
+                $(".proportion:not(:disabled)").each(function () {
+                    proportion += Number($(this).val());
+                });
+                $("#proportionSum").text(proportion + "%");
+            });
+
         })
     </script>
 }
@@ -119,7 +137,7 @@
             <div class="col-2">@Html.ValidationMessageFor(m => m.OfficeTel)</div>
             <label class="form-label col-2">户口类型：</label>
             <div class="formControls col-2">
-                @{ 
+                @{
                     var HouseholdProperty = ViewData["HouseholdProperty1"] as List<SelectListItem>;
                 }
                 @Html.DropDownListFor(m => m.HouseholdProperty, HouseholdProperty, new { @class = "input-text" })
@@ -140,7 +158,7 @@
         <div class="row cl">
             <label class="form-label col-2">社平工资：</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.SocialAvgSalary, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.SocialAvgSalary, new { @class = "input-text base" })
             </div>
             <div class="col-2">@Html.ValidationMessageFor(m => m.SocialAvgSalary)</div>
         </div>
@@ -148,47 +166,56 @@
 
             <label class="form-label col-2">百分比：</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.MinSocial, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.MinSocial, new { @class = "input-text base" })
             </div>
             <label class="form-label col-1 text-align-center">~</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.MaxSocial, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.MaxSocial, new { @class = "input-text base" })
             </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2"></label>
             <div class="col-2">@Html.ValidationMessageFor(m => m.MinSocial)</div>
+            <label class="form-label col-1"></label>
             <div class="col-2">@Html.ValidationMessageFor(m => m.MaxSocial)</div>
         </div>
-
+        <div class="row cl">
+            <label class="form-label col-2">基数范围：</label>
+            <div class="formControls col-2" id="baseScope" style="line-height:31px">
+                @Math.Round(Convert.ToDecimal(Model.SocialAvgSalary * Model.MinSocial / 100), 2)~@Math.Round(Convert.ToDecimal(Model.SocialAvgSalary * Model.MaxSocial / 100), 2)
+            </div>
+        </div>
         <div class="row cl">
             <label class="form-label col-2" style="font-size:22px;">单位信息</label>
         </div>
         <div class="row cl">
             <label class="form-label col-2">养老：</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.CompYangLao, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.CompYangLao, new { @class = "input-text proportion" })
             </div>
             <div class="col-2">@Html.ValidationMessageFor(m => m.CompYangLao)</div>
             <label class="form-label col-2">医疗：</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.CompYiLiao, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.CompYiLiao, new { @class = "input-text proportion" })
             </div>
             <div class="col-2">@Html.ValidationMessageFor(m => m.CompYiLiao)</div>
         </div>
         <div class="row cl">
             <label class="form-label col-2">失业：</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.CompShiYe, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.CompShiYe, new { @class = "input-text proportion" })
             </div>
             <div class="col-2">@Html.ValidationMessageFor(m => m.CompShiYe)</div>
             <label class="form-label col-2">工伤：</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.CompGongShang, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.CompGongShang, new { @class = "input-text proportion" })
             </div>
             <div class="col-2">@Html.ValidationMessageFor(m => m.CompGongShang)</div>
         </div>
         <div class="row cl">
             <label class="form-label col-2">生育：</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.CompShengYu, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.CompShengYu, new { @class = "input-text proportion" })
             </div>
             <div class="col-2">@Html.ValidationMessageFor(m => m.CompShengYu)</div>
         </div>
@@ -199,38 +226,56 @@
         <div class="row cl">
             <label class="form-label col-2">养老：</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.PersonalYangLao, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.PersonalYangLao, new { @class = "input-text proportion" })
             </div>
             <div class="col-2">@Html.ValidationMessageFor(m => m.PersonalYangLao)</div>
             <label class="form-label col-2">医疗：</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.PersonalYiLiao, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.PersonalYiLiao, new { @class = "input-text proportion" })
             </div>
             <div class="col-2">@Html.ValidationMessageFor(m => m.PersonalYiLiao)</div>
         </div>
         <div class="row cl">
             <label class="form-label col-2">失业(城镇)：</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.PersonalShiYeTown, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.PersonalShiYeTown, new { @class = "input-text proportion" })
             </div>
             <div class="col-2">@Html.ValidationMessageFor(m => m.PersonalShiYeTown)</div>
             <label class="form-label col-2">失业(农村)：</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.PersonalShiYeRural, new { @class = "input-text"})
+                @Html.TextBoxFor(m => m.PersonalShiYeRural, new { @class = "input-text proportion" })
             </div>
             <div class="col-2">@Html.ValidationMessageFor(m => m.PersonalShiYeRural)</div>
         </div>
         <div class="row cl">
             <label class="form-label col-2">工伤：</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.PersonalGongShang, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.PersonalGongShang, new { @class = "input-text proportion" })
             </div>
             <div class="col-2">@Html.ValidationMessageFor(m => m.PersonalGongShang)</div>
             <label class="form-label col-2">生育：</label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.PersonalShengYu, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.PersonalShengYu, new { @class = "input-text proportion" })
             </div>
             <div class="col-2">@Html.ValidationMessageFor(m => m.PersonalShengYu)</div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">社保比例：</label>
+            <div class="formControls col-2" id="proportionSum" style="line-height:31px">
+                @{ 
+                    decimal value = 0;
+                    if (Convert.ToInt32(Model.HouseholdProperty) == Convert.ToInt32(HouseholdPropertyEnum.InRural) || Convert.ToInt32(Model.HouseholdProperty) == Convert.ToInt32(HouseholdPropertyEnum.OutRural))
+                    {
+                        value = Model.PersonalShiYeRural;
+                    }
+                    else if (Convert.ToInt32(Model.HouseholdProperty) == Convert.ToInt32(HouseholdPropertyEnum.InTown) || Convert.ToInt32(Model.HouseholdProperty) == Convert.ToInt32(HouseholdPropertyEnum.OutTown))
+                    {
+                        value = Model.PersonalShiYeTown;
+                    }
+                }
+                @Math.Round(Convert.ToDecimal(Model.CompYangLao + Model.CompYiLiao + Model.CompShiYe + Model.CompGongShang + Model.CompShengYu
+                + Model.PersonalYangLao + Model.PersonalYiLiao + value + Model.PersonalGongShang + Model.PersonalShengYu), 2)%
+            </div>
         </div>
         <div class="row cl" style="text-align:center;">
             <label style="font-size:24px;font-weight:bold;">公积金信息</label>

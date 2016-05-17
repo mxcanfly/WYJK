@@ -623,6 +623,11 @@ namespace WYJK.Entity
         /// 金额
         /// </summary>
         public decimal Amount { get; set; }
+
+        /// <summary>
+        ///服务月数
+        /// </summary>
+        public int MonthCount { get; set; }
     }
 
     /// <summary>

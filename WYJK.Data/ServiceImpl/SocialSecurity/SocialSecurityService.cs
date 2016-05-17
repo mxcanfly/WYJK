@@ -655,7 +655,7 @@ select @totalAmount";
         }
 
         /// <summary>
-        /// 根据MemberID获取参保数（待办与正常）
+        /// 根据MemberID获取参保列表（待办与正常）
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
@@ -670,7 +670,7 @@ select @totalAmount";
         }
 
         /// <summary>
-        /// 根据MemberID获取参公积金数（待办与正常）
+        /// 根据MemberID获取参公积金列表（待办与正常）
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
@@ -682,6 +682,25 @@ select @totalAmount";
             and(AccumulationFund.Status in({(int)SocialSecurityStatusEnum.WaitingHandle},{(int)SocialSecurityStatusEnum.Normal}))";
 
             return DbHelper.Query<SocialSecurityPeople>(sqlstr); ;
+        }
+
+        /// <summary>
+        /// 更新用户ID下的所有待续费的社保和公积金变成正常
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        public void UpdateRenewToNormalByMemberID(int MemberID)
+        {
+            string sqlstr = $@"update SocialSecurity set SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Normal} where socialsecurity.SocialSecurityID in
+  (select SocialSecurity.SocialSecurityID from SocialSecurity
+left join SocialSecurityPeople on SocialSecurity.SocialSecurityPeopleID = SocialSecurityPeople.SocialSecurityPeopleID
+  where SocialSecurityPeople.MemberID = {MemberID} and SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Renew});
+update AccumulationFund set AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Normal} where AccumulationFund.AccumulationFundID in
+  (select AccumulationFund.AccumulationFundID from AccumulationFund
+left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = SocialSecurityPeople.SocialSecurityPeopleID
+  where SocialSecurityPeople.MemberID = {MemberID} and AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Renew})
+  ";
+            DbHelper.ExecuteSqlCommand(sqlstr, null);
         }
     }
 }

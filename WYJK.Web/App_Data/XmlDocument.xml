@@ -920,7 +920,7 @@
         </member>
         <member name="M:WYJK.Web.Controllers.Http.MemberController.SubmitRenewalService(WYJK.Entity.RenewalServiceParameters)">
             <summary>
-            充值(提交续费服务)
+            续费
             </summary>
             <returns></returns>
         </member>
