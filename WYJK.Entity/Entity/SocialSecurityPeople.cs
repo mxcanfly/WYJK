@@ -59,6 +59,11 @@ namespace WYJK.Entity
         /// </summary>
         public string Status { get; set; }
 
+        /// <summary>
+        /// 是否有订单已经支付过
+        /// </summary>
+        public bool IsPay { get; set; }
+
     }
 
     /// <summary>

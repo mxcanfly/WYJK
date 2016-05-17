@@ -711,9 +711,16 @@
             <param name="socialSecurityPeople"></param>
             <returns></returns>
         </member>
+        <member name="M:WYJK.Web.Controllers.Http.SocialSecurityController.GetWaitingHandleListByStatus(System.Int32)">
+            <summary>
+            获取待办理列表     
+            </summary>
+            <param name="MemberID"></param>
+            <returns></returns>
+        </member>
         <member name="M:WYJK.Web.Controllers.Http.SocialSecurityController.GetInsuredPeopleListByStatus(System.Int32,System.Int32)">
             <summary>
-            获取参保人列表 待办、正常、待续费  状态说明如下： 待办=2/正常=3/待续费=4
+            获取参保人列表 正常、待续费  状态说明如下：正常=3/待续费=4
             </summary>
             <param name="Status">状态</param>
             <param name="MemberID"></param>

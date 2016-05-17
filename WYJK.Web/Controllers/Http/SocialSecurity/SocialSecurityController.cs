@@ -614,7 +614,29 @@ namespace WYJK.Web.Controllers.Http
         }
 
         /// <summary>
-        /// 获取参保人列表 待办、正常、待续费  状态说明如下： 待办=2/正常=3/待续费=4
+        /// 获取待办理列表     
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        public JsonResult<List<SocialSecurityPeoples>> GetWaitingHandleListByStatus(int MemberID) {
+
+            string sql = "select ssp.SocialSecurityPeopleID,ssp.SocialSecurityPeopleName,ss.PayTime SSPayTime,ISNULL(ss.AlreadyPayMonthCount,0) SSAlreadyPayMonthCount,ss.Status SSStatus,ss.PayMonthCount SSRemainingMonthCount, af.PayTime AFPayTime,ISNULL(af.AlreadyPayMonthCount,0) AFAlreadyPayMonthCount,af.Status AFStatus,af.PayMonthCount AFRemainingMonthCount"
+            + " from SocialSecurityPeople ssp"
+            + " left join SocialSecurity ss on ssp.SocialSecurityPeopleID = ss.SocialSecurityPeopleID"
+            + " left join AccumulationFund af on ssp.SocialSecurityPeopleID = af.SocialSecurityPeopleID"
+            + $" where (ss.Status = {(int)SocialSecurityStatusEnum.WaitingHandle} or af.Status = {(int)SocialSecurityStatusEnum.WaitingHandle}) or((ss.Status = {(int)SocialSecurityStatusEnum.UnInsured} or af.Status = {(int)SocialSecurityStatusEnum.UnInsured}) and ssp.IsPay =1) and ssp.MemberID = {MemberID}";
+            List<SocialSecurityPeoples> socialSecurityPeopleList = DbHelper.Query<SocialSecurityPeoples>(sql);
+
+            return new JsonResult<List<SocialSecurityPeoples>>
+            {
+                status = true,
+                Message = "获取成功",
+                Data = socialSecurityPeopleList
+            };
+        }
+
+        /// <summary>
+        /// 获取参保人列表 正常、待续费  状态说明如下：正常=3/待续费=4
         /// </summary>
         /// <param name="Status">状态</param>
         /// <param name="MemberID"></param>

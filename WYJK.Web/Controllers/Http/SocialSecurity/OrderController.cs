@@ -246,25 +246,22 @@ where SocialSecurityPeople.SocialSecurityPeopleID in({SocialSecurityPeopleIDsStr
                     if (!(updateResult > 0)) throw new Exception("更新个人账户失败");
 
                     string sqlAccountRecord = "";
-                    //收入记录
+                    string sqlSocialSecurityPeople = "";
+                    //收支记录
                     foreach (var orderDetail in orderDetailList)
                     {
+                        sqlSocialSecurityPeople += $"update SocialSecurityPeople set IsPay=1 where SocialSecurityPeopleID ={orderDetail.SocialSecurityPeopleID};";
+
                         decimal accountNum = orderDetail.SocialSecurityAmount * orderDetail.SocialSecuritypayMonth + orderDetail.SocialSecurityServiceCost + orderDetail.SocialSecurityFirstBacklogCost + orderDetail.SocialSecurityBuCha
                             + orderDetail.AccumulationFundAmount * orderDetail.AccumulationFundpayMonth + orderDetail.AccumulationFundServiceCost + orderDetail.AccumulationFundFirstBacklogCost;
                         sqlAccountRecord += $"insert into AccountRecord(MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,OperationType,Cost,CreateTime) values({order.MemberID},{orderDetail.SocialSecurityPeopleID},'{orderDetail.SocialSecurityPeopleName}','收入','{model.PaymentMethod}','缴费',{accountNum},getdate());";
-                    }
 
-                    //支出记录
-                    foreach (var orderDetail in orderDetailList)
-                    {
-                        //sqlAccountRecord += orderDetail.SocialSecurityServiceCost != 0 ? $"insert into AccountRecord(MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,QuChu,Cost,CreateTime) values({order.MemberID},{orderDetail.SocialSecurityPeopleID},'{orderDetail.SocialSecurityPeopleName}','支出','个人账户','社保服务费账户',{orderDetail.SocialSecurityServiceCost},getdate());" : string.Empty;
-                        //sqlAccountRecord += orderDetail.AccumulationFundServiceCost != 0 ? $"insert into AccountRecord(MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,QuChu,Cost,CreateTime) values({order.MemberID},{orderDetail.SocialSecurityPeopleID},'{orderDetail.SocialSecurityPeopleName}','支出','个人账户','公积金服务费账户',{orderDetail.AccumulationFundServiceCost},getdate());" : string.Empty;
                         sqlAccountRecord += orderDetail.SocialSecurityFirstBacklogCost != 0 ? $"insert into AccountRecord(MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,OperationType,Cost,CreateTime) values({order.MemberID},{orderDetail.SocialSecurityPeopleID},'{orderDetail.SocialSecurityPeopleName}','支出','余额','社保代办',{orderDetail.SocialSecurityFirstBacklogCost},getdate());" : string.Empty;
                         sqlAccountRecord += orderDetail.AccumulationFundFirstBacklogCost != 0 ? $"insert into AccountRecord(MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,OperationType,Cost,CreateTime) values({order.MemberID},{orderDetail.SocialSecurityPeopleID},'{orderDetail.SocialSecurityPeopleName}','支出','余额','公积金代办',{orderDetail.AccumulationFundFirstBacklogCost},getdate());" : string.Empty;
-                        //sqlAccountRecord += orderDetail.SocialSecurityBuCha != 0 ? $"insert into AccountRecord(MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,QuChu,Cost,CreateTime) values({order.MemberID},{orderDetail.SocialSecurityPeopleID},'{orderDetail.SocialSecurityPeopleName}','支出','个人账户','冻结账户',{orderDetail.SocialSecurityBuCha},getdate());" : string.Empty;
                     }
 
-
+                    //更新未参保人的支付状态
+                    DbHelper.ExecuteSqlCommand(sqlSocialSecurityPeople, null);
 
                     //更新记录
                     DbHelper.ExecuteSqlCommand(sqlAccountRecord, null);

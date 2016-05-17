@@ -68,15 +68,15 @@ namespace WYJK.Data.ServiceImpl
         /// <returns></returns>
         public async Task<List<UnInsuredPeople>> GetUnInsuredPeopleList(int memberID, int status)
         {
-            string sql = "select SocialSecurityPeople.SocialSecurityPeopleID,SocialSecurityPeople.SocialSecurityPeopleName,IsPaySocialSecurity, IsPayAccumulationFund,"
-                        + " SocialSecurity.PayTime SSPayTime, SocialSecurity.PayMonthCount SSPayMonthCount, SocialSecurity.SocialSecurityBase,SocialSecurity.PayProportion SSPayProportion,SocialSecurity.Status SSStatus,"
-                        + " AccumulationFund.PayTime AFPayTime, AccumulationFund.PayMonthCount AFPayMonthCount ,AccumulationFund.AccumulationFundBase,AccumulationFund.PayProportion AFPayProportion,AccumulationFund.Status AFStatus"
-                        + " from SocialSecurityPeople"
-                        + " left join SocialSecurity"
-                        + " on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID"
-                        + " left join dbo.AccumulationFund"
-                        + " on SocialSecurityPeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID"
-                        + " where MemberID = @MemberID and (SocialSecurity.status = @status or AccumulationFund.status=@status)";
+            string sql = $@"select SocialSecurityPeople.SocialSecurityPeopleID,SocialSecurityPeople.SocialSecurityPeopleName,IsPaySocialSecurity, IsPayAccumulationFund, 
+SocialSecurity.PayTime SSPayTime, SocialSecurity.PayMonthCount SSPayMonthCount, SocialSecurity.SocialSecurityBase,SocialSecurity.PayProportion SSPayProportion,SocialSecurity.Status SSStatus, 
+AccumulationFund.PayTime AFPayTime, AccumulationFund.PayMonthCount AFPayMonthCount ,AccumulationFund.AccumulationFundBase,AccumulationFund.PayProportion AFPayProportion,AccumulationFund.Status AFStatus 
+from SocialSecurityPeople 
+left join SocialSecurity 
+on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID 
+left join dbo.AccumulationFund 
+on SocialSecurityPeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID 
+where SocialSecurityPeople.MemberID = @MemberID and (SocialSecurity.status = @status or AccumulationFund.status=@status) and SocialSecurityPeople.IsPay=0";
 
             List<UnInsuredPeople> unIsuredPeopleList = await DbHelper.QueryAsync<UnInsuredPeople>(sql, new
             {
