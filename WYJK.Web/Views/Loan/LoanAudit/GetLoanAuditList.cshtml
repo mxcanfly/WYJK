@@ -119,8 +119,8 @@
                         <td>@item.AvailableAmount</td>
                         <td>@item.ApplyAmount</td>
                         <td>@EnumExt.GetEnumCustomDescription((LoanAuditEnum)Convert.ToInt32(item.Status)) </td>
-                        <td>@(item.ApplyDate == null ? "无": Convert.ToString(item.ApplyDate))</td>
-                        <td>@(item.AuditDate == null ? "无" : Convert.ToString(item.AuditDate))</td>
+                        <td>@(item.ApplyDate == null ? "--": Convert.ToString(item.ApplyDate))</td>
+                        <td>@(item.AuditDate == null ? "--" : Convert.ToString(item.AuditDate))</td>
                     </tr>
                 }
             </tbody>

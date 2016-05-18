@@ -128,12 +128,17 @@ where SocialSecurityPeople.SocialSecurityPeopleID in({SocialSecurityPeopleIDsStr
                     List<OrderDetails> orderDetailList = DbHelper.Query<OrderDetails>(sqlOrderDetail);
 
                     string sqlAccountRecord = "";
+                    string sqlSocialSecurityPeople = "";
                     //支出记录
                     foreach (var orderDetail in orderDetailList)
                     {
+                        sqlSocialSecurityPeople += $"update SocialSecurityPeople set IsPay=1 where SocialSecurityPeopleID ={orderDetail.SocialSecurityPeopleID};";
                         sqlAccountRecord += orderDetail.SocialSecurityFirstBacklogCost != 0 ? $"insert into AccountRecord(MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,OperationType,Cost,CreateTime) values({parameter.MemberID},{orderDetail.SocialSecurityPeopleID},'{orderDetail.SocialSecurityPeopleName}','支出','余额','社保代办',{orderDetail.SocialSecurityFirstBacklogCost},getdate());" : string.Empty;
                         sqlAccountRecord += orderDetail.AccumulationFundFirstBacklogCost != 0 ? $"insert into AccountRecord(MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,OperationType,Cost,CreateTime) values({parameter.MemberID},{orderDetail.SocialSecurityPeopleID},'{orderDetail.SocialSecurityPeopleName}','支出','余额','公积金代办',{orderDetail.AccumulationFundFirstBacklogCost},getdate());" : string.Empty;
                     }
+
+                    //更新未参保人的支付状态
+                    DbHelper.ExecuteSqlCommand(sqlSocialSecurityPeople, null);
 
                     //更新记录
                     DbHelper.ExecuteSqlCommand(sqlAccountRecord, null);

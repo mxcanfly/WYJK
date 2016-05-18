@@ -781,6 +781,13 @@
             <param name="AccountRecordBase"></param>
             <returns></returns>
         </member>
+        <member name="M:WYJK.Web.Controllers.Http.SocialSecurityController.GetSocialSecurityListByMemberID(System.Int32)">
+            <summary>
+            根据用户ID获取所有参保人列表
+            </summary>
+            <param name="MemberID"></param>
+            <returns></returns>
+        </member>
         <member name="T:WYJK.Web.Controllers.Http.MemberController">
             <summary>
             用户接口

@@ -406,7 +406,7 @@ where SocialSecurityPeople.MemberID = @MemberID and (SocialSecurity.status = @st
         /// <returns></returns>
         public SocialSecurityDetail GetSocialSecurityAndAccumulationFundDetail(int SocialSecurityPeopleID)
         {
-            string sql = $"select SocialSecurityPeople.SocialSecurityPeopleName,SocialSecurity.SocialSecurityBase,SocialSecurity.InsuranceArea,SocialSecurity.PayTime SSPayTime, ISNULL(SocialSecurity.AlreadyPayMonthCount, 0) SSAlreadyPayMonthCount,SocialSecurity.PayMonthCount SSRemainingMonths"
+            string sql = $"select SocialSecurityPeople.SocialSecurityPeopleName,SocialSecurity.SocialSecurityBase,SocialSecurity.InsuranceArea,SocialSecurity.PayTime SSPayTime, ISNULL(SocialSecurity.AlreadyPayMonthCount, 0) SSAlreadyPayMonthCount,SocialSecurity.PayMonthCount SSRemainingMonths,"
                             + " AccumulationFund.AccumulationFundBase,AccumulationFund.AccumulationFundArea,AccumulationFund.PayTime AFPayTime, ISNULL(AccumulationFund.AlreadyPayMonthCount, 0) AFAlreadyPayMonthCount,AccumulationFund.PayMonthCount AFRemainingMonths"
                             + " from SocialSecurityPeople"
                             + " left join SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID"
@@ -694,11 +694,11 @@ select @totalAmount";
             string sqlstr = $@"update SocialSecurity set SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Normal},SocialSecurity.PayMonthCount={MonthCount} where socialsecurity.SocialSecurityID in
   (select SocialSecurity.SocialSecurityID from SocialSecurity
 left join SocialSecurityPeople on SocialSecurity.SocialSecurityPeopleID = SocialSecurityPeople.SocialSecurityPeopleID
-  where SocialSecurityPeople.MemberID = {MemberID} and SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Renew});
+  where SocialSecurityPeople.MemberID = {MemberID} and SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Renew}) and SocialSecurity.PayMonthCount<{MonthCount};
 update AccumulationFund set AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Normal},AccumulationFund.PayMonthCount={MonthCount} where AccumulationFund.AccumulationFundID in
   (select AccumulationFund.AccumulationFundID from AccumulationFund
 left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = SocialSecurityPeople.SocialSecurityPeopleID
-  where SocialSecurityPeople.MemberID = {MemberID} and AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Renew})
+  where SocialSecurityPeople.MemberID = {MemberID} and AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Renew}) and AccumulationFund.PayMonthCount<{MonthCount}
   ";
             DbHelper.ExecuteSqlCommand(sqlstr, null);
         }

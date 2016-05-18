@@ -82,8 +82,8 @@
                         <td name="SocialSecurityServiceCost">@item.SocialSecurityServiceCost.ToString("N2")</td>
                         <td name="SocialSecurityFirstBacklogCost">@item.SocialSecurityFirstBacklogCost.ToString("N2")</td>
                         <td name="SocialSecurityBuCha">@item.SocialSecurityBuCha.ToString("N2")</td>
-                        <td>@(item.afStartTime == null ? "无" : item.ssStartTime.Value.ToShortDateString())</td>
-                        <td>@(item.afEndTime == null ? "无" : item.ssStartTime.Value.ToShortDateString())</td>
+                        <td>@(item.afStartTime == null ? "无" : item.afStartTime.Value.ToShortDateString())</td>
+                        <td>@(item.afEndTime == null ? "无" : item.afStartTime.Value.ToShortDateString())</td>
                         <td name="afAmount">@item.afAmount.ToString("N2")</td>
                         <td name="AccumulationFundServiceCost">@item.AccumulationFundServiceCost.ToString("N2")</td>
                         <td name="AccumulationFundFirstBacklogCost">@item.AccumulationFundFirstBacklogCost.ToString("N2")</td>

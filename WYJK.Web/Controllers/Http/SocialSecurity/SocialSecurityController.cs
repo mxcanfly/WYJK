@@ -914,7 +914,35 @@ namespace WYJK.Web.Controllers.Http
             };
         }
 
-
+        /// <summary>
+        /// 根据用户ID获取所有参保人列表
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        public JsonResult<List<SocialSecurityPeoples>> GetSocialSecurityListByMemberID(int MemberID) {
+            string sqlstr = @"select SocialSecurityPeople.SocialSecurityPeopleID,
+SocialSecurityPeople.SocialSecurityPeopleName,
+SocialSecurity.PayTime SSPayTime,
+SocialSecurity.AlreadyPayMonthCount SSAlreadyPayMonthCount,
+SocialSecurity.PayMonthCount SSRemainingMonthCount,
+SocialSecurity.Status SSStatus,
+AccumulationFund.PayTime AFPayTime,
+AccumulationFund.AlreadyPayMonthCount AFAlreadyPayMonthCount,
+AccumulationFund.PayMonthCount AFRemainingMonthCount,
+AccumulationFund.Status AFStatus
+from SocialSecurityPeople
+left join SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID
+left
+join AccumulationFund on SocialSecurityPeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID
+where SocialSecurityPeople.MemberID = 1";
+            List<SocialSecurityPeoples> SocialSecurityPeopleList = DbHelper.Query<SocialSecurityPeoples>(sqlstr);
+            return new JsonResult<List<SocialSecurityPeoples>>
+            {
+                status = true,
+                Message = "获取成功",
+                Data = SocialSecurityPeopleList
+            };
+        }
 
         ///// <summary>
         ///// 是否存在续费

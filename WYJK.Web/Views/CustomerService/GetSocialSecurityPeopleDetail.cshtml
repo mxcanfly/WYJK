@@ -12,9 +12,11 @@
     </style>
     <script>
         $(function () {
-            $("#HouseholdProperty").change(function () {
-                var HouseholdProperty= $(this).find("option:selected").text();
+            @*$("#HouseholdProperty").change(function () {
+                var HouseholdProperty = $(this).find("option:selected").text();
+                alert('@Model.socialSecurity');
                 if ('@Model.socialSecurity' != 'null') {
+                   
                     //ssEnterpriseName ssSocialSecurityBase ssPayProportion
                     $.ajax({
                         url: '@Url.Action("GetDefaultEnterpriseSocialSecurityByArea", "Enterprise")?area='+'@Model.socialSecurity.InsuranceArea'+'&HouseholdProperty=' + HouseholdProperty,
@@ -27,12 +29,12 @@
                             alert("服务器错误");
                         }
                     });
-                }
-                if (!'@Model.accumulationFund == null') {
+                }*@
+                @*if (!'@Model.accumulationFund == null') {
                     //ssEnterpriseName ssSocialSecurityBase ssPayProportion
-                    
-                }
-            });
+
+                }*@
+            //});
         })
     </script>
     
