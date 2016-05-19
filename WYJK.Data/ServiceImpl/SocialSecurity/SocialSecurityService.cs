@@ -689,7 +689,7 @@ select @totalAmount";
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
-        public void UpdateRenewToNormalByMemberID(int MemberID,int MonthCount)
+        public void UpdateRenewToNormalByMemberID(int MemberID, int MonthCount)
         {
             string sqlstr = $@"update SocialSecurity set SocialSecurity.Status = {(int)SocialSecurityStatusEnum.Normal},SocialSecurity.PayMonthCount={MonthCount} where socialsecurity.SocialSecurityID in
   (select SocialSecurity.SocialSecurityID from SocialSecurity
@@ -701,6 +701,52 @@ left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = Soci
   where SocialSecurityPeople.MemberID = {MemberID} and AccumulationFund.Status = {(int)SocialSecurityStatusEnum.Renew}) and AccumulationFund.PayMonthCount<{MonthCount}
   ";
             DbHelper.ExecuteSqlCommand(sqlstr, null);
+        }
+
+        /// <summary>
+        /// 获取当前基数
+        /// </summary>
+        /// <param name="SocialSecurityPeopleID"></param>
+        /// <returns></returns>
+        public AdjustingBase GetCurrentBase(int SocialSecurityPeopleID)
+        {
+            string sqlstr = $@"select SocialSecurityPeople.SocialSecurityPeopleID,SocialSecurityPeople.IsPaySocialSecurity,
+SocialSecurityPeople.IsPayAccumulationFund,SocialSecurity.SocialSecurityBase,AccumulationFund.AccumulationFundBase,
+SocialSecurityPeople.HouseholdProperty,SocialSecurity.InsuranceArea,AccumulationFund.AccumulationFundArea,
+ess1.SocialAvgSalary*ess1.MinSocial/100 SocialSecurityMinBase,ess1.SocialAvgSalary*ess1.MaxSocial/100 SocialSecurityMaxBase,
+ess2.MinAccumulationFund AccumulationFundMinBase,ess2.MaxAccumulationFund AccumulationFundMaxBase
+ from SocialSecurityPeople
+left join SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID
+left join EnterpriseSocialSecurity ESS1 on SocialSecurity.RelationEnterprise = ESS1.EnterpriseID
+left join AccumulationFund on SocialSecurityPeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID
+left join EnterpriseSocialSecurity ESS2 on AccumulationFund.RelationEnterprise = ESS2.EnterpriseID
+where SocialSecurityPeople.SocialSecurityPeopleID={SocialSecurityPeopleID}";
+
+            AdjustingBase model = DbHelper.QuerySingle<AdjustingBase>(sqlstr);
+            return model;
+        }
+
+        /// <summary>
+        /// 调整基数
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public bool AddAdjustingBase(AdjustingBaseParameter parameter)
+        {
+            string sqlstr = string.Empty;
+            if (parameter.IsPaySocialSecurity)
+            {
+                sqlstr += $"insert into BaseAudit(SocialSecurityPeopleID,BaseAdjusted,Type) values({parameter.SocialSecurityPeopleID},'{parameter.SocialSecurityBaseAdjusted}',0); ";
+            }
+            if (parameter.IsPayAccumulationFund)
+            {
+                sqlstr += $"insert into BaseAudit(SocialSecurityPeopleID,BaseAdjusted,Type) values({parameter.SocialSecurityPeopleID},'{parameter.AccumulationFundBaseAdjusted}',1) ;";
+            }
+
+            int result = DbHelper.ExecuteSqlCommandScalar(sqlstr, new DbParameter[] { });
+
+            return result > 0;
+
         }
     }
 }

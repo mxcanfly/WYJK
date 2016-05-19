@@ -170,6 +170,18 @@ namespace WYJK.Framework.EnumHelper
         NoPass = 3
     }
 
+    /// <summary>
+    /// 基数审核
+    /// </summary>
+    public enum BaseAuditEnum
+    {
+        [EnumDisplayName("未审核")]
+        NoAudited = 1,
+        [EnumDisplayName("已通过")]
+        Pass = 2,
+        [EnumDisplayName("未通过")]
+        NoPass = 3
+    }
 
 
     public class SelectListClass

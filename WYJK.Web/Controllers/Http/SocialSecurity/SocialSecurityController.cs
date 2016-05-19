@@ -618,7 +618,8 @@ namespace WYJK.Web.Controllers.Http
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
-        public JsonResult<List<SocialSecurityPeoples>> GetWaitingHandleListByStatus(int MemberID) {
+        public JsonResult<List<SocialSecurityPeoples>> GetWaitingHandleListByStatus(int MemberID)
+        {
 
             string sql = "select ssp.SocialSecurityPeopleID,ssp.SocialSecurityPeopleName,ss.PayTime SSPayTime,ISNULL(ss.AlreadyPayMonthCount,0) SSAlreadyPayMonthCount,ss.Status SSStatus,ss.PayMonthCount SSRemainingMonthCount, af.PayTime AFPayTime,ISNULL(af.AlreadyPayMonthCount,0) AFAlreadyPayMonthCount,af.Status AFStatus,af.PayMonthCount AFRemainingMonthCount"
             + " from SocialSecurityPeople ssp"
@@ -919,7 +920,8 @@ namespace WYJK.Web.Controllers.Http
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
-        public JsonResult<List<SocialSecurityPeoples>> GetSocialSecurityListByMemberID(int MemberID) {
+        public JsonResult<List<SocialSecurityPeoples>> GetSocialSecurityListByMemberID(int MemberID)
+        {
             string sqlstr = @"select SocialSecurityPeople.SocialSecurityPeopleID,
 SocialSecurityPeople.SocialSecurityPeopleName,
 SocialSecurity.PayTime SSPayTime,
@@ -943,6 +945,43 @@ where SocialSecurityPeople.MemberID = 1";
                 Data = SocialSecurityPeopleList
             };
         }
+
+
+
+        /// <summary>
+        /// 调整基数创建
+        /// </summary>
+        /// <param name="SocialSecurityPeopleID"></param>
+        /// <returns></returns>
+        [System.Web.Http.HttpGet]
+        public JsonResult<AdjustingBase> CreateAdjustingBase(int SocialSecurityPeopleID)
+        {
+            AdjustingBase model = _socialSecurityService.GetCurrentBase(SocialSecurityPeopleID);
+
+            return new JsonResult<AdjustingBase>
+            {
+                status = true,
+                Message = "获取成功",
+                Data = model
+            };
+
+        }
+
+        /// <summary>
+        /// 调整基数提交
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult<dynamic> PostAdjustingBase(AdjustingBaseParameter parameter)
+        {
+            bool flag = _socialSecurityService.AddAdjustingBase(parameter);
+
+            return new JsonResult<dynamic>
+            {
+                status = flag,
+                Message = flag ? "提交成功" : "提交失败"
+            };
+        }
+
 
         ///// <summary>
         ///// 是否存在续费

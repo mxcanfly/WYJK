@@ -238,5 +238,19 @@ namespace WYJK.Data.IServices
         /// <returns></returns>
 
         void UpdateRenewToNormalByMemberID(int MemberID,int MonthCount);
+
+        /// <summary>
+        /// 获取当前基数
+        /// </summary>
+        /// <param name="SocialSecurityPeopleID"></param>
+        /// <returns></returns>
+        AdjustingBase GetCurrentBase(int SocialSecurityPeopleID);
+
+        /// <summary>
+        /// 调整基数
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        bool AddAdjustingBase(AdjustingBaseParameter parameter);
     }
 }

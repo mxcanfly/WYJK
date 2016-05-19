@@ -788,6 +788,19 @@
             <param name="MemberID"></param>
             <returns></returns>
         </member>
+        <member name="M:WYJK.Web.Controllers.Http.SocialSecurityController.CreateAdjustingBase(System.Int32)">
+            <summary>
+            调整基数创建
+            </summary>
+            <param name="SocialSecurityPeopleID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Http.SocialSecurityController.PostAdjustingBase(WYJK.Entity.AdjustingBaseParameter)">
+            <summary>
+            调整基数提交
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:WYJK.Web.Controllers.Http.MemberController">
             <summary>
             用户接口
