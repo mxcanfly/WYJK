@@ -20,13 +20,21 @@ namespace WYJK.Entity
         /// </summary>		
         public int SocialSecurityPeopleID { get; set; }
         /// <summary>
+        /// 当前基数
+        /// </summary>
+        public decimal CurrentBase { get; set; }
+        /// <summary>
         /// 调整后基数
         /// </summary>		
         public decimal BaseAdjusted { get; set; }
         /// <summary>
-        /// 创建时间
+        /// 申请时间
         /// </summary>		
-        public DateTime CreateDate { get; set; }
+        public DateTime ApplyDate { get; set; }
+        /// <summary>
+        /// 审核时间
+        /// </summary>		
+        public DateTime? AuditDate { get; set; }
         /// <summary>
         /// 审核状态
         /// </summary>		
@@ -35,6 +43,58 @@ namespace WYJK.Entity
         /// 类型（社保：0、公积金：1）
         /// </summary>		
         public string Type { get; set; }
+    }
+
+    /// <summary>
+    /// 基数调整列表
+    /// </summary>
+    public class BaseAuditList : BaseAudit
+    {
+        /// <summary>
+        /// 用户类型
+        /// </summary>
+        public string UserType { get; set; }
+        /// <summary>
+        /// 代理机构
+        /// </summary>
+        public string MemberName { get; set; }
+        /// <summary>
+        /// 参保人名称
+        /// </summary>
+        public string SocialSecurityPeopleName { get; set; }
+
+        /// <summary>
+        /// 当前基数
+        /// </summary>
+        public string CurrentBase { get; set; }
+
+
+    }
+
+    /// <summary>
+    /// 基数审核参数
+    /// </summary>
+    public class BaseAuditParameter : PagedParameter
+    {
+        /// <summary>
+        /// 类型
+        /// </summary>
+        public string Type { get; set; }
+
+        /// <summary>
+        /// 代理机构
+        /// </summary>
+        public string MemberID { get; set; }
+
+        /// <summary>
+        /// 参保人名称
+        /// </summary>
+        public string SocialSecurityPeopleName { get; set; }
+
+        /// <summary>
+        /// 审核状态
+        /// </summary>
+        public string Status { get; set; }
     }
 
     /// <summary>
@@ -49,11 +109,11 @@ namespace WYJK.Entity
         public int SocialSecurityPeopleID { get; set; }
 
         /// <summary>
-        /// 是否缴纳社保
+        /// 是否正常缴纳社保
         /// </summary>
         public bool IsPaySocialSecurity { get; set; }
         /// <summary>
-        /// 是否缴纳公积金
+        /// 是否正常缴纳公积金
         /// </summary>
         public bool IsPayAccumulationFund { get; set; }
         /// <summary>
@@ -94,11 +154,11 @@ namespace WYJK.Entity
         /// </summary>
         public int SocialSecurityPeopleID { get; set; }
         /// <summary>
-        /// 是否缴纳社保
+        /// 是否正常缴纳社保
         /// </summary>
         public bool IsPaySocialSecurity { get; set; }
         /// <summary>
-        /// 是否缴纳公积金
+        /// 是否正常缴纳公积金
         /// </summary>
         public bool IsPayAccumulationFund { get; set; }
         /// <summary>

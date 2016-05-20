@@ -272,6 +272,7 @@
     <Compile Include="Controllers\Mvc\Loan\LoanMemberController.cs" />
     <Compile Include="Controllers\Mvc\Loan\LoanSettingController.cs" />
     <Compile Include="Controllers\Mvc\SocialSecurity\AccumulationFundController.cs" />
+    <Compile Include="Controllers\Mvc\SocialSecurity\BaseAuditController.cs" />
     <Compile Include="Controllers\Mvc\SocialSecurity\CustomerServiceController.cs" />
     <Compile Include="Controllers\Mvc\SocialSecurity\EnterpriseController.cs" />
     <Compile Include="Controllers\Mvc\SocialSecurity\InformationController.cs" />
@@ -1821,6 +1822,7 @@
     <Content Include="Views\Loan\LoanSetting\EditSubject.cshtml" />
     <Content Include="Views\Loan\LoanMember\GetLoanMemberList.cshtml" />
     <Content Include="Views\Loan\LoanAudit\GetLoanAuditList.cshtml" />
+    <Content Include="Views\BaseAudit\GetBaseAuditList.cshtml" />
     <None Include="Views\SocialSecurity\SocialSecurityWaitingHandle.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

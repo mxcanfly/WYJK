@@ -30,12 +30,28 @@
         $(function () {
 
             $(".Huialert.Huialert-info").fadeOut(2000);
+
+            $("#UserType").change(function () {
+
+                $.ajax({
+                    url: '@Url.Action("GetMemberList1", "Member")?UserType=',
+                    dataType: "json",
+                    type: "get",
+                    success: function (data) {
+
+                        alert(data);
+                    },
+                    error: function () {
+                        alert("服务器错误");
+                    }
+                });
+            });
         })
     </script>
 }
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 注册用户 <span class="c-gray en">&gt;</span> 注册用户管理<a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="pd-20">
-    @if (!string.IsNullOrWhiteSpace(TempData["Message"]+""))
+    @if (!string.IsNullOrWhiteSpace(TempData["Message"] + ""))
     {
         <div class="Huialert Huialert-info">@TempData["Message"]</div>
     }
@@ -60,6 +76,30 @@
                 @Html.DropDownList("MemberID", list, new { @class = "select" })
             </span>
             @:客户名称： @Html.TextBox("SocialSecurityPeopleName", null, new { style = "width:250px", @class = "input-text", placeholder = "客户名称" })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

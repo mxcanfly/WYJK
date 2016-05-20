@@ -710,8 +710,8 @@ left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = Soci
         /// <returns></returns>
         public AdjustingBase GetCurrentBase(int SocialSecurityPeopleID)
         {
-            string sqlstr = $@"select SocialSecurityPeople.SocialSecurityPeopleID,SocialSecurityPeople.IsPaySocialSecurity,
-SocialSecurityPeople.IsPayAccumulationFund,SocialSecurity.SocialSecurityBase,AccumulationFund.AccumulationFundBase,
+            string sqlstr = $@"select SocialSecurityPeople.SocialSecurityPeopleID,case when SocialSecurityPeople.IsPaySocialSecurity=1 and SocialSecurity.Status={(int)SocialSecurityStatusEnum.Normal} then 1 else 0 end IsPaySocialSecurity,
+case when SocialSecurityPeople.IsPayAccumulationFund=1 and AccumulationFund.Status={(int)SocialSecurityStatusEnum.Normal} then 1 else 0 end IsPayAccumulationFund,SocialSecurity.SocialSecurityBase,AccumulationFund.AccumulationFundBase,
 SocialSecurityPeople.HouseholdProperty,SocialSecurity.InsuranceArea,AccumulationFund.AccumulationFundArea,
 ess1.SocialAvgSalary*ess1.MinSocial/100 SocialSecurityMinBase,ess1.SocialAvgSalary*ess1.MaxSocial/100 SocialSecurityMaxBase,
 ess2.MinAccumulationFund AccumulationFundMinBase,ess2.MaxAccumulationFund AccumulationFundMaxBase
@@ -736,11 +736,11 @@ where SocialSecurityPeople.SocialSecurityPeopleID={SocialSecurityPeopleID}";
             string sqlstr = string.Empty;
             if (parameter.IsPaySocialSecurity)
             {
-                sqlstr += $"insert into BaseAudit(SocialSecurityPeopleID,BaseAdjusted,Type) values({parameter.SocialSecurityPeopleID},'{parameter.SocialSecurityBaseAdjusted}',0); ";
+                sqlstr += $"insert into BaseAudit(SocialSecurityPeopleID,CurrentBase,BaseAdjusted,Type) values({parameter.SocialSecurityPeopleID},(select SocialSecurityBase from SocialSecurity where SocialSecurityPeopleID={parameter.SocialSecurityPeopleID}),'{parameter.SocialSecurityBaseAdjusted}',0); ";
             }
             if (parameter.IsPayAccumulationFund)
             {
-                sqlstr += $"insert into BaseAudit(SocialSecurityPeopleID,BaseAdjusted,Type) values({parameter.SocialSecurityPeopleID},'{parameter.AccumulationFundBaseAdjusted}',1) ;";
+                sqlstr += $"insert into BaseAudit(SocialSecurityPeopleID,CurrentBase,BaseAdjusted,Type) values({parameter.SocialSecurityPeopleID},(select AccumulationFundBase from AccumulationFund where SocialSecurityPeopleID={parameter.SocialSecurityPeopleID}),'{parameter.AccumulationFundBaseAdjusted}',1) ;";
             }
 
             int result = DbHelper.ExecuteSqlCommandScalar(sqlstr, new DbParameter[] { });

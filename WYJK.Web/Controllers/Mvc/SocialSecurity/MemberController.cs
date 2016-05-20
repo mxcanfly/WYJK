@@ -30,6 +30,14 @@ namespace WYJK.Web.Controllers.Mvc
             return View(membersStatisticsList);
         }
 
+        /// <summary>
+        /// 获取用户列表
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult GetMemberList1(string UserType)
+        {
+            return Json(_memberService.GetMembersList().Select(item => new { MemberID = item.MemberID, MemberName = item.MemberName }), JsonRequestBehavior.AllowGet);
+        }
 
         /// <summary>
         /// 新建编辑
@@ -118,7 +126,7 @@ namespace WYJK.Web.Controllers.Mvc
             #region 日志记录
             if (flag == true)
             {
-                LogService.WriteLogInfo(new Log { UserName = HttpContext.User.Identity.Name, Contents = string.Format("修改了用户{0}信息",(await _memberService.GetMemberInfo(model.MemberID)).MemberName) });
+                LogService.WriteLogInfo(new Log { UserName = HttpContext.User.Identity.Name, Contents = string.Format("修改了用户{0}信息", (await _memberService.GetMemberInfo(model.MemberID)).MemberName) });
             }
             #endregion
 

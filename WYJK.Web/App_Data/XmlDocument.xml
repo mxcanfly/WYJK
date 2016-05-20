@@ -713,7 +713,7 @@
         </member>
         <member name="M:WYJK.Web.Controllers.Http.SocialSecurityController.GetWaitingHandleListByStatus(System.Int32)">
             <summary>
-            获取待办理列表     
+            获取待办理列表    状态为 1和2的都显示为待办
             </summary>
             <param name="MemberID"></param>
             <returns></returns>
@@ -1131,6 +1131,26 @@
             <param name="AccumulationFundNo"></param>
             <returns></returns>
         </member>
+        <member name="T:WYJK.Web.Controllers.Mvc.BaseAuditController">
+            <summary>
+            基数审核
+            </summary>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Mvc.BaseAuditController.GetBaseAuditList(WYJK.Entity.BaseAuditParameter)">
+            <summary>
+            基数审核列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Mvc.BaseAuditController.BatchAudit(System.Int32[],System.String,System.Int32)">
+            <summary>
+            批量审核
+            </summary>
+            <param name="IDs"></param>
+            <param name="Status"></param>
+            <param name="Type"></param>
+            <returns></returns>
+        </member>
         <member name="T:WYJK.Web.Controllers.Mvc.CustomerServiceController">
             <summary>
             客户管理
@@ -1280,6 +1300,12 @@
             获取日志列表
             </summary>
             <param name="parameter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Mvc.MemberController.GetMemberList1(System.String)">
+            <summary>
+            获取用户列表
+            </summary>
             <returns></returns>
         </member>
         <member name="M:WYJK.Web.Controllers.Mvc.MemberController.EditMemberExtensionInformation(System.Int32,System.Int32)">

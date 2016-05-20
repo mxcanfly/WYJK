@@ -16,7 +16,7 @@
                 var HouseholdProperty = $(this).find("option:selected").text();
                 alert('@Model.socialSecurity');
                 if ('@Model.socialSecurity' != 'null') {
-                   
+
                     //ssEnterpriseName ssSocialSecurityBase ssPayProportion
                     $.ajax({
                         url: '@Url.Action("GetDefaultEnterpriseSocialSecurityByArea", "Enterprise")?area='+'@Model.socialSecurity.InsuranceArea'+'&HouseholdProperty=' + HouseholdProperty,

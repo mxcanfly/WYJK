@@ -17,7 +17,7 @@
             }(),
             jump: function (e, first) { //触发分页后的回调
                 if (!first) { //一定要加此判断，否则初始时会无限刷新
-                    location.href = '?PageIndex=' + e.curr;
+                    location.href = '?PageIndex=' + e.curr + "&Type=" + '@Request.Params["Type"]';
                 }
             }
         });
@@ -119,7 +119,7 @@
                         <td>@item.AvailableAmount</td>
                         <td>@item.ApplyAmount</td>
                         <td>@EnumExt.GetEnumCustomDescription((LoanAuditEnum)Convert.ToInt32(item.Status)) </td>
-                        <td>@(item.ApplyDate == null ? "--": Convert.ToString(item.ApplyDate))</td>
+                        <td>@(item.ApplyDate == null ? "--" : Convert.ToString(item.ApplyDate))</td>
                         <td>@(item.AuditDate == null ? "--" : Convert.ToString(item.AuditDate))</td>
                     </tr>
                 }

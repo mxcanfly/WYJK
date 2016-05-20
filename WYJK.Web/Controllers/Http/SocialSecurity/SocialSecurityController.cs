@@ -614,7 +614,7 @@ namespace WYJK.Web.Controllers.Http
         }
 
         /// <summary>
-        /// 获取待办理列表     
+        /// 获取待办理列表    状态为 1和2的都显示为待办
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
@@ -627,6 +627,13 @@ namespace WYJK.Web.Controllers.Http
             + " left join AccumulationFund af on ssp.SocialSecurityPeopleID = af.SocialSecurityPeopleID"
             + $" where (ss.Status = {(int)SocialSecurityStatusEnum.WaitingHandle} or af.Status = {(int)SocialSecurityStatusEnum.WaitingHandle}) or((ss.Status = {(int)SocialSecurityStatusEnum.UnInsured} or af.Status = {(int)SocialSecurityStatusEnum.UnInsured}) and ssp.IsPay =1) and ssp.MemberID = {MemberID}";
             List<SocialSecurityPeoples> socialSecurityPeopleList = DbHelper.Query<SocialSecurityPeoples>(sql);
+
+            socialSecurityPeopleList.ForEach(item=> {
+                if (item.SSStatus == null)
+                    item.SSStatus = 0;
+                if (item.AFStatus == null)
+                    item.AFStatus = 0;
+            });
 
             return new JsonResult<List<SocialSecurityPeoples>>
             {
