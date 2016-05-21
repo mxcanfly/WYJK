@@ -49,6 +49,11 @@ namespace WYJK.Entity
         /// 显示费用
         /// </summary>
         public string CostDisplay { get; set; }
+
+        /// <summary>
+        /// 余额
+        /// </summary>
+        public decimal Balance { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>		

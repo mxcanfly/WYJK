@@ -106,7 +106,7 @@ namespace WYJK.Web.Controllers.Mvc
             ViewData["member"] = _memberService.GetMemberInfoForAdmin(MemberID);
 
             //获取账户列表
-            ViewData["accountRecordList"] = _memberService.GetAccountRecordList(MemberID);
+            ViewData["accountRecordList"] = _memberService.GetAccountRecordList(MemberID).OrderByDescending(n => n.CreateTime).ToList();
 
             #region 户口性质
             List<SelectListItem> list = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
@@ -121,7 +121,7 @@ namespace WYJK.Web.Controllers.Mvc
                 }
             }
 
-            ViewData["HouseholdProperty"] = new SelectList(list,"value","text",householdType);
+            ViewData["HouseholdProperty"] = new SelectList(list, "value", "text", householdType);
             #endregion
 
             return View(socialSecurityPeople);
