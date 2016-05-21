@@ -32,14 +32,18 @@
             $(".Huialert.Huialert-info").fadeOut(2000);
 
             $("#UserType").change(function () {
+                $this = $(this);
 
                 $.ajax({
-                    url: '@Url.Action("GetMemberList1", "Member")?UserType=',
+                    url: '@Url.Action("GetMemberList1", "Member")?UserType=' + $this.val(),
                     dataType: "json",
                     type: "get",
                     success: function (data) {
-
-                        alert(data);
+                        $("#MemberID").empty();
+                        $("#MemberID").append("<option value=''>全部</option>");
+                        $.each(data, function (i, obj) {
+                            $("#MemberID").append("<option value='" + obj.MemberID + "'>" + obj.MemberName + "</option>");
+                        });
                     },
                     error: function () {
                         alert("服务器错误");
@@ -76,6 +80,102 @@
                 @Html.DropDownList("MemberID", list, new { @class = "select" })
             </span>
             @:客户名称： @Html.TextBox("SocialSecurityPeopleName", null, new { style = "width:250px", @class = "input-text", placeholder = "客户名称" })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

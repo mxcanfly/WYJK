@@ -36,7 +36,10 @@ namespace WYJK.Web.Controllers.Mvc
         /// <returns></returns>
         public JsonResult GetMemberList1(string UserType)
         {
-            return Json(_memberService.GetMembersList().Select(item => new { MemberID = item.MemberID, MemberName = item.MemberName }), JsonRequestBehavior.AllowGet);
+            List<Members> memberList = _memberService.GetMembersList();
+            var list = memberList.Where(n => UserType == string.Empty ? true : n.UserType == UserType)
+                .Select(item => new { MemberID = item.MemberID, MemberName = item.MemberName });
+            return Json(list , JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
