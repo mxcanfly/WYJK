@@ -148,7 +148,21 @@ namespace WYJK.Entity
         /// 补交月数
         /// </summary>		
         public int PayBeforeMonthCount { get; set; }
-        
+
+        /// <summary>
+        /// 申请停公积金时间
+        /// </summary>
+        public DateTime? ApplyStopDate { get; set; }
+        /// <summary>
+        /// 停公积金时间
+        /// </summary>
+        public DateTime? StopDate { get; set; }
+
+        /// <summary>
+        /// 是否欠费
+        /// </summary>
+        public bool IsArrears { get; set; }
+
         /// <summary>
         /// 状态
         /// </summary>		

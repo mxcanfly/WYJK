@@ -822,6 +822,7 @@ left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = Soci
 
         }
 
+
         ///// <summary>
         ///// 获取多个错误
         ///// </summary>

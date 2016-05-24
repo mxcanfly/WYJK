@@ -59,5 +59,10 @@ namespace WYJK.Entity
         /// </summary>		
         public DateTime CreateTime { get; set; }
 
+        /// <summary>
+        /// 流水号
+        /// </summary>
+        public string SerialNum { get; set; }
+
     }
 }

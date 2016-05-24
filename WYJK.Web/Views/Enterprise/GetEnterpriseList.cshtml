@@ -110,7 +110,7 @@
                         <td><input type="checkbox" value="@item.EnterpriseID" name="Enterprise"></td>
                         <td><a href='@Url.Action("GetEnterpriseDetail", "Enterprise")?EnterpriseID=@item.EnterpriseID'>@item.EnterpriseName</a></td>
                         <td>@item.EnterpriseArea.Replace("|", "")</td>
-                        <td>@Convert.ToDecimal(item.SocialAvgSalary * item.MinSocial / 100).ToString("N2")~@Convert.ToDecimal(item.SocialAvgSalary * item.MaxSocial / 100).ToString("N2")</td>
+                        <td>@Math.Round(Convert.ToDecimal(item.SocialAvgSalary * item.MinSocial / 100)).ToString("N2")~@Math.Round(Convert.ToDecimal(item.SocialAvgSalary * item.MaxSocial / 100)).ToString("N2")</td>
                         <td>@Convert.ToDecimal(item.MinAccumulationFund).ToString("N2")~@Convert.ToDecimal(item.MaxAccumulationFund).ToString("N2")</td>
                         <td>
                             @if (item.IsDefault)

@@ -30,7 +30,28 @@ namespace WYJK.Web.Controllers.Mvc
         public ActionResult GetCustomerServiceList(CustomerServiceParameter parameter)
         {
             PagedResult<CustomerServiceViewModel> customerServiceList = _customerService.GetCustomerServiceList(parameter);
+
+
+            List<SelectListItem> UserTypeList = EnumExt.GetSelectList(typeof(UserTypeEnum));
+            UserTypeList.Insert(0, new SelectListItem { Text = "全部", Value = "" });
+
+            ViewData["UserType"] = new SelectList(UserTypeList, "Value", "Text");
+
+            ViewBag.memberList = _memberService.GetMembersList();
+
             return View(customerServiceList);
+        }
+
+        /// <summary>
+        /// 获取用户列表
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult GetMemberList1(string UserType)
+        {
+            List<Members> memberList = _memberService.GetMembersList();
+            var list = memberList.Where(n => UserType == string.Empty ? true : n.UserType == UserType)
+                .Select(item => new { MemberID = item.MemberID, MemberName = item.MemberName });
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

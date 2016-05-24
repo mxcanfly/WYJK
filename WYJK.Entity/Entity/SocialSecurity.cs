@@ -168,6 +168,25 @@ namespace WYJK.Entity
         /// 企业缴费月数
         /// </summary>		
         public int EnterprisePayMonth { get; set; }
+
+        /// <summary>
+        /// 停保原因
+        /// </summary>
+        public string StopReason { get; set; }
+        /// <summary>
+        /// 申请停保时间
+        /// </summary>
+        public DateTime? ApplyStopDate { get; set; }
+        /// <summary>
+        /// 停保原因
+        /// </summary>
+        public DateTime? StopDate { get; set; }
+
+        /// <summary>
+        /// 是否欠费
+        /// </summary>
+        public bool IsArrears { get; set; }
+
         /// <summary>
         /// 状态
         /// </summary>		

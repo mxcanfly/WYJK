@@ -1162,6 +1162,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:WYJK.Web.Controllers.Mvc.CustomerServiceController.GetMemberList1(System.String)">
+            <summary>
+            获取用户列表
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:WYJK.Web.Controllers.Mvc.CustomerServiceController.BatchComplete(System.Int32[])">
             <summary>
             批量通过  注： 参保人客户服务状态变成已审核，并判断对应的订单财务是否已经审核通过

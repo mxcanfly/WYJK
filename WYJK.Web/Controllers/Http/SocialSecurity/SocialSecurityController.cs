@@ -492,6 +492,8 @@ namespace WYJK.Web.Controllers.Http
                     if (socialSecurityPeople.socialSecurity != null)
                     {
                         socialSecurityPeople.socialSecurity.SocialSecurityPeopleID = socialSecurityPeople.SocialSecurityPeopleID;
+                        if (socialSecurityPeople.socialSecurity.PayTime.Day > 14)
+                            socialSecurityPeople.socialSecurity.PayTime.AddMonths(1);
                         SocialSecurityID = _socialSecurityService.AddSocialSecurity(socialSecurityPeople.socialSecurity);
                         //查询社保金额
                         SocialSecurityAmount = _socialSecurityService.GetSocialSecurityAmount(SocialSecurityID);
@@ -504,6 +506,8 @@ namespace WYJK.Web.Controllers.Http
                     if (socialSecurityPeople.accumulationFund != null)
                     {
                         socialSecurityPeople.accumulationFund.SocialSecurityPeopleID = socialSecurityPeople.SocialSecurityPeopleID;
+                        if (socialSecurityPeople.accumulationFund.PayTime.Day > 14)
+                            socialSecurityPeople.accumulationFund.PayTime.AddMonths(1);
                         AccumulationFundID = _socialSecurityService.AddAccumulationFund(socialSecurityPeople.accumulationFund);
                         //查询公积金金额
                         AccumulationFundAmount = _socialSecurityService.GetAccumulationFundAmount(AccumulationFundID);
@@ -564,6 +568,9 @@ namespace WYJK.Web.Controllers.Http
                     //保存社保参保方案
                     if (socialSecurityPeople.socialSecurity != null)
                     {
+                        if (socialSecurityPeople.socialSecurity.PayTime.Day > 14)
+                            socialSecurityPeople.socialSecurity.PayTime.AddMonths(1);
+
                         //返回社保ID
                         SocialSecurityID = _socialSecurityService.AddSocialSecurity(socialSecurityPeople.socialSecurity);
                         //查询社保金额
@@ -576,6 +583,8 @@ namespace WYJK.Web.Controllers.Http
                     //保存公积金参保方案
                     if (socialSecurityPeople.accumulationFund != null)
                     {
+                        if (socialSecurityPeople.accumulationFund.PayTime.Day > 14)
+                            socialSecurityPeople.accumulationFund.PayTime.AddMonths(1);
                         //返回公积金ID
                         AccumulationFundID = _socialSecurityService.AddAccumulationFund(socialSecurityPeople.accumulationFund);
                         //查询公积金金额

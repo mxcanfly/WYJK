@@ -84,6 +84,11 @@ namespace WYJK.Entity
         /// </summary>
         public string AccumulationFundException { get; set; }
 
+        /// <summary>
+        /// 欠费金额
+        /// </summary>
+        public decimal ArrearAmount { get; set; }
+
     }
 
     /// <summary>
@@ -91,6 +96,24 @@ namespace WYJK.Entity
     /// </summary>
     public class CustomerServiceParameter : PagedParameter
     {
+        /// <summary>
+        /// 用户类型
+        /// </summary>
+        public string UserType { get; set; }
 
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        public string MemberID { get; set; }
+
+        /// <summary>
+        /// 客户名称
+        /// </summary>
+        public string SocialSecurityPeopleName { get; set; }
+
+        /// <summary>
+        /// 身份证号
+        /// </summary>
+        public string IdentityCard { get; set; }
     }
 }

@@ -6,8 +6,11 @@
     <script src="~/Content/lib/laydate-master/laydate.dev.js"></script>
     <script type="text/javascript">
         $(function () {
-            if ('@Request.Params["type"]' == 1)
+            if ('@Request.Params["type"]' == 1) {
                 $('input,select,textarea', $('form')).attr('disabled', true);
+                $('button', $('form')).css('display','none');
+            }
+                
         })
 
         laydate({

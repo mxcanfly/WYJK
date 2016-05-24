@@ -84,8 +84,8 @@
                         <td>@socialSecurity.SocialSecurityBase.ToString("N2")</td>
                         <td>@socialSecurity.PayProportion.ToString("N2")</td>
                         <td>@Convert.ToDecimal(socialSecurity.SocialSecurityBase * socialSecurity.PayProportion / 100).ToString("N2")</td>
-                        <td></td>
-                        <td></td>
+                        <td>@socialSecurity.StopReason</td>
+                        <td>@socialSecurity.StopDate</td>
                         <td class="td-status"><span class="label label-success radius">@EnumExt.GetEnumCustomDescription((SocialSecurityStatusEnum)(Convert.ToInt32(socialSecurity.Status)))</span></td>
                     </tr>
                 }

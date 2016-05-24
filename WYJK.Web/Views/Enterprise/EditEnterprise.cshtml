@@ -45,7 +45,7 @@
 
             //社保基数计算
             $(".base").blur(function () {
-                $("#baseScope").text(parseFloat($(".base").eq(0).val()) * parseFloat($(".base").eq(1).val()) / 100 + "~" + parseFloat($(".base").eq(0).val()) * parseFloat($(".base").eq(2).val()) / 100);
+                $("#baseScope").text(math.round(parseFloat($(".base").eq(0).val()) * parseFloat($(".base").eq(1).val()) / 100) + "~" + math.round(parseFloat($(".base").eq(0).val()) * parseFloat($(".base").eq(2).val()) / 100));
             });
 
             //社保缴费比例计算
@@ -182,7 +182,7 @@
         <div class="row cl">
             <label class="form-label col-2">基数范围：</label>
             <div class="formControls col-2" id="baseScope" style="line-height:31px">
-                @Math.Round(Convert.ToDecimal(Model.SocialAvgSalary * Model.MinSocial / 100), 2)~@Math.Round(Convert.ToDecimal(Model.SocialAvgSalary * Model.MaxSocial / 100), 2)
+                @Math.Round(Convert.ToDecimal(Model.SocialAvgSalary * Model.MinSocial / 100))~@Math.Round(Convert.ToDecimal(Model.SocialAvgSalary * Model.MaxSocial / 100))
             </div>
         </div>
         <div class="row cl">
