@@ -764,5 +764,31 @@ where SocialSecurityPeople.SocialSecurityPeopleID={SocialSecurityPeopleID}";
             return result > 0;
 
         }
+
+        /// <summary>
+        /// 获取某用户下所有的社保
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        public List<SocialSecurityShowModel> GetSocialSecurityList(int MemberID)
+        {
+            string sqlstr = $"select * from View_SocialSecurity where MemberID={MemberID}";
+
+            List<SocialSecurityShowModel> list = DbHelper.Query<SocialSecurityShowModel>(sqlstr);
+
+            return list;
+        }
+
+        /// <summary>
+        /// 获取某签约企业的社保列表
+        /// </summary>
+        /// <param name="RelationEnterprise"></param>
+        /// <returns></returns>
+        public List<SocialSecurityShowModel> GetSocialSecurityListByEnterpriseID(int RelationEnterprise)
+        {
+            string sqlstr = $"select * from View_SocialSecurity where RelationEnterprise = {RelationEnterprise}";
+            List<SocialSecurityShowModel> list = DbHelper.Query<SocialSecurityShowModel>(sqlstr);
+            return list;
+        }
     }
 }

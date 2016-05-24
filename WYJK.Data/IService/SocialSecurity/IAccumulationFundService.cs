@@ -20,6 +20,20 @@ namespace WYJK.Data.IService
         Task<PagedResult<AccumulationFundShowModel>> GetAccumulationFundList(AccumulationFundParameter parameter);
 
         /// <summary>
+        /// 获取某用户公积金列表
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        List<AccumulationFundShowModel> GetAccumulationFundList(int MemberID);
+
+        /// <summary>
+        /// 获取某签约企业下的公积金列表
+        /// </summary>
+        /// <param name="RelationEnterprise"></param>
+        /// <returns></returns>
+        List<AccumulationFundShowModel> GetAccumulationFundListByEnterpriseID(int RelationEnterprise);
+
+        /// <summary>
         /// 修改公积金状态(Admin)
         /// </summary>
         /// <param name="SocialSecurityPeopleIDs"></param>

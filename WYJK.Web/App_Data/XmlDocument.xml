@@ -1252,6 +1252,13 @@
             <param name="HouseholdProperty"></param>
             <returns></returns>
         </member>
+        <member name="M:WYJK.Web.Controllers.Mvc.EnterpriseController.GetSocialSecurityList(System.Int32)">
+            <summary>
+            获取社保列表
+            </summary>
+            <param name="RelationEnterprise"></param>
+            <returns></returns>
+        </member>
         <member name="T:WYJK.Web.Controllers.Mvc.InformationController">
             <summary>
             信息展示

@@ -235,5 +235,17 @@ namespace WYJK.Data.ServiceImpl
             List<Order> orderList = DbHelper.Query<Order>(sqlstr);
             return orderList;
         }
+
+        /// <summary>
+        /// 用户下是否存在未支付订单
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        public bool IsExistsWaitingPayOrderByMemberID(int MemberID)
+        {
+            string sqlstr = $"select count(*) from Order where MemberID = {MemberID} and Status ={(int)OrderEnum.WaitingPay}";
+            int result = DbHelper.QuerySingle<int>(sqlstr);
+            return result > 0;
+        }
     }
 }

@@ -27,6 +27,24 @@
 
 
         $(function () {
+            //查看参保人列表
+            $(document).on('click', ".action-select", function () {
+                if ($("input[type='checkbox'][name='Enterprise']:checked").length != 1) {
+                    layer.msg("请选择需要查看的企业");
+                    return;
+                }
+
+                var EnterpriseID = $("input[type='checkbox'][name='Enterprise']:checked").val();
+
+                var layerObject = layer.open({
+                    type: 2,
+                    title: "社保列表",
+                    area: ['800px', '600px'],
+                    content: "@Url.Action("GetSocialSecurityList", "Enterprise")?RelationEnterprise=" + EnterpriseID
+                });
+
+            })
+
             //删除企业
             $(".action-delete").click(function () {
                 if ($("input[type='checkbox'][name='Enterprise']:checked").length <= 0) {
@@ -128,5 +146,12 @@
         </table>
         <div id="pager" style="margin-top: 20px;"></div>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="@Url.Action("AddEnterprise","Enterprise")" class="btn btn-primary radius action-complete"><i class="Hui-iconfont">&#xe600;</i> 新增企业</a> <a href="javascript:;" class="btn btn-danger radius action-delete"><i class="Hui-iconfont">&#xe6e2;</i> 删除企业</a></span> <span class="r">共有数据：<strong>@Model.TotalItemCount</strong> 条</span> </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <a href="@Url.Action("AddEnterprise","Enterprise")" class="btn btn-primary radius action-complete"><i class="Hui-iconfont">&#xe600;</i> 新增企业</a>
+            <a href="javascript:;" class="btn btn-danger radius action-delete"><i class="Hui-iconfont">&#xe6e2;</i> 删除企业</a>
+            <a href="javascript:;" class="btn btn-default radius action-select"><i class="Hui-iconfont">&#xe665;</i> 查看参保人列表</a>
+        </span>
+        <span class="r">共有数据：<strong>@Model.TotalItemCount</strong> 条</span>
+    </div>
 </div>

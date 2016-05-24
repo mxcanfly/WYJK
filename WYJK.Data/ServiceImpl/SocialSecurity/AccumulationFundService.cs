@@ -113,5 +113,29 @@ case when exists(
             return result >= 0;
 
         }
+
+        /// <summary>
+        /// 获取某用户公积金列表
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        public List<AccumulationFundShowModel> GetAccumulationFundList(int MemberID)
+        {
+            string sqlstr = $"select * from View_AccumulationFund where MemberID={MemberID}";
+            List<AccumulationFundShowModel> list = DbHelper.Query<AccumulationFundShowModel>(sqlstr);
+            return list;
+        }
+
+        /// <summary>
+        /// 获取某签约企业下的公积金列表
+        /// </summary>
+        /// <param name="RelationEnterprise"></param>
+        /// <returns></returns>
+        public List<AccumulationFundShowModel> GetAccumulationFundListByEnterpriseID(int RelationEnterprise)
+        {
+            string sqlstr = $"select * from View_AccumulationFund where RelationEnterprise = {RelationEnterprise}";
+            List<AccumulationFundShowModel> list = DbHelper.Query<AccumulationFundShowModel>(sqlstr);
+            return list;
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using WYJK.Data.IService;
 using WYJK.Data.IServices;
 using WYJK.Data.ServiceImpl;
 using WYJK.Entity;
@@ -15,6 +16,8 @@ namespace WYJK.Web.Controllers.Mvc
     public class MemberController : Controller
     {
         private readonly IMemberService _memberService = new MemberService();
+        private readonly ISocialSecurityService _socialSecurityService = new SocialSecurityService();
+        private readonly IAccumulationFundService _accumulationFundService = new AccumulationFundService();
         // GET: Member
         public ActionResult GetMemberList(MembersParameters parameter)
         {
@@ -39,7 +42,7 @@ namespace WYJK.Web.Controllers.Mvc
             List<Members> memberList = _memberService.GetMembersList();
             var list = memberList.Where(n => UserType == string.Empty ? true : n.UserType == UserType)
                 .Select(item => new { MemberID = item.MemberID, MemberName = item.MemberName });
-            return Json(list , JsonRequestBehavior.AllowGet);
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -107,6 +110,12 @@ namespace WYJK.Web.Controllers.Mvc
 
             ViewData["HouseholdType"] = new SelectList(UserTypeList, "Value", "Text");
             #endregion
+
+            if (type == 1)
+            {
+                ViewData["SocialSecurityList"] = _socialSecurityService.GetSocialSecurityList(MemberID);
+                ViewData["AccumulationFundList"] = _accumulationFundService.GetAccumulationFundList(MemberID);
+            }
 
             return View(model);
         }

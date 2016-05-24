@@ -82,5 +82,12 @@ namespace WYJK.Data.IService
         /// <param name="SocialSecurityPeopleID"></param>
         /// <returns></returns>
         List<Order> GetOrderList(int SocialSecurityPeopleID);
+
+        /// <summary>
+        /// 某用户下是否存在未支付订单
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        bool IsExistsWaitingPayOrderByMemberID(int MemberID);
     }
 }

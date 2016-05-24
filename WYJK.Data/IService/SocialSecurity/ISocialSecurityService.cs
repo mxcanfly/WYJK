@@ -18,6 +18,20 @@ namespace WYJK.Data.IServices
         Task<PagedResult<SocialSecurityShowModel>> GetSocialSecurityList(SocialSecurityParameter Parameter);
 
         /// <summary>
+        /// 获取某用户下所有的社保
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        List<SocialSecurityShowModel> GetSocialSecurityList(int MemberID);
+
+        /// <summary>
+        /// 获取某签约企业的社保列表
+        /// </summary>
+        /// <param name="RelationEnterprise"></param>
+        /// <returns></returns>
+        List<SocialSecurityShowModel> GetSocialSecurityListByEnterpriseID(int RelationEnterprise);
+
+        /// <summary>
         /// 获取未参保人(Mobile)
         /// </summary>
         /// <returns></returns>

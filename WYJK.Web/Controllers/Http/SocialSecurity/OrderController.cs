@@ -29,13 +29,53 @@ namespace WYJK.Web.Controllers.Http
         [System.Web.Http.HttpPost]
         public JsonResult<dynamic> GenerateOrder(GenerateOrderParameter parameter)
         {
+            //首先判断是否有未支付订单，若有，则不能生成订单
+            if (_orderService.IsExistsWaitingPayOrderByMemberID(parameter.MemberID))
+            {
+                return new JsonResult<dynamic>
+                {
+                    status = false,
+                    Message = "有未支付的订单，请先进行支付"
+                };
+            }
+            string SocialSecurityPeopleIDStr = string.Join(",", parameter.SocialSecurityPeopleIDS);
+            //判断所选参保人中有没有超过14号的
+            string sqlstr = $"select * from SocialSecurity where SocialSecurityPeopleID in({SocialSecurityPeopleIDStr})";
+            List<SocialSecurity> socialSecurityList = DbHelper.Query<SocialSecurity>(sqlstr);
+            foreach (var socialSecurity in socialSecurityList)
+            {
+                if (socialSecurity.PayTime.Month < DateTime.Now.Month || (socialSecurity.PayTime.Month == DateTime.Now.Month && socialSecurity.PayTime.Day > 13))
+                {
+                    return new JsonResult<dynamic>
+                    {
+                        status = false,
+                        Message = "参保人日期已失效，请修改"
+                    };
+                }
+            }
+
+            string sqlstr1 = $"select * from AccumulationFund where SocialSecurityPeopleID in({SocialSecurityPeopleIDStr})";
+            List<AccumulationFund> accumulationFundList = DbHelper.Query<AccumulationFund>(sqlstr1);
+            foreach (var accumulationFund in accumulationFundList)
+            {
+                if (accumulationFund.PayTime.Month < DateTime.Now.Month || (accumulationFund.PayTime.Month == DateTime.Now.Month && accumulationFund.PayTime.Day > 13))
+                {
+                    return new JsonResult<dynamic>
+                    {
+                        status = false,
+                        Message = "参保人日期已失效，请修改"
+                    };
+                }
+            }
+
+
             ////参保人ID数组
             //string[] SocialSecurityPeopleIDS = HttpContext.Current.Request.Form.GetValues("SocialSecurityPeopleIDS");
 
             ////用户ID
             //int MemberID = Convert.ToInt32(HttpContext.Current.Request.Form["MemberID"]);
 
-            string SocialSecurityPeopleIDStr = string.Join(",", parameter.SocialSecurityPeopleIDS);
+
 
             string orderCode = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000).ToString().PadLeft(3, '0');
 
@@ -228,6 +268,7 @@ where SocialSecurityPeople.SocialSecurityPeopleID in({SocialSecurityPeopleIDsStr
             //社保、公积金、社保服务费、公积金服务费、社保第一次代办费、公积金第一次代办费
             //张三、账户余额、支出、支付宝、社保、450、时间
 
+
             using (TransactionScope transaction = new TransactionScope())
             {
                 try
@@ -239,6 +280,43 @@ where SocialSecurityPeople.SocialSecurityPeopleID in({SocialSecurityPeopleIDsStr
 
                     string sqlOrderDetail = $"select * from OrderDetails where OrderCode ={model.OrderCode}";
                     List<OrderDetails> orderDetailList = DbHelper.Query<OrderDetails>(sqlOrderDetail);
+
+                    int[] SocialSecurityPeopleIDS = new int[orderDetailList.Count];
+                    for (int i = 0; i < orderDetailList.Count; i++)
+                    {
+                        SocialSecurityPeopleIDS[i] = orderDetailList[i].SocialSecurityPeopleID;
+                    }
+
+                    string SocialSecurityPeopleIDStr = string.Join(",", SocialSecurityPeopleIDS);
+                    //判断所选参保人中有没有超过14号的
+                    string sqlstr = $"select * from SocialSecurity where SocialSecurityPeopleID in({SocialSecurityPeopleIDStr})";
+                    List<SocialSecurity> socialSecurityList = DbHelper.Query<SocialSecurity>(sqlstr);
+                    foreach (var socialSecurity in socialSecurityList)
+                    {
+                        if (socialSecurity.PayTime.Month < DateTime.Now.Month || (socialSecurity.PayTime.Month == DateTime.Now.Month && socialSecurity.PayTime.Day > 13))
+                        {
+                            return new JsonResult<dynamic>
+                            {
+                                status = false,
+                                Message = "参保人日期已失效，请修改"
+                            };
+                        }
+                    }
+
+                    string sqlstr1 = $"select * from AccumulationFund where SocialSecurityPeopleID in({SocialSecurityPeopleIDStr})";
+                    List<AccumulationFund> accumulationFundList = DbHelper.Query<AccumulationFund>(sqlstr1);
+                    foreach (var accumulationFund in accumulationFundList)
+                    {
+                        if (accumulationFund.PayTime.Month < DateTime.Now.Month || (accumulationFund.PayTime.Month == DateTime.Now.Month && accumulationFund.PayTime.Day > 13))
+                        {
+                            return new JsonResult<dynamic>
+                            {
+                                status = false,
+                                Message = "参保人日期已失效，请修改"
+                            };
+                        }
+                    }
+
 
 
                     string sqlAccountRecord = "";

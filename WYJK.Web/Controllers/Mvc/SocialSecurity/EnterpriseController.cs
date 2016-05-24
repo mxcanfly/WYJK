@@ -20,6 +20,7 @@ namespace WYJK.Web.Controllers.Mvc
     {
         private readonly ISocialSecurityService _socialSecurityService = new SocialSecurityService();
         private readonly IEnterpriseService _enterpriseService = new EnterpriseService();
+        private readonly IAccumulationFundService _accumulationFundService = new AccumulationFundService();
         /// <summary>
         /// 获取参保企业列表
         /// </summary>
@@ -202,6 +203,18 @@ namespace WYJK.Web.Controllers.Mvc
         {
             EnterpriseSocialSecurity model = _socialSecurityService.GetDefaultEnterpriseSocialSecurityByArea(area, HouseholdProperty);
             return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 获取社保列表
+        /// </summary>
+        /// <param name="RelationEnterprise"></param>
+        /// <returns></returns>
+        public ActionResult GetSocialSecurityList(int RelationEnterprise) {
+
+            ViewData["SocialSecurityList"] = _socialSecurityService.GetSocialSecurityListByEnterpriseID(RelationEnterprise);
+            ViewData["AccumulationFundList"] = _accumulationFundService.GetAccumulationFundListByEnterpriseID(RelationEnterprise);
+            return View();
         }
     }
 }
