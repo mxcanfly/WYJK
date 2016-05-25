@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
+using WYJK.Data;
 using WYJK.Data.IService;
 using WYJK.Data.IServices;
 using WYJK.Data.ServiceImpl;
@@ -23,6 +25,8 @@ namespace WYJK.Web.Controllers.Mvc
         private readonly ISocialSecurityService _socialSecurityService = new SocialSecurityService();
         private readonly IAccumulationFundService _accumulationFundService = new AccumulationFundService();
         private readonly IMemberService _memberService = new MemberService();
+        private readonly IEnterpriseService _enterpriseService = new EnterpriseService();
+        private readonly IUserService _userService = new UserService();
         /// <summary>
         /// 获取客户管理列表
         /// </summary>
@@ -117,10 +121,22 @@ namespace WYJK.Web.Controllers.Mvc
             if (socialSecurityPeople.IsPaySocialSecurity)
             {
                 socialSecurityPeople.socialSecurity = _socialSecurityService.GetSocialSecurityDetail(SocialSecurityPeopleID);
+                //企业签约单位列表
+                List<EnterpriseSocialSecurity> SSList = _socialSecurityService.GetEnterpriseSocialSecurityByAreaList(socialSecurityPeople.socialSecurity.InsuranceArea, socialSecurityPeople.HouseholdProperty);
+                EnterpriseSocialSecurity SS = _socialSecurityService.GetDefaultEnterpriseSocialSecurityByArea(socialSecurityPeople.socialSecurity.InsuranceArea, socialSecurityPeople.HouseholdProperty);
+                ViewData["SSEnterpriseList"] = new SelectList(SSList, "EnterpriseID", "EnterpriseName", socialSecurityPeople.socialSecurity.RelationEnterprise);
+                ViewData["SSMaxBase"] = Math.Round(SS.SocialAvgSalary * SS.MaxSocial / 100);
+                ViewData["SSMinBase"] = Math.Round(SS.SocialAvgSalary * SS.MinSocial / 100);
             }
             if (socialSecurityPeople.IsPayAccumulationFund)
             {
                 socialSecurityPeople.accumulationFund = _accumulationFundService.GetAccumulationFundDetail(SocialSecurityPeopleID);
+                //企业签约单位列表
+                List<EnterpriseSocialSecurity> AFList = _socialSecurityService.GetEnterpriseSocialSecurityByAreaList(socialSecurityPeople.accumulationFund.AccumulationFundArea, socialSecurityPeople.HouseholdProperty);
+                EnterpriseSocialSecurity AF = _socialSecurityService.GetDefaultEnterpriseSocialSecurityByArea(socialSecurityPeople.accumulationFund.AccumulationFundArea, socialSecurityPeople.HouseholdProperty);
+                ViewData["AFEnterpriseList"] = new SelectList(AFList, "EnterpriseID", "EnterpriseName", socialSecurityPeople.accumulationFund.RelationEnterprise);
+                ViewData["AFMaxBase"] = AF.MaxAccumulationFund;
+                ViewData["AFMinBase"] = AF.MinAccumulationFund;
             }
 
             //获取会员信息
@@ -145,6 +161,7 @@ namespace WYJK.Web.Controllers.Mvc
             ViewData["HouseholdProperty"] = new SelectList(list, "value", "text", householdType);
             #endregion
 
+
             return View(socialSecurityPeople);
         }
 
@@ -157,6 +174,140 @@ namespace WYJK.Web.Controllers.Mvc
         {
             List<Order> orderList = _orderService.GetOrderList(SocialSecurityPeopleID);
             return View(orderList);
+        }
+
+
+        /// <summary>
+        /// 获取企业列表
+        /// </summary>
+        /// <param name="area"></param>
+        /// <param name="HouseHoldProperty"></param>
+        /// <returns></returns>
+        public ActionResult GetEnterpriseSocialSecurityByAreaList(string area, string HouseHoldProperty)
+        {
+            List<EnterpriseSocialSecurity> list = _socialSecurityService.GetEnterpriseSocialSecurityByAreaList(area, HouseHoldProperty);
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 根据签约单位ID获取签约单位信息
+        /// </summary>
+        /// <param name="EnterpriseID"></param>
+        /// <returns></returns>
+        public ActionResult GetSSEnterprise(int EnterpriseID)
+        {
+            EnterpriseSocialSecurity model = _enterpriseService.GetEnterpriseSocialSecurity(EnterpriseID);
+            decimal SSMaxBase = Math.Round(model.SocialAvgSalary * model.MaxSocial / 100);
+            decimal SSMinBase = Math.Round(model.SocialAvgSalary * model.MinSocial / 100);
+            decimal value = 0;
+            if (Convert.ToInt32(model.HouseholdProperty) == (int)HouseholdPropertyEnum.InRural ||
+                Convert.ToInt32(model.HouseholdProperty) == (int)HouseholdPropertyEnum.OutRural)
+            {
+                value = model.PersonalShiYeRural;
+            }
+            else if (Convert.ToInt32(model.HouseholdProperty) == (int)HouseholdPropertyEnum.InTown ||
+                Convert.ToInt32(model.HouseholdProperty) == (int)HouseholdPropertyEnum.OutTown)
+            {
+                value = model.PersonalShiYeTown;
+            }
+            decimal SSPayProportion = model.CompYangLao + model.CompYiLiao + model.CompShiYe + model.CompGongShang + model.CompShengYu
+                + model.PersonalYangLao + model.PersonalYiLiao + value + model.PersonalGongShang + model.PersonalShengYu;
+            decimal SSMonthAccount = Math.Round(Math.Round(Convert.ToDecimal(SSMinBase)) * Math.Round(Convert.ToDecimal(SSPayProportion) / 100), 2);
+
+            return Json(new
+            {
+                SSMaxBase = SSMaxBase,
+                SSMinBase = SSMinBase,
+                SSPayProportion = SSPayProportion,
+                SSMonthAccount = SSMonthAccount
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 根据签约单位ID获取签约单位信息
+        /// </summary>
+        /// <param name="EnterpriseID"></param>
+        /// <returns></returns>
+        public ActionResult GetAFEnterprise(int EnterpriseID)
+        {
+            EnterpriseSocialSecurity model = _enterpriseService.GetEnterpriseSocialSecurity(EnterpriseID);
+            decimal AFMaxBase = model.MaxAccumulationFund;
+            decimal AFMinBase = model.MinAccumulationFund;
+            decimal AFPayProportion = model.CompProportion + model.PersonalProportion;
+            decimal AFMonthAccount = Math.Round(AFMinBase * AFPayProportion / 100, 2);
+
+            return Json(new
+            {
+                AFMaxBase = AFMaxBase,
+                AFMinBase = AFMinBase,
+                AFPayProportion = AFPayProportion,
+                AFMonthAccount = AFMonthAccount
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult SaveEnterprise(SocialSecurityPeopleDetail model)
+        {
+            //SocialSecurityPeople socialSecurityPeople = new SocialSecurityPeople();
+            //socialSecurityPeople.IdentityCard = model.IdentityCard;
+
+            //#region 户籍性质
+            //List<SelectListItem> list = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
+
+            //foreach (var item in list)
+            //{
+            //    if (item.Value == model.HouseholdProperty)
+            //    {
+            //        socialSecurityPeople.HouseholdProperty = item.Text;
+            //        break;
+            //    }
+            //}
+            //#endregion
+
+            //#region 更新参保人
+            //socialSecurityPeople.IdentityCardPhoto = string.Join(";", model.ImgUrls).Replace(ConfigurationManager.AppSettings["ServerUrl"], string.Empty);
+            //DbHelper.ExecuteSqlCommand($"update SocialSecurityPeople set IdentityCard='{socialSecurityPeople.IdentityCard}',HouseholdProperty='{socialSecurityPeople.HouseholdProperty}',IdentityCardPhoto='{socialSecurityPeople.IdentityCardPhoto}' where SocialSecurityPeopleID={model.SocialSecurityPeopleID}", null);
+            //#endregion
+
+            //#region 更新用户
+            //string inviteCode = _userService.GetUserInfoByUserID(model.InviteCode).InviteCode;
+            //DbHelper.ExecuteSqlCommand($"update Members set InviteCode='{inviteCode}' where MemberID={model.MemberID}", null);
+            //#endregion
+
+            //#region 更新社保
+
+            //#endregion
+
+            //#region 更新公积金
+
+            //#endregion
+
+            return RedirectToAction("GetCustomerServiceList");
+        }
+
+        public class SocialSecurityPeopleDetail
+        {
+            public int SocialSecurityPeopleID { get; set; }
+            public string IdentityCard { get; set; }
+            public string HouseholdProperty { get; set; }
+            public string[] ImgUrls { get; set; }
+
+            public int MemberID { get; set; }
+            public string InviteCode { get; set; }
+
+
+            public string SocialSecurityNo { get; set; }
+            public string SSEnterpriseList { get; set; }
+            public string SocialSecurityBase { get; set; }
+
+            public string AccumulationFundNo { get; set; }
+            public string AFEnterpriseList { get; set; }
+            public string AccumulationFundBase { get; set; }
+
         }
     }
 }

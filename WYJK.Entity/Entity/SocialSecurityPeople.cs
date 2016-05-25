@@ -33,6 +33,10 @@ namespace WYJK.Entity
         /// </summary>		
         public string IdentityCardPhoto { get; set; }
         /// <summary>
+        /// 身份证照片数组
+        /// </summary>
+        public string[] ImgUrls { get; set; }
+        /// <summary>
         /// 户口性质
         /// </summary>		
         public string HouseholdProperty { get; set; }

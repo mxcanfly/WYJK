@@ -90,6 +90,10 @@ namespace WYJK.Entity
         /// 审核日期
         /// </summary>		
         public DateTime? AuditDate { get; set; }
+        /// <summary>
+        /// 放款时间
+        /// </summary>
+        public DateTime? AlreadyloanDate { get; set; }
     }
 
     /// <summary>

@@ -940,7 +940,7 @@ namespace WYJK.Web.Controllers.Http
         /// <returns></returns>
         public JsonResult<List<SocialSecurityPeoples>> GetSocialSecurityListByMemberID(int MemberID)
         {
-            string sqlstr = @"select SocialSecurityPeople.SocialSecurityPeopleID,
+            string sqlstr = $@"select SocialSecurityPeople.SocialSecurityPeopleID,
 SocialSecurityPeople.SocialSecurityPeopleName,
 SocialSecurity.PayTime SSPayTime,
 SocialSecurity.AlreadyPayMonthCount SSAlreadyPayMonthCount,
@@ -954,7 +954,7 @@ from SocialSecurityPeople
 left join SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID
 left
 join AccumulationFund on SocialSecurityPeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID
-where SocialSecurityPeople.MemberID = 1";
+where SocialSecurityPeople.MemberID = {MemberID}";
             List<SocialSecurityPeoples> SocialSecurityPeopleList = DbHelper.Query<SocialSecurityPeoples>(sqlstr);
             return new JsonResult<List<SocialSecurityPeoples>>
             {

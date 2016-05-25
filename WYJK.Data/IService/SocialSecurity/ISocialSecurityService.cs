@@ -66,6 +66,14 @@ namespace WYJK.Data.IServices
         EnterpriseSocialSecurity GetDefaultEnterpriseSocialSecurityByArea(string area,string HouseholdProperty);
 
         /// <summary>
+        /// 根据区域和户籍性质获取默认社保企业列表
+        /// </summary>
+        /// <param name="area"></param>
+        /// <param name="HouseholdProperty"></param>
+        /// <returns></returns>
+        List<EnterpriseSocialSecurity> GetEnterpriseSocialSecurityByAreaList(string area, string HouseholdProperty);
+
+        /// <summary>
         /// 添加社保(Mobile)
         /// </summary>
         /// <param name="socialSecurityPeople"></param>

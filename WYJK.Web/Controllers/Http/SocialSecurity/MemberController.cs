@@ -494,7 +494,7 @@ namespace WYJK.Web.Controllers.Http
 
                         if (Convert.ToInt32(str1[0]) <= day && day <= Convert.ToInt32(str1[1]))
                         {
-                            //社保待办与正常的人数
+                            //社保待办与正常与续费的人数
                             SSServiceCost = _socialSecurityService.GetSocialSecurityRenewListByMemberID(MemberID).Count * Convert.ToDecimal(str1[2]);
                             break;
                         }

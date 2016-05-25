@@ -46,7 +46,7 @@ namespace WYJK.Data.ServiceImpl
         public async Task<bool> InformationAdd(Information model)
         {
             string ImgUrls = string.Join(";", model.ImgUrls);
-            string sql = $"insert into Information(Name,ImgUrl) values('{model.Name}','{ImgUrls}')";
+            string sql = $"insert into Information(Name,ImgUrl,StrContent) values('{model.Name}','{ImgUrls}','{model.StrContent}')";
             int result = await DbHelper.ExecuteSqlCommandAsync(sql);
             return result > 0;
         }

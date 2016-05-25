@@ -17,7 +17,7 @@
             }(),
             jump: function (e, first) { //触发分页后的回调
                 if (!first) { //一定要加此判断，否则初始时会无限刷新
-                    location.href = '?PageIndex=' + e.curr + "&Type=" + '@Request.Params["Type"]';
+                    location.href = '?PageIndex=' + e.curr + "&MemberName=" + '@Request.Params["MemberName"]' + "&Status=" + '@Request.Params["Status"]';
                 }
             }
         });
@@ -42,9 +42,7 @@
                            shade: [0.1, '#000']
                        });
 
-                       var Status = '@((int)LoanAuditEnum.NoPass)';
-                       if ($this.filter(".action-audit-pass").length > 0)
-                           Status = '@((int)LoanAuditEnum.Pass)';
+                       var Status = $this.attr("data-type");
 
                        //提交
                        $.ajax({
@@ -105,6 +103,7 @@
                     <th width="80">状态</th>
                     <th width="100">提交时间</th>
                     <th width="100">审核时间</th>
+                    <th width="100">放款时间</th>
                 </tr>
             </thead>
             <tbody>
@@ -121,11 +120,27 @@
                         <td>@EnumExt.GetEnumCustomDescription((LoanAuditEnum)Convert.ToInt32(item.Status)) </td>
                         <td>@(item.ApplyDate == null ? "--" : Convert.ToString(item.ApplyDate))</td>
                         <td>@(item.AuditDate == null ? "--" : Convert.ToString(item.AuditDate))</td>
+                        <td>@(item.AlreadyloanDate == null ? "--" : Convert.ToString(item.AlreadyloanDate))</td>
                     </tr>
                 }
             </tbody>
         </table>
         <div id="pager" style="margin-top: 20px;"></div>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"><a href="javascript:;" class="btn btn-primary radius action-audit-pass"><i class="Hui-iconfont">&#xe6e1;</i> 通过</a> <a href="javascript:;" class="btn btn-danger radius action-audit-nopass"><i class="Hui-iconfont">&#xe6dd;</i> 不通过</a> </span><span class="r">共有数据：<strong>@Model.TotalItemCount</strong> 条</span> </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+
+        <span class="l">
+            @if (Request.Params["Status"] == ((int)LoanAuditEnum.NoAudited).ToString())
+            {
+                <a href="javascript:;" class="btn btn-primary radius action-audit-pass" data-type="@Convert.ToInt32(LoanAuditEnum.Pass)"><i class="Hui-iconfont">&#xe6e1;</i> 通过</a>
+                <a href="javascript:;" class="btn btn-danger radius action-audit-nopass"  data-type="@Convert.ToInt32(LoanAuditEnum.NoPass)"><i class="Hui-iconfont">&#xe6dd;</i> 不通过</a>
+            }
+            @if (Request.Params["Status"] == ((int)LoanAuditEnum.Pass).ToString())
+            {
+                <a href="javascript:;" class="btn btn-default radius action-audit-alreadyloan"  data-type="@Convert.ToInt32(LoanAuditEnum.AlreadyLoan)"><i class="Hui-iconfont">&#xe63a;</i> 放款</a>
+            }
+        </span>
+
+        <span class="r">共有数据：<strong>@Model.TotalItemCount</strong> 条</span>
+    </div>
 </div>

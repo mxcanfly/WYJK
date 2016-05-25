@@ -233,5 +233,17 @@ namespace WYJK.Data.ServiceImpl
             List<Users> userList = DbHelper.Query<Users>(sqlstr);
             return userList;
         }
+
+        /// <summary>
+        /// 根据UserID获取用户信息
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        public Users GetUserInfoByUserID(string UserID)
+        {
+            string sqlstr = $"select * from Users where UserID={UserID}";
+            Users user = DbHelper.QuerySingle<Users>(sqlstr);
+            return user;
+        }
     }
 }

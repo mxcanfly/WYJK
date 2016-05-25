@@ -44,25 +44,25 @@ namespace WYJK.Web.Controllers.Mvc.Loan
         /// <returns></returns>
         public ActionResult BatchAudit(int[] IDs, string Status)
         {
-            string IDsStr = string.Join(",", IDs);
+            //string IDsStr = string.Join(",", IDs);
             //如果未审核，则进行下面的操作
-            List<MemberLoanAudit> NoAuditedList = _loanAuditService.GetNoAuditedList(IDsStr, Convert.ToString((int)LoanAuditEnum.NoAudited));
-            if (NoAuditedList != null && NoAuditedList.Count > 0)
-            {
-                int[] IDs1 = new int[NoAuditedList.Count];
+            //List<MemberLoanAudit> NoAuditedList = _loanAuditService.GetNoAuditedList(IDsStr, Convert.ToString((int)LoanAuditEnum.NoAudited));
+            //if (NoAuditedList != null && NoAuditedList.Count > 0)
+            //{
+            //    int[] IDs1 = new int[NoAuditedList.Count];
 
-                for (int i = 0; i < NoAuditedList.Count; i++) {
-                    IDs1[i] = NoAuditedList[i].ID;
-                }
+            //    for (int i = 0; i < NoAuditedList.Count; i++) {
+            //        IDs1[i] = NoAuditedList[i].ID;
+            //    }
 
-                bool flag = _loanAuditService.MemberLoanAudit(IDs1, Status);
-                if (flag == false)
-                    return Json(new { status = false, message = "审核失败" });
+            bool flag = _loanAuditService.MemberLoanAudit(IDs, Status);
+            if (flag == false)
+                return Json(new { status = false, message = "审核失败" });
 
-            }
-            else {
-                return Json(new { status = false, message = "此选项已经审核过" });
-            }
+            //}
+            //else {
+            //    return Json(new { status = false, message = "此选项已经审核过" });
+            //}
 
             return Json(new { status = true, message = "审核成功" });
 

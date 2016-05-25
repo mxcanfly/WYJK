@@ -101,6 +101,13 @@ namespace WYJK.Data.IService
         Users GetUserInfo(string InviteCode);
 
         /// <summary>
+        /// 根据UserID获取用户信息
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        Users GetUserInfoByUserID(string UserID);
+
+        /// <summary>
         /// 获取员工列表
         /// </summary>
         /// <returns></returns>

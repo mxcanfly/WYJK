@@ -4,6 +4,10 @@
     var accountRecordList = ViewData["accountRecordList"] as List<AccountRecord>;
     var type = Request.Params["Type"];
 }
+@section Header
+{
+    <link rel="stylesheet" type="text/css" href="/Content/lib/webuploader/0.1.5/webuploader.css" />
+}
 @section Footer{
     <style>
         span.lineheight {
@@ -12,6 +16,24 @@
     </style>
     <script>
         $(function () {
+            $("button[type='submit']").click(function () {
+                var SocialSecurityBase = Number($("[name='SocialSecurityBase']").val());
+                var SSMinBase = Number($("#SSMinBase").text());
+                var SSMaxBase = Number($("#SSMaxBase").text());
+                if (SocialSecurityBase < SSMinBase || SocialSecurityBase > SSMaxBase) {
+                    alert("所填社保基数不符合范围");
+                    return false;
+                }
+
+                var AccumulationFundBase = Number($("[name='AccumulationFundBase']").val());
+                var AFMinBase = Number($("#AFMinBase").text());
+                var AFMaxBase = Number($("#AFMaxBase").text());
+                if (AccumulationFundBase < AFMinBase || AccumulationFundBase > AFMaxBase) {
+                    alert("所填公积金基数不符合范围");
+                    return false;
+                }
+            });
+
             @*$("#HouseholdProperty").change(function () {
                 var HouseholdProperty = $(this).find("option:selected").text();
                 alert('@Model.socialSecurity');
@@ -30,19 +52,231 @@
                         }
                     });
                 }*@
-                @*if (!'@Model.accumulationFund == null') {
+            @*if (!'@Model.accumulationFund == null') {
                     //ssEnterpriseName ssSocialSecurityBase ssPayProportion
 
                 }*@
             //});
+
+            //户籍性质改变时
+            $("#HouseholdProperty").change(function () {
+                var InsuranceArea = $("#InsuranceArea[type='hidden']").val();
+                var Accumulation = $("#AccumulationFundArea[type='hidden']").val();
+
+                var HouseholdProperty = $(this).find("option:selected").text();
+
+                if (InsuranceArea != undefined) {
+                    $.ajax({
+                        url: '@Url.Action("GetEnterpriseSocialSecurityByAreaList", "CustomerService")?area=' + InsuranceArea + "&HouseHoldProperty=" + HouseholdProperty,
+                        type: 'get',
+                        dataType: "json",
+                        success: function (data) {
+                            $("#SSEnterpriseList").empty();
+                            $.each(data, function (i, value) {
+                                $("#SSEnterpriseList").append("<option value='" + value.EnterpriseID + "'>" + value.EnterpriseName + "</option>");
+                            });
+                            $("#SSEnterpriseList").change();
+                        },
+                        error: function () {
+                            alert("服务器错误");
+                        }
+                    });
+                }
+
+                if (Accumulation != undefined) {
+
+                    $.ajax({
+                        url: '@Url.Action("GetEnterpriseSocialSecurityByAreaList", "CustomerService")?area=' + Accumulation + "&HouseHoldProperty=" + HouseholdProperty,
+                        type: 'get',
+                        dataType: "json",
+                        success: function (data) {
+                            $("#AFEnterpriseList").empty();
+                            $.each(data, function (i, value) {
+                                $("#AFEnterpriseList").append("<option value='" + value.EnterpriseID + "'>" + value.EnterpriseName + "</option>");
+                            });
+                            $("#AFEnterpriseList").change();
+                        },
+                        error: function () {
+                            alert("服务器错误");
+                        }
+                    });
+                }
+            });
+
+            //社保签约单位改变时
+            $("#SSEnterpriseList").change(function () {
+                $.ajax({
+                    url: '@Url.Action("GetSSEnterprise", "CustomerService")?EnterpriseID=' + $(this).val(),
+                    type: 'get',
+                    dataType: "json",
+                    success: function (data) {
+                        $("#SSMinBase").text(data.SSMinBase);
+                        $("#SSMaxBase").text(data.SSMaxBase);
+                        $("#SocialSecurityBase").val(data.SSMinBase);
+                        $("#ssPayProportion").text(data.SSPayProportion + "%");
+                        $("#SSMonthAccount").text(data.SSMonthAccount);
+                    },
+                    error: function () {
+                        alert("服务器错误");
+                    }
+                });
+            })
+
+            //公积金签约单位改变时
+            $("#AFEnterpriseList").change(function () {
+                $.ajax({
+                    url: '@Url.Action("GetAFEnterprise", "CustomerService")?EnterpriseID=' + $(this).val(),
+                    type: 'get',
+                    dataType: "json",
+                    success: function (data) {
+                        $("#AFMinBase").text(data.AFMinBase);
+                        $("#AFMaxBase").text(data.AFMaxBase);
+                        $("#AccumulationFundBase").val(data.AFMinBase);
+                        $("#afPayProportion").text(data.AFPayProportion + "%");
+                        $("#AFMonthAccount").text(data.AFMonthAccount);
+                    },
+                    error: function () {
+                        alert("服务器错误");
+                    }
+                });
+            })
         })
     </script>
-    
+    <script type="text/javascript" src="/Content/lib/webuploader/0.1.5/webuploader.min.js"></script>
+    <script type="text/javascript">
+        window.config.Webuploader = null;
+
+        function removeFile(current) {
+            var $this = $(current).parents(".item");
+            var id = $this.attr("id");
+            $this.remove().empty();
+
+            $(".wyjk-images").each(function (i) {
+                $(this).attr("name", 'ImgUrls[' + i + ']');
+            });
+            if (id) {
+                window.config.Webuploader.removeFile(id);
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        $list = $("#fileList"),
+            $btn = $("#btn-star"),
+            state = "pending";
+        var uploader = window.config.Webuploader = WebUploader.create({
+            auto: true,
+            swf: '/Content/lib/webuploader/0.1.5/Uploader.swf',
+
+            // 文件接收服务端。
+            server: '/api/upload/MultiUpload',
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#filePicker',
+
+            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+            resize: false,
+            // 只允许选择图片文件。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            }
+        });
+        uploader.on('fileQueued', function (file) {
+            var $li = $(
+                    '<div id="' + file.id + '" class="item ">' +
+                    '<div class="pic-box"><img></div>' +
+                    // '<div class="info">' + file.name + '</div>' +
+                    //'<p class="state">等待上传...</p>' +
+                    '</div>'
+                ),
+                $img = $li.find('img');
+            $list.append($li);
+            thumbnailWidth = 100;
+            thumbnailHeight = 100;
+            // 创建缩略图
+            // 如果为非图片文件，可以不用调用此方法。
+            // thumbnailWidth x thumbnailHeight 为 100 x 100
+            uploader.makeThumb(file, function (error, src) {
+                if (error) {
+                    $img.replaceWith('<span>不能预览</span>');
+                    return;
+                }
+
+                $img.attr('src', src);
+            }, thumbnailWidth, thumbnailHeight);
+        });
+        uploader.on('uploadBeforeSend', function (obj, data, headers) {
+            @*headers.UserId = @Model.UserId;*@
+        });
+        // 文件上传过程中创建进度条实时显示。
+        uploader.on('uploadProgress', function (file, percentage) {
+
+            var $li = $('#' + file.id),
+                $percent = $li.find('.progress-box .sr-only');
+
+            // 避免重复创建
+            if (!$percent.length) {
+                $percent = $('<div class="progress-box"><span class="progress-bar radius"><span class="sr-only" style="width:0%"></span></span></div>').appendTo($li).find('.sr-only');
+            }
+            //$li.find(".state").text("上传中");
+            $percent.css('width', percentage * 100 + '%');
+        });
+        //uploader.on('uploadAccept', function (obj, response) {
+        //    return response.status === 'true';
+        //});
+        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+        uploader.on('uploadSuccess', function (file, response) {
+            var index = $(".upload-state-done").length;
+            //alert("上传成功");
+
+            var html = '<span class="iconfont icon-iconfontwiconguanbi uploader-remove" title="删除" onclick="removeFile(this)"><input type="hidden"  class="wyjk-images"  name="ImgUrls[' + index + ']" value="' + response.Data[0] + '"/></span>';
+            $('#' + file.id).addClass('upload-state-done').append(html);
+        });
+
+        // 文件上传失败，显示上传出错。
+        uploader.on('uploadError', function (file) {
+            //alert("上传失败");
+            $('#' + file.id).addClass('upload-state-error').find(".state").text("上传出错");
+        });
+
+        // 完成上传完了，成功或者失败，先删除进度条。
+        uploader.on('uploadComplete', function (file) {
+            //alert("上传完成");
+            $('#' + file.id).find('.progress-box').fadeOut();
+        });
+        uploader.on('all', function (type) {
+            if (type === 'startUpload') {
+                state = 'uploading';
+            } else if (type === 'stopUpload') {
+                state = 'paused';
+            } else if (type === 'uploadFinished') {
+                state = 'done';
+            }
+
+            if (state === 'uploading') {
+                $btn.text('暂停上传');
+            } else {
+                $btn.text('开始上传');
+            }
+        });
+
+        $btn.on('click', function () {
+            if (state === 'uploading') {
+                uploader.stop();
+            } else {
+                uploader.upload();
+            }
+        });
+
+    </script>
 }
 <div class="pd-20">
-    <form action='' method="post" class="form form-horizontal" id="form-article-add">
+    <form action='@Url.Action("SaveEnterprise")' method="post" class="form form-horizontal" id="form-article-add">
         <div class="row cl" style="text-align:center;">
             <label style="font-size:24px;font-weight:bold;">@(Model.SocialSecurityPeopleName)的基本信息</label>
+            @Html.HiddenFor(m => m.SocialSecurityPeopleID)
         </div>
         <div class="row cl">
             <label class="form-label col-3">用户类型：</label>
@@ -68,6 +302,7 @@
             </div>
             <label class="form-label col-3">业务专员：</label>
             <div class="formControls col-2">
+                <input type="hidden" value="@member.MemberID" />
                 @if (type == "0")
                 {
                     <span class="lineheight">
@@ -116,9 +351,6 @@
 
                 }
             </div>
-            @{
-                var imgs = Model.IdentityCardPhoto.Split(';');
-            }
         </div>
         <div class="row cl">
             <label class="form-label col-3">户籍性质：</label>
@@ -135,16 +367,52 @@
                 }
             </div>
         </div>
-        <div class="row cl">
-            <label class="form-label col-3">身份证照：</label>
-            <div class="formControls col-2">
+        @{
+            var ImgUrls = Model.IdentityCardPhoto.Split(';');
+        }
+        @if (type == "0")
+        {
+            <div class="row cl">
+                <label class="form-label col-3">身份证照：</label>
+                <div class="formControls col-2">
+                    <img src="/@ImgUrls[0]" height="100" />
+                </div>
+                <div class="formControls col-2">
+                    <img src="/@ImgUrls[1]" height="100" />
+                </div>
+            </div>
+        }
+        else if (type == "1")
+        {
+            <div class="row cl">
+                <label class="form-label col-3">身份证照：</label>
+                <div class="formControls col-8">
+                    <div class="uploader-thum-container">
+                        <div id="fileList" class="uploader-list">
 
-                <img src="/@imgs[0]" height="100" />
+                            @if (ImgUrls != null && ImgUrls.Length > 0)
+                            {
+                                for (int i = 0, len = ImgUrls.Length; i < len; i++)
+                                {
+                                    <div class="item upload-state-done">
+                                        <div class="pic-box">
+                                            <img src="/@ImgUrls[i]" style="width: 100px; height: 100px" />
+
+                                        </div>
+                                        <span class="iconfont icon-iconfontwiconguanbi uploader-remove" title="删除" onclick="removeFile(this)">
+                                            <input type="hidden" name="@ImgUrls[i]" class="wyjk-images" value="@ImgUrls[i]" />
+                                        </span>
+                                    </div>
+
+                                }
+                            }
+                        </div>
+                        <div id="filePicker">选择图片</div>
+                    </div>
+                </div>
             </div>
-            <div class="formControls col-2">
-                <span class="lineheight"><img src="/@imgs[1]" height="100" /></span>
-            </div>
-        </div>
+        }
+
         <br />
         @if (Model.socialSecurity != null)
         {
@@ -168,17 +436,23 @@
                     }
                     else if (type == "1")
                     {
-                        @Html.TextBoxFor(m => m.socialSecurity.SocialSecurityNo, new { @class = "input-text" })
+                        @*@Html.TextBoxFor(m => m.socialSecurity.SocialSecurityNo, new { @class = "input-text" })*@
+                        <input type="text" value="@Model.socialSecurity.SocialSecurityNo" name="SocialSecurityNo" class="input-text" />
                     }
 
                 </div>
                 <label class="form-label col-3">签约单位：</label>
                 <div class="formControls col-2">
                     <span class="lineheight" id="ssEnterpriseName">
-                        @{
+                        @if (type == "0")
+                        {
                             WYJK.Data.IService.IEnterpriseService _enterpriseService = new WYJK.Data.ServiceImpl.EnterpriseService();
                             EnterpriseSocialSecurity enterpriseSocialSecurity = _enterpriseService.GetEnterpriseSocialSecurity(Model.socialSecurity.RelationEnterprise);
                             @enterpriseSocialSecurity.EnterpriseName
+                        }
+                        else if (type == "1")
+                        {
+                            @Html.DropDownList("SSEnterpriseList", ViewData["SSEnterpriseList"] as List<SelectListItem>, new { @class = "input-text" });
                         }
                     </span>
                 </div>
@@ -194,9 +468,21 @@
                     }
                     else if (type == "1")
                     {
-                        @Html.TextBoxFor(m => m.socialSecurity.SocialSecurityBase, new { @class = "input-text" })
+                        @*@Html.TextBoxFor(m => m.socialSecurity.SocialSecurityBase, new { @class = "input-text" })*@
+                        <input type="text" value="@Model.socialSecurity.SocialSecurityBase" name="SocialSecurityBase" class="input-text" />
+                        <div style="color:red;">
+                            <span>基数范围：</span>
+                            <span id="SSMinBase">
+                                @ViewData["SSMinBase"]
+                            </span>
+                            <span>~</span>
+                            <span id="SSMaxBase">
+                                @ViewData["SSMaxBase"]
+                            </span>
+                        </div>
+
                     }
-                    
+
                 </div>
                 <label class="form-label col-3">比例：</label>
                 <div class="formControls col-2">
@@ -211,10 +497,11 @@
                     <span class="lineheight">
                         @Model.socialSecurity.InsuranceArea.Replace("|", "")
                     </span>
+                    <input id="InsuranceArea" type="hidden" value="@Model.socialSecurity.InsuranceArea" />
                 </div>
                 <label class="form-label col-3">每月交：</label>
                 <div class="formControls col-2">
-                    <span class="lineheight">
+                    <span class="lineheight" id="SSMonthAccount">
                         @Convert.ToDecimal(Model.socialSecurity.SocialSecurityBase * Model.socialSecurity.PayProportion / 100).ToString("N2")
                     </span>
                 </div>
@@ -269,7 +556,7 @@
                     </span>
                 </div>
             </div>
-                            }
+        }
         @if (Model.accumulationFund != null)
         {
             <div class="row cl" style="text-align:center;">
@@ -279,22 +566,36 @@
                 <label class="form-label col-3">客户公积金号：</label>
                 <div class="formControls col-2">
                     <span class="lineheight">
-                        @if (string.IsNullOrWhiteSpace(Model.accumulationFund.AccumulationFundNo))
+                        @if (type == "0")
                         {
-                            @:无
+                            if (string.IsNullOrWhiteSpace(Model.accumulationFund.AccumulationFundNo))
+                            {
+                                @:无
                     }
-                        else {
-                            @Model.accumulationFund.AccumulationFundNo
+                            else {
+                                @Model.accumulationFund.AccumulationFundNo
+                            }
                         }
+                        else if (type == "1")
+                        {
+                            @*@Html.TextBoxFor(m => m.accumulationFund.AccumulationFundNo, new { @class = "input-text" })*@
+                            <input type="text" name="AccumulationFundNo" value="@Model.accumulationFund.AccumulationFundNo" class="input-text" />
+                        }
+
                     </span>
                 </div>
                 <label class="form-label col-3">签约单位：</label>
                 <div class="formControls col-2">
                     <span class="lineheight" id="afEnterpriseName">
-                        @{
+                        @if (type == "0")
+                        {
                             WYJK.Data.IService.IEnterpriseService _enterpriseService = new WYJK.Data.ServiceImpl.EnterpriseService();
                             EnterpriseSocialSecurity enterpriseSocialSecurity = _enterpriseService.GetEnterpriseSocialSecurity(Model.accumulationFund.RelationEnterprise);
                             @enterpriseSocialSecurity.EnterpriseName
+                        }
+                        else if (type == "1")
+                        {
+                            @Html.DropDownList("AFEnterpriseList", ViewData["AFEnterpriseList"] as List<SelectListItem>, new { @class = "input-text" });
                         }
                     </span>
                 </div>
@@ -302,9 +603,28 @@
             <div class="row cl">
                 <label class="form-label col-3">基数：</label>
                 <div class="formControls col-2">
-                    <span class="lineheight" id="afAccumulationFundBase">
+
+                    @if (type == "0")
+                    {<span class="lineheight" id="afAccumulationFundBase">
                         @Model.accumulationFund.AccumulationFundBase
                     </span>
+                    }
+                    else if (type == "1")
+                    {
+                        @*@Html.TextBoxFor(m => m.accumulationFund.AccumulationFundBase, new { @class = "input-text" })*@
+                        <input type="text" value="@Model.accumulationFund.AccumulationFundBase" name="AccumulationFundBase" class="input-text" />
+                        <div style="color:red;">
+                            <span>基数范围：</span>
+                            <span id="AFMinBase">
+                                @ViewData["AFMinBase"]
+                            </span>
+                            <span>~</span>
+                            <span id="AFMaxBase">
+                                @ViewData["AFMaxBase"]
+                            </span>
+                        </div>
+                    }
+
                 </div>
                 <label class="form-label col-3">比例：</label>
                 <div class="formControls col-2">
@@ -319,10 +639,11 @@
                     <span class="lineheight">
                         @Model.accumulationFund.AccumulationFundArea.Replace("|", "")
                     </span>
+                    <input id="AccumulationFundArea" type="hidden" value="@Model.accumulationFund.AccumulationFundArea" />
                 </div>
                 <label class="form-label col-3">每月交：</label>
                 <div class="formControls col-2">
-                    <span class="lineheight">
+                    <span class="lineheight" id="AFMonthAccount">
                         @Convert.ToDecimal(Model.accumulationFund.AccumulationFundBase * Model.accumulationFund.PayProportion / 100).ToString("N2")
                     </span>
                 </div>
@@ -377,7 +698,7 @@
                     </span>
                 </div>
             </div>
-                            }
+        }
         <div class="row cl">
             <div class="col-10 col-offset-2">
                 <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>

@@ -1191,6 +1191,34 @@
             <param name="SocialSecurityPeopleID"></param>
             <returns></returns>
         </member>
+        <member name="M:WYJK.Web.Controllers.Mvc.CustomerServiceController.GetEnterpriseSocialSecurityByAreaList(System.String,System.String)">
+            <summary>
+            获取企业列表
+            </summary>
+            <param name="area"></param>
+            <param name="HouseHoldProperty"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Mvc.CustomerServiceController.GetSSEnterprise(System.Int32)">
+            <summary>
+            根据签约单位ID获取签约单位信息
+            </summary>
+            <param name="EnterpriseID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Mvc.CustomerServiceController.GetAFEnterprise(System.Int32)">
+            <summary>
+            根据签约单位ID获取签约单位信息
+            </summary>
+            <param name="EnterpriseID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WYJK.Web.Controllers.Mvc.CustomerServiceController.SaveEnterprise(WYJK.Web.Controllers.Mvc.CustomerServiceController.SocialSecurityPeopleDetail)">
+            <summary>
+            保存
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:WYJK.Web.Controllers.Mvc.EnterpriseController">
             <summary>
             签约企业

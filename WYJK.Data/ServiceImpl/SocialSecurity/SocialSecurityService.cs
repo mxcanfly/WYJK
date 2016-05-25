@@ -185,7 +185,7 @@ where SocialSecurityPeople.MemberID = @MemberID and (SocialSecurity.status = @st
             return flag;
         }
         /// <summary>
-        /// 根据区域获取默认社保企业
+        /// 根据区域和户籍性质获取默认社保企业
         /// </summary>
         /// <param name="area"></param>
         /// <returns></returns>
@@ -207,6 +207,31 @@ where SocialSecurityPeople.MemberID = @MemberID and (SocialSecurity.status = @st
             string sql = $"select * from EnterpriseSocialSecurity where enterpriseArea  like '%{area}%' and HouseholdProperty in ({sqlHouseholdProperty}) and IsDefault = 1";
             EnterpriseSocialSecurity model = DbHelper.QuerySingle<EnterpriseSocialSecurity>(sql);
             return model;
+        }
+
+        /// <summary>
+        /// 根据区域和户籍性质获取社保企业列表
+        /// </summary>
+        /// <param name="area"></param>
+        /// <returns></returns>
+        public List<EnterpriseSocialSecurity> GetEnterpriseSocialSecurityByAreaList(string area, string HouseholdProperty)
+        {
+            string sqlHouseholdProperty = string.Empty;
+            if (HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.InRural)) ||
+                HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.OutRural)))
+            {
+                sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InRural) + "," + Convert.ToString((int)HouseholdPropertyEnum.OutRural);
+            }
+            else if (HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.InTown)) ||
+              HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.OutTown)))
+            {
+                sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InTown) + "," + Convert.ToString((int)HouseholdPropertyEnum.OutTown);
+            }
+
+
+            string sql = $"select * from EnterpriseSocialSecurity where enterpriseArea  like '%{area}%' and HouseholdProperty in ({sqlHouseholdProperty})";
+            List<EnterpriseSocialSecurity> list = DbHelper.Query<EnterpriseSocialSecurity>(sql);
+            return list;
         }
 
         /// <summary>

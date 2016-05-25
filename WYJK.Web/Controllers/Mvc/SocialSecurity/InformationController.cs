@@ -44,6 +44,7 @@ namespace WYJK.Web.Controllers.Mvc
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [ValidateInput(false)]
         public async Task<ActionResult> InformationAdd(Information model)
         {
             if (!ModelState.IsValid) return View();

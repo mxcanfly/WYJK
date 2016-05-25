@@ -167,7 +167,9 @@ namespace WYJK.Framework.EnumHelper
         [EnumDisplayName("已通过")]
         Pass = 2,
         [EnumDisplayName("未通过")]
-        NoPass = 3
+        NoPass = 3,
+        [EnumDisplayName("已放款")]
+        AlreadyLoan = 4
     }
 
     /// <summary>
