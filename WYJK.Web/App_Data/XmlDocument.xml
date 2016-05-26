@@ -940,7 +940,7 @@
         </member>
         <member name="M:WYJK.Web.Controllers.Http.MemberController.GetRenewalServiceList(System.Int32)">
             <summary>
-            获取续费服务集合
+            获取续费服务集合 只有需要续费的才能进入
             </summary>
             <param name="MemberID"></param>
             <returns></returns>

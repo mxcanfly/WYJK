@@ -815,5 +815,26 @@ where SocialSecurityPeople.SocialSecurityPeopleID={SocialSecurityPeopleID}";
             List<SocialSecurityShowModel> list = DbHelper.Query<SocialSecurityShowModel>(sqlstr);
             return list;
         }
+
+        /// <summary>
+        /// 获取待续费用户所产生的金额和
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        public decimal GetRenewAmountByMemberID(int MemberID)
+        {
+            string sqlstr = $@"declare @SocialSecurityAmount decimal = 0, @AccumulationFundAmount decimal = 0,@totalAmount decimal =0
+select @SocialSecurityAmount += SocialSecurity.SocialSecurityBase * SocialSecurity.PayProportion / 100 from SocialSecurityPeople
+      left join SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID
+      where SocialSecurityPeople.MemberID = {MemberID} and SocialSecurity.Status = 4;
+            select @AccumulationFundAmount += AccumulationFund.AccumulationFundBase * AccumulationFund.PayProportion / 100 from SocialSecurityPeople
+                  left join AccumulationFund on socialsecuritypeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID
+                  where SocialSecurityPeople.MemberID = {MemberID} and AccumulationFund.Status = 4;
+            select @totalAmount = @SocialSecurityAmount + @AccumulationFundAmount;
+select @totalAmount";
+
+            decimal result = DbHelper.QuerySingle<decimal>(sqlstr);
+            return result;
+        }
     }
 }

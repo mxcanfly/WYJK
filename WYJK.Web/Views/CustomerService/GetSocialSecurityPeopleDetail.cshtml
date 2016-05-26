@@ -124,7 +124,7 @@
             //社保签约单位改变时
             $("#SSEnterpriseList").change(function () {
                 $.ajax({
-                    url: '@Url.Action("GetSSEnterprise", "CustomerService")?EnterpriseID=' + $(this).val()+"&HouseholdProperty="+$("#HouseholdProperty").val(),
+                    url: '@Url.Action("GetSSEnterprise", "CustomerService")?EnterpriseID=' + $(this).val() + "&HouseholdProperty=" + $("#HouseholdProperty").val(),
                     type: 'get',
                     dataType: "json",
                     success: function (data) {
@@ -511,9 +511,17 @@
                 </div>
                 <label class="form-label col-3">比例：</label>
                 <div class="formControls col-2">
-                    <span class="lineheight">
-                        <input type="text" name="ssPayProportion" value="@Model.socialSecurity.PayProportion%" readonly="readonly" class="input-text" />
-                    </span>
+                    @if (type == "0")
+                    {
+                        @:@Model.socialSecurity.PayProportion%
+                   }
+                    else {
+
+                        <span class="lineheight">
+                            <input type="text" name="ssPayProportion" value="@Model.socialSecurity.PayProportion%" readonly="readonly" class="input-text" />
+                        </span>
+                    }
+
                 </div>
             </div>
             <div class="row cl">
@@ -535,7 +543,7 @@
                 <label class="form-label col-3">起缴时间：</label>
                 <div class="formControls col-2">
                     <span class="lineheight">
-                        @Model.socialSecurity.PayTime
+                        @Model.socialSecurity.PayTime.ToString("yyyy/MM")
                     </span>
                 </div>
                 <label class="form-label col-3">业务当前状态：</label>
@@ -549,13 +557,19 @@
                 <label class="form-label col-3">业务申请时间：</label>
                 <div class="formControls col-2">
                     <span class="lineheight">
-                        @Model.socialSecurity.PayTime
+                        @{
+                            string sqlstr = @"  select * from [Order]
+  left join OrderDetails on OrderDetails.OrderCode =[Order].OrderCode
+  where OrderDetails.SocialSecurityPeopleID = " + Model.SocialSecurityPeopleID;
+                            Order order = WYJK.Data.DbHelper.QuerySingle<Order>(sqlstr);
+                        }
+                        @(order != null ? order.PayTime.ToString() : "--")
                     </span>
                 </div>
                 <label class="form-label col-3">交费至：</label>
                 <div class="formControls col-2">
                     <span class="lineheight">
-                        @Model.socialSecurity.PayTime.AddMonths(Model.socialSecurity.PayMonthCount - 1)
+                        @Model.socialSecurity.PayTime.AddMonths(Model.socialSecurity.PayMonthCount - 1).ToString("yyyy/MM")
                     </span>
                 </div>
             </div>
@@ -563,13 +577,13 @@
                 <label class="form-label col-3">业务办停时间：</label>
                 <div class="formControls col-2">
                     <span class="lineheight">
-                        @Model.socialSecurity.StopDate
+                        @(Model.socialSecurity.StopDate == null ? "--" : Convert.ToString(Model.socialSecurity.StopDate))
                     </span>
                 </div>
                 <label class="form-label col-3">业务办理时间：</label>
                 <div class="formControls col-2">
                     <span class="lineheight">
-                        @Model.socialSecurity.HandleDate
+                        @(Model.socialSecurity.HandleDate == null ? "--" : Convert.ToString(Model.socialSecurity.HandleDate))
                     </span>
                 </div>
             </div>
@@ -581,11 +595,11 @@
                     </span>
                 </div>
             </div>
-        }
-        else
-        {
-            @Html.Hidden("IsPaySocialSecurity", false)
-        }
+                            }
+                            else
+                            {
+                                @Html.Hidden("IsPaySocialSecurity", false)
+                            }
 
         @if (Model.accumulationFund != null)
         {
@@ -634,22 +648,22 @@
             <div class="row cl">
                 <label class="form-label col-3">基数：</label>
                 <div class="formControls col-2">
-
                     @if (type == "0")
-                    {<span class="lineheight" id="afAccumulationFundBase">
-                        @Model.accumulationFund.AccumulationFundBase
-                    </span>
+                {
+                        <span class="lineheight" id="afAccumulationFundBase">
+                            @Model.accumulationFund.AccumulationFundBase
+                        </span>
                     }
                     else if (type == "1")
                     {
                         @*@Html.TextBoxFor(m => m.accumulationFund.AccumulationFundBase, new { @class = "input-text" })*@
                         <input type="text" value="@Model.accumulationFund.AccumulationFundBase" name="AccumulationFundBase" class="input-text" />
                         <div style="color:red;">
-                            <span>基数范围：</span>
+                            <span> 基数范围：</span>
                             <span id="AFMinBase">
                                 @ViewData["AFMinBase"]
                             </span>
-                            <span>~</span>
+                            <span> ~</span>
                             <span id="AFMaxBase">
                                 @ViewData["AFMaxBase"]
                             </span>
@@ -659,9 +673,17 @@
                 </div>
                 <label class="form-label col-3">比例：</label>
                 <div class="formControls col-2">
-                    <span class="lineheight">
-                        <input type="text" value="@Model.accumulationFund.PayProportion%" name="afPayProportion" readonly="readonly" class="input-text" />
-                    </span>
+                    @if (type == "0")
+                {
+                        @:@Model.accumulationFund.PayProportion%
+                    }
+                else if (type == "1")
+                {
+                        <span class="lineheight">
+                            <input type="text" value="@Model.accumulationFund.PayProportion%" name="afPayProportion" readonly="readonly" class="input-text" />
+                        </span>
+                    }
+
                 </div>
             </div>
             <div class="row cl">
@@ -683,7 +705,7 @@
                 <label class="form-label col-3">起缴时间：</label>
                 <div class="formControls col-2">
                     <span class="lineheight">
-                        @Model.accumulationFund.PayTime
+                        @Model.accumulationFund.PayTime.ToString("yyyy/MM")
                     </span>
                 </div>
                 <label class="form-label col-3">业务当前状态：</label>
@@ -697,13 +719,19 @@
                 <label class="form-label col-3">业务申请时间：</label>
                 <div class="formControls col-2">
                     <span class="lineheight">
-                        @Model.accumulationFund.PayTime
+                        @{
+                            string sqlstr = @"  select * from [Order]
+  left join OrderDetails on OrderDetails.OrderCode =[Order].OrderCode
+  where OrderDetails.SocialSecurityPeopleID = " + Model.SocialSecurityPeopleID;
+                            Order order = WYJK.Data.DbHelper.QuerySingle<Order>(sqlstr);
+                        }
+                        @(order != null ? order.PayTime.ToString() : "--")
                     </span>
                 </div>
                 <label class="form-label col-3">交费至：</label>
                 <div class="formControls col-2">
                     <span class="lineheight">
-                        @Model.accumulationFund.PayTime.AddMonths(Model.accumulationFund.PayMonthCount - 1)
+                        @Model.accumulationFund.PayTime.AddMonths(Model.accumulationFund.PayMonthCount - 1).ToString("yyyy/MM")
                     </span>
                 </div>
             </div>
@@ -711,13 +739,13 @@
                 <label class="form-label col-3">业务办停时间：</label>
                 <div class="formControls col-2">
                     <span class="lineheight">
-                        @Model.accumulationFund.StopDate
+                        @(Model.accumulationFund.StopDate == null ? "--" : Convert.ToString(Model.accumulationFund.StopDate))
                     </span>
                 </div>
                 <label class="form-label col-3">业务办理时间：</label>
                 <div class="formControls col-2">
                     <span class="lineheight">
-                        @Model.accumulationFund.HandleDate
+                        @(Model.accumulationFund.HandleDate == null ? "--" : Convert.ToString(Model.accumulationFund.HandleDate))
                     </span>
                 </div>
             </div>
@@ -733,12 +761,14 @@
         else {
             @Html.Hidden("IsPayAccumulationFund", false)
         }
-
-        <div class="row cl">
-            <div class="col-10 col-offset-2">
-                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+        @if (type == "1")
+        {
+            <div class="row cl">
+                <div class="col-10 col-offset-2">
+                    <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+                </div>
             </div>
-        </div>
+        }
     </form>
     <div class="row cl" style="text-align:center;">
         <label style="font-size:24px;font-weight:bold;">@(member.MemberName)的账户信息</label>

@@ -232,6 +232,13 @@ namespace WYJK.Data.IServices
         /// <returns></returns>
         decimal GetMonthTotalAmountByMemberID(int MemberID);
 
+        /// <summary>
+        /// 获取待续费用户所产生的金额和
+        /// </summary>
+        /// <param name="MemberID"></param>
+        /// <returns></returns>
+        decimal GetRenewAmountByMemberID(int MemberID);
+
 
         /// <summary>
         /// 是否存在续费

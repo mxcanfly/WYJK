@@ -459,81 +459,70 @@ namespace WYJK.Web.Controllers.Http
         }
 
         /// <summary>
-        /// 获取续费服务集合
+        /// 获取续费服务集合 只有需要续费的才能进入
         /// </summary>
         /// <param name="MemberID"></param>
         /// <returns></returns>
         public JsonResult<List<KeyValuePair<int, decimal>>> GetRenewalServiceList(int MemberID)
         {
-            //1号前无需服务费；1号后看账户余额，如果够缴纳一个月，则不需要交服务费，否则需交所有人一个月服务费(同下)
-            //账户余额够一个月，则无需交服务费，如果不够，则看1号前还是1号后，前不需要交，后需要交
-            //一个月服务
-            decimal MonthTotal = _socialSecurityService.GetMonthTotalAmountByMemberID(MemberID);
+            //只有账户状态为待续费状态下才能进行续费服务，付费提供1-12个月的服务，1号前无需缴纳服务费，其它需按设置缴纳，不管续几个月，只缴纳一个月服务费
+            decimal RenewMonthTotal = _socialSecurityService.GetRenewAmountByMemberID(MemberID);
             Dictionary<int, decimal> dic = new Dictionary<int, decimal>();
             for (int i = 0; i < 12; i++)
             {
-                dic.Add(i + 1, MonthTotal * (i + 1));
+                dic.Add(i + 1, RenewMonthTotal * (i + 1));
             }
+
             //计算第一个月
             decimal TotalServiceCost = 0;
             decimal SSServiceCost = 0;
             decimal AFServiceCost = 0;
 
-            AccountInfo accountInfo = _memberService.GetAccountInfo(MemberID);
-            if (accountInfo.Account < MonthTotal)
+
+            int day = DateTime.Now.Day;
+            //社保服务费
+            CostParameterSetting SSParameter = _parameterSettingService.GetCostParameter((int)PayTypeEnum.SocialSecurity);
+            if (SSParameter != null && !string.IsNullOrEmpty(SSParameter.RenewServiceCost))
             {
-                int day = DateTime.Now.Day;
-                //社保服务费
-                CostParameterSetting SSParameter = _parameterSettingService.GetCostParameter((int)PayTypeEnum.SocialSecurity);
-                if (SSParameter != null && !string.IsNullOrEmpty(SSParameter.RenewServiceCost))
+                string[] str = SSParameter.RenewServiceCost.Split(';');
+                foreach (var item in str)
                 {
-                    string[] str = SSParameter.RenewServiceCost.Split(';');
-                    foreach (var item in str)
+                    string[] str1 = item.Split(',');
+
+                    if (Convert.ToInt32(str1[0]) <= day && day <= Convert.ToInt32(str1[1]))
                     {
-                        string[] str1 = item.Split(',');
-
-                        if (Convert.ToInt32(str1[0]) <= day && day <= Convert.ToInt32(str1[1]))
-                        {
-                            //社保待办与正常与续费的人数
-                            SSServiceCost = _socialSecurityService.GetSocialSecurityRenewListByMemberID(MemberID).Count * Convert.ToDecimal(str1[2]);
-                            break;
-                        }
-
+                        //社保续费的人数*服务费
+                        SSServiceCost = _socialSecurityService.GetSocialSecurityRenewListByMemberID(MemberID).Count * Convert.ToDecimal(str1[2]);
+                        break;
                     }
+
                 }
-                //公积金服务费
-                CostParameterSetting AFParameter = _parameterSettingService.GetCostParameter((int)PayTypeEnum.AccumulationFund);
-                if (AFParameter != null && !string.IsNullOrEmpty(AFParameter.RenewServiceCost))
+            }
+            //公积金服务费
+            CostParameterSetting AFParameter = _parameterSettingService.GetCostParameter((int)PayTypeEnum.AccumulationFund);
+            if (AFParameter != null && !string.IsNullOrEmpty(AFParameter.RenewServiceCost))
+            {
+                string[] str = AFParameter.RenewServiceCost.Split(';');
+                foreach (var item in str)
                 {
-                    string[] str = AFParameter.RenewServiceCost.Split(';');
-                    foreach (var item in str)
+                    string[] str1 = item.Split(',');
+
+                    if (Convert.ToInt32(str1[0]) <= day && day <= Convert.ToInt32(str1[1]))
                     {
-                        string[] str1 = item.Split(',');
-
-                        if (Convert.ToInt32(str1[0]) <= day && day <= Convert.ToInt32(str1[1]))
-                        {
-                            //社保待办与正常的人数
-                            AFServiceCost = _socialSecurityService.GetAccumulationFundRenewListByMemberID(MemberID).Count * Convert.ToDecimal(str1[2]);
-                            break;
-                        }
-
+                        //社保待续费任务*服务费
+                        AFServiceCost = _socialSecurityService.GetAccumulationFundRenewListByMemberID(MemberID).Count * Convert.ToDecimal(str1[2]);
+                        break;
                     }
-                }
 
-                //小于一个月的（现在处于小于一个月内），不管充几个月服务，都要加上这个服务费，然后减去账户金额
-                TotalServiceCost = SSServiceCost + AFServiceCost;
-                for (int i = 0; i < 12; i++)
-                {
-                    dic[i + 1] = dic[i + 1] + TotalServiceCost;
                 }
             }
 
-            //所有服务月-账户余额，如果<0则去除
+            //不管充几个月服务，都要加上这个服务费，然后减去账户金额
+            AccountInfo accountInfo = _memberService.GetAccountInfo(MemberID);
+            TotalServiceCost = SSServiceCost + AFServiceCost;
             for (int i = 0; i < 12; i++)
             {
-                dic[i + 1] = dic[i + 1] - accountInfo.Account;
-                if (dic[i + 1] <= 0)
-                    dic.Remove(i + 1);
+                dic[i + 1] = dic[i + 1] + TotalServiceCost - accountInfo.Account;
             }
 
             return new JsonResult<List<KeyValuePair<int, decimal>>>
@@ -542,6 +531,93 @@ namespace WYJK.Web.Controllers.Http
                 Message = "获取集合成功",
                 Data = dic.ToList()
             };
+
+            ////所有服务月-账户余额，如果<0则去除
+            //for (int i = 0; i < 12; i++)
+            //{
+            //    dic[i + 1] = dic[i + 1] - accountInfo.Account;
+            //    if (dic[i + 1] <= 0)
+            //        dic.Remove(i + 1);
+            //}
+
+
+            ////1号前无需服务费；1号后看账户余额，如果够缴纳一个月，则不需要交服务费，否则需交所有人一个月服务费(同下)
+            ////账户余额够一个月，则无需交服务费，如果不够，则看1号前还是1号后，前不需要交，后需要交
+            ////一个月服务
+            //decimal MonthTotal = _socialSecurityService.GetMonthTotalAmountByMemberID(MemberID);
+            //Dictionary<int, decimal> dic = new Dictionary<int, decimal>();
+            //for (int i = 0; i < 12; i++)
+            //{
+            //    dic.Add(i + 1, MonthTotal * (i + 1));
+            //}
+            ////计算第一个月
+            //decimal TotalServiceCost = 0;
+            //decimal SSServiceCost = 0;
+            //decimal AFServiceCost = 0;
+
+            //AccountInfo accountInfo = _memberService.GetAccountInfo(MemberID);
+            //if (accountInfo.Account < MonthTotal)
+            //{
+            //    int day = DateTime.Now.Day;
+            //    //社保服务费
+            //    CostParameterSetting SSParameter = _parameterSettingService.GetCostParameter((int)PayTypeEnum.SocialSecurity);
+            //    if (SSParameter != null && !string.IsNullOrEmpty(SSParameter.RenewServiceCost))
+            //    {
+            //        string[] str = SSParameter.RenewServiceCost.Split(';');
+            //        foreach (var item in str)
+            //        {
+            //            string[] str1 = item.Split(',');
+
+            //            if (Convert.ToInt32(str1[0]) <= day && day <= Convert.ToInt32(str1[1]))
+            //            {
+            //                //社保待办与正常与续费的人数
+            //                SSServiceCost = _socialSecurityService.GetSocialSecurityRenewListByMemberID(MemberID).Count * Convert.ToDecimal(str1[2]);
+            //                break;
+            //            }
+
+            //        }
+            //    }
+            //    //公积金服务费
+            //    CostParameterSetting AFParameter = _parameterSettingService.GetCostParameter((int)PayTypeEnum.AccumulationFund);
+            //    if (AFParameter != null && !string.IsNullOrEmpty(AFParameter.RenewServiceCost))
+            //    {
+            //        string[] str = AFParameter.RenewServiceCost.Split(';');
+            //        foreach (var item in str)
+            //        {
+            //            string[] str1 = item.Split(',');
+
+            //            if (Convert.ToInt32(str1[0]) <= day && day <= Convert.ToInt32(str1[1]))
+            //            {
+            //                //社保待办与正常的人数
+            //                AFServiceCost = _socialSecurityService.GetAccumulationFundRenewListByMemberID(MemberID).Count * Convert.ToDecimal(str1[2]);
+            //                break;
+            //            }
+
+            //        }
+            //    }
+
+            //    //小于一个月的（现在处于小于一个月内），不管充几个月服务，都要加上这个服务费，然后减去账户金额
+            //    TotalServiceCost = SSServiceCost + AFServiceCost;
+            //    for (int i = 0; i < 12; i++)
+            //    {
+            //        dic[i + 1] = dic[i + 1] + TotalServiceCost;
+            //    }
+            //}
+
+            ////所有服务月-账户余额，如果<0则去除
+            //for (int i = 0; i < 12; i++)
+            //{
+            //    dic[i + 1] = dic[i + 1] - accountInfo.Account;
+            //    if (dic[i + 1] <= 0)
+            //        dic.Remove(i + 1);
+            //}
+
+            //return new JsonResult<List<KeyValuePair<int, decimal>>>
+            //{
+            //    status = true,
+            //    Message = "获取集合成功",
+            //    Data = dic.ToList()
+            //};
         }
 
         ///// <summary>
