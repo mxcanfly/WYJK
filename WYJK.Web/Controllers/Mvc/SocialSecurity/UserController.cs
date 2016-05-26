@@ -28,7 +28,7 @@ namespace WYJK.Web.Controllers
     /// <summary>
     /// 员工
     /// </summary>
-    [Authorize]
+
     public class UserController : Controller
     {
         IUserService _userService = new UserService();
@@ -360,6 +360,13 @@ namespace WYJK.Web.Controllers
 
         [HttpGet]
         public ActionResult TestDapper()
+        {
+            SocialSecurityPeople model = new SocialSecurityPeople();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult TestDapper(SocialSecurityPeople model)
         {
             string sql = "select Users.UserID, Users.UserName , Roles.RoleID, Roles.RoleName from Users left join UserRole on Users.UserID = UserRole.UserID left join Roles on UserRole.RoleID = Roles.RoleID";
             List<Users> list = DbHelper.CustomQuery<Users, Entity.Roles, Users>(sql,

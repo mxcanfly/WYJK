@@ -212,7 +212,7 @@ namespace WYJK.Web.Controllers.Mvc
             }
             decimal SSPayProportion = model.CompYangLao + model.CompYiLiao + model.CompShiYe + model.CompGongShang + model.CompShengYu
                 + model.PersonalYangLao + model.PersonalYiLiao + value + model.PersonalGongShang + model.PersonalShengYu;
-            decimal SSMonthAccount = Math.Round(Math.Round(Convert.ToDecimal(SSMinBase)) * Math.Round(Convert.ToDecimal(SSPayProportion) / 100), 2);
+            decimal SSMonthAccount = Math.Round(Math.Round(Convert.ToDecimal(SSMinBase)) * Convert.ToDecimal(SSPayProportion) / 100, 2);
 
             return Json(new
             {
@@ -252,40 +252,66 @@ namespace WYJK.Web.Controllers.Mvc
         [HttpPost]
         public ActionResult SaveEnterprise(SocialSecurityPeopleDetail model)
         {
-            //SocialSecurityPeople socialSecurityPeople = new SocialSecurityPeople();
-            //socialSecurityPeople.IdentityCard = model.IdentityCard;
 
-            //#region 户籍性质
-            //List<SelectListItem> list = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
+            SocialSecurityPeople socialSecurityPeople = new SocialSecurityPeople();
+            socialSecurityPeople.IdentityCard = model.IdentityCard;
 
-            //foreach (var item in list)
-            //{
-            //    if (item.Value == model.HouseholdProperty)
-            //    {
-            //        socialSecurityPeople.HouseholdProperty = item.Text;
-            //        break;
-            //    }
-            //}
-            //#endregion
+            #region 户籍性质
+            List<SelectListItem> list = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
 
-            //#region 更新参保人
-            //socialSecurityPeople.IdentityCardPhoto = string.Join(";", model.ImgUrls).Replace(ConfigurationManager.AppSettings["ServerUrl"], string.Empty);
-            //DbHelper.ExecuteSqlCommand($"update SocialSecurityPeople set IdentityCard='{socialSecurityPeople.IdentityCard}',HouseholdProperty='{socialSecurityPeople.HouseholdProperty}',IdentityCardPhoto='{socialSecurityPeople.IdentityCardPhoto}' where SocialSecurityPeopleID={model.SocialSecurityPeopleID}", null);
-            //#endregion
+            foreach (var item in list)
+            {
+                if (item.Value == model.HouseholdProperty)
+                {
+                    socialSecurityPeople.HouseholdProperty = item.Text;
+                    break;
+                }
+            }
+            #endregion
+            using (TransactionScope transaction = new TransactionScope())
+            {
+                try
+                {
+                    #region 更新参保人
+                    socialSecurityPeople.IdentityCardPhoto = string.Join(";", model.ImgUrls).Replace(ConfigurationManager.AppSettings["ServerUrl"], string.Empty);
+                    DbHelper.ExecuteSqlCommand($"update SocialSecurityPeople set IdentityCard='{socialSecurityPeople.IdentityCard}',HouseholdProperty='{socialSecurityPeople.HouseholdProperty}',IdentityCardPhoto='{socialSecurityPeople.IdentityCardPhoto}' where SocialSecurityPeopleID={model.SocialSecurityPeopleID}", null);
+                    #endregion
 
-            //#region 更新用户
-            //string inviteCode = _userService.GetUserInfoByUserID(model.InviteCode).InviteCode;
-            //DbHelper.ExecuteSqlCommand($"update Members set InviteCode='{inviteCode}' where MemberID={model.MemberID}", null);
-            //#endregion
+                    #region 更新用户
+                    string inviteCode = string.Empty;
+                    if (!string.IsNullOrEmpty(model.InviteCode))
+                    {
+                        inviteCode = _userService.GetUserInfoByUserID(model.InviteCode).InviteCode;
+                    }
+                    DbHelper.ExecuteSqlCommand($"update Members set InviteCode='{inviteCode}' where MemberID={model.MemberID}", null);
+                    #endregion
 
-            //#region 更新社保
-
-            //#endregion
-
-            //#region 更新公积金
-
-            //#endregion
-
+                    if (model.IsPaySocialSecurity)
+                    {
+                        #region 更新社保
+                        DbHelper.ExecuteSqlCommand($"update SocialSecurity set SocialSecurityNo='{model.SocialSecurityNo}',SocialSecurityBase='{model.SocialSecurityBase}',RelationEnterprise='{model.SSEnterpriseList}',PayProportion='{model.ssPayProportion.TrimEnd('%')}' where SocialSecurityPeopleID={model.SocialSecurityPeopleID}", null);
+                        #endregion
+                    }
+                    if (model.IsPayAccumulationFund)
+                    {
+                        #region 更新公积金
+                        DbHelper.ExecuteSqlCommand($"update AccumulationFund set AccumulationFundNo='{model.AccumulationFundNo}',AccumulationFundBase='{model.AccumulationFundBase}',RelationEnterprise='{model.AFEnterpriseList}',PayProportion='{model.afPayProportion.TrimEnd('%')}' where SocialSecurityPeopleID={model.SocialSecurityPeopleID}", null);
+                        
+                        #endregion
+                    }
+                    transaction.Complete();
+                }
+                catch (Exception ex)
+                {
+                    TempData["Message"] = "更新失败";
+                    return RedirectToAction("GetCustomerServiceList");
+                }
+                finally
+                {
+                    transaction.Dispose();
+                }
+            }
+            TempData["Message"] = "更新成功";
             return RedirectToAction("GetCustomerServiceList");
         }
 
@@ -300,13 +326,24 @@ namespace WYJK.Web.Controllers.Mvc
             public string InviteCode { get; set; }
 
 
+            public bool IsPaySocialSecurity { get; set; }
             public string SocialSecurityNo { get; set; }
+            /// <summary>
+            /// 签约单位
+            /// </summary>
             public string SSEnterpriseList { get; set; }
             public string SocialSecurityBase { get; set; }
+            public string ssPayProportion { get; set; }
 
+
+            public bool IsPayAccumulationFund { get; set; }
             public string AccumulationFundNo { get; set; }
+            /// <summary>
+            /// 签约单位
+            /// </summary>
             public string AFEnterpriseList { get; set; }
             public string AccumulationFundBase { get; set; }
+            public string afPayProportion { get; set; }
 
         }
     }

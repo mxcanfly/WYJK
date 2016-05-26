@@ -16,6 +16,24 @@
     </style>
     <script>
         $(function () {
+
+            //手动更改社保基数
+            $("[name='SocialSecurityBase']").blur(function () {
+
+                var val = $.trim($("[name='ssPayProportion']").val());
+
+                $("#SSMonthAccount").text(Math.round(Number($(this).val()) * Number(val.substring(0, val.length - 1)) / 100, 2));
+            })
+
+            //手动更改公积金基数
+            $("[name='AccumulationFundBase']").blur(function () {
+                var val = $.trim($("[name='afPayProportion']").val());
+
+                $("#AFMonthAccount").text(Math.round(Number($(this).val()) * Number(val.substring(0, val.length - 1)) / 100, 2));
+            });
+
+
+            //提交
             $("button[type='submit']").click(function () {
                 var SocialSecurityBase = Number($("[name='SocialSecurityBase']").val());
                 var SSMinBase = Number($("#SSMinBase").text());
@@ -112,8 +130,8 @@
                     success: function (data) {
                         $("#SSMinBase").text(data.SSMinBase);
                         $("#SSMaxBase").text(data.SSMaxBase);
-                        $("#SocialSecurityBase").val(data.SSMinBase);
-                        $("#ssPayProportion").text(data.SSPayProportion + "%");
+                        $("[name='SocialSecurityBase']").val(data.SSMinBase);
+                        $("[name='ssPayProportion']").val(data.SSPayProportion + "%");
                         $("#SSMonthAccount").text(data.SSMonthAccount);
                     },
                     error: function () {
@@ -131,8 +149,8 @@
                     success: function (data) {
                         $("#AFMinBase").text(data.AFMinBase);
                         $("#AFMaxBase").text(data.AFMaxBase);
-                        $("#AccumulationFundBase").val(data.AFMinBase);
-                        $("#afPayProportion").text(data.AFPayProportion + "%");
+                        $("[name='AccumulationFundBase']").val(data.AFMinBase);
+                        $("[name='afPayProportion']").val(data.AFPayProportion + "%");
                         $("#AFMonthAccount").text(data.AFMonthAccount);
                     },
                     error: function () {
@@ -302,7 +320,7 @@
             </div>
             <label class="form-label col-3">业务专员：</label>
             <div class="formControls col-2">
-                <input type="hidden" value="@member.MemberID" />
+                <input type="hidden" value="@member.MemberID" name="MemberID" />
                 @if (type == "0")
                 {
                     <span class="lineheight">
@@ -374,12 +392,16 @@
         {
             <div class="row cl">
                 <label class="form-label col-3">身份证照：</label>
-                <div class="formControls col-2">
-                    <img src="/@ImgUrls[0]" height="100" />
-                </div>
-                <div class="formControls col-2">
-                    <img src="/@ImgUrls[1]" height="100" />
-                </div>
+                @if (ImgUrls != null && ImgUrls.Length > 0)
+                {
+                    foreach (var ImgUrl in ImgUrls)
+                    {
+
+                        <div class="formControls col-2">
+                            <img src="/@ImgUrl" height="100" />
+                        </div>
+                    }
+                }
             </div>
         }
         else if (type == "1")
@@ -400,7 +422,7 @@
 
                                         </div>
                                         <span class="iconfont icon-iconfontwiconguanbi uploader-remove" title="删除" onclick="removeFile(this)">
-                                            <input type="hidden" name="@ImgUrls[i]" class="wyjk-images" value="@ImgUrls[i]" />
+                                            <input type="hidden" name="ImgUrls[@i]" class="wyjk-images" value="@ImgUrls[i]" />
                                         </span>
                                     </div>
 
@@ -414,8 +436,11 @@
         }
 
         <br />
+
+
         @if (Model.socialSecurity != null)
         {
+            @Html.Hidden("IsPaySocialSecurity", true)
             <div class="row cl" style="text-align:center;">
                 <label style="font-size:24px;font-weight:bold;">@(Model.SocialSecurityPeopleName)的社保业务信息</label>
             </div>
@@ -486,8 +511,8 @@
                 </div>
                 <label class="form-label col-3">比例：</label>
                 <div class="formControls col-2">
-                    <span class="lineheight" id="ssPayProportion">
-                        @Model.socialSecurity.PayProportion%
+                    <span class="lineheight">
+                        <input type="text" name="ssPayProportion" value="@Model.socialSecurity.PayProportion%" readonly="readonly" class="input-text" />
                     </span>
                 </div>
             </div>
@@ -502,7 +527,7 @@
                 <label class="form-label col-3">每月交：</label>
                 <div class="formControls col-2">
                     <span class="lineheight" id="SSMonthAccount">
-                        @Convert.ToDecimal(Model.socialSecurity.SocialSecurityBase * Model.socialSecurity.PayProportion / 100).ToString("N2")
+                        @Math.Round(Model.socialSecurity.SocialSecurityBase * Model.socialSecurity.PayProportion / 100, 2)
                     </span>
                 </div>
             </div>
@@ -557,8 +582,14 @@
                 </div>
             </div>
         }
+        else
+        {
+            @Html.Hidden("IsPaySocialSecurity", false)
+        }
+
         @if (Model.accumulationFund != null)
         {
+            @Html.Hidden("IsPayAccumulationFund", true)
             <div class="row cl" style="text-align:center;">
                 <label style="font-size:24px;font-weight:bold;">@(Model.SocialSecurityPeopleName)的公积金业务信息</label>
             </div>
@@ -628,8 +659,8 @@
                 </div>
                 <label class="form-label col-3">比例：</label>
                 <div class="formControls col-2">
-                    <span class="lineheight" id="afPayProportion">
-                        @Model.accumulationFund.PayProportion%
+                    <span class="lineheight">
+                        <input type="text" value="@Model.accumulationFund.PayProportion%" name="afPayProportion" readonly="readonly" class="input-text" />
                     </span>
                 </div>
             </div>
@@ -644,7 +675,7 @@
                 <label class="form-label col-3">每月交：</label>
                 <div class="formControls col-2">
                     <span class="lineheight" id="AFMonthAccount">
-                        @Convert.ToDecimal(Model.accumulationFund.AccumulationFundBase * Model.accumulationFund.PayProportion / 100).ToString("N2")
+                        @Math.Round(Model.accumulationFund.AccumulationFundBase * Model.accumulationFund.PayProportion / 100, 2)
                     </span>
                 </div>
             </div>
@@ -699,6 +730,10 @@
                 </div>
             </div>
         }
+        else {
+            @Html.Hidden("IsPayAccumulationFund", false)
+        }
+
         <div class="row cl">
             <div class="col-10 col-offset-2">
                 <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>

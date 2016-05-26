@@ -89,8 +89,8 @@ namespace WYJK.Web.Controllers.Http
                     status = false,
                     Message = "该区域不能进行缴费操作，请选择其他区域"
                 };
-            decimal minBase = model.SocialAvgSalary * (model.MinSocial / 100);
-            decimal maxBase = model.SocialAvgSalary * (model.MaxSocial / 100);
+            decimal minBase = Math.Round(model.SocialAvgSalary * (model.MinSocial / 100));
+            decimal maxBase = Math.Round(model.SocialAvgSalary * (model.MaxSocial / 100));
             return new JsonResult<dynamic>
             {
                 status = true,
@@ -639,7 +639,8 @@ namespace WYJK.Web.Controllers.Http
             + $" where (ss.Status = {(int)SocialSecurityStatusEnum.WaitingHandle} or af.Status = {(int)SocialSecurityStatusEnum.WaitingHandle}) or((ss.Status = {(int)SocialSecurityStatusEnum.UnInsured} or af.Status = {(int)SocialSecurityStatusEnum.UnInsured}) and ssp.IsPay =1) and ssp.MemberID = {MemberID}";
             List<SocialSecurityPeoples> socialSecurityPeopleList = DbHelper.Query<SocialSecurityPeoples>(sql);
 
-            socialSecurityPeopleList.ForEach(item=> {
+            socialSecurityPeopleList.ForEach(item =>
+            {
                 if (item.SSStatus == null)
                     item.SSStatus = 0;
                 if (item.AFStatus == null)

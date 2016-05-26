@@ -1,0 +1,12 @@
+﻿@model SocialSecurityPeople
+<form action='@Url.Action("TestDapper")' method="post">
+    <div>
+        @Html.TextBoxFor(m => m.SocialSecurityPeopleID)
+        <input type="text" value="@Model.SocialSecurityPeopleID" />
+        @Html.TextBoxFor(m => m.socialSecurity.SocialSecurityID)
+        @Html.TextBoxFor(m => m.accumulationFund.AccumulationFundID)
+    </div>
+    <input type="submit" value="save" />
+</form>
+
+

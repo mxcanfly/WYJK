@@ -30,6 +30,8 @@
         });
 
         $(function () {
+            $(".Huialert.Huialert-info").fadeOut(2000);
+
             $("#UserType").change(function () {
                 $this = $(this);
 
@@ -167,6 +169,10 @@
     </div>
 
     <div class="mt-20">
+        @if (!string.IsNullOrWhiteSpace(TempData["Message"] + ""))
+        {
+            <div class="Huialert Huialert-info">@(TempData["Message"])</div>
+        }
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <thead>
                 <tr class="text-c">

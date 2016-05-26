@@ -1219,6 +1219,16 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="P:WYJK.Web.Controllers.Mvc.CustomerServiceController.SocialSecurityPeopleDetail.SSEnterpriseList">
+            <summary>
+            签约单位
+            </summary>
+        </member>
+        <member name="P:WYJK.Web.Controllers.Mvc.CustomerServiceController.SocialSecurityPeopleDetail.AFEnterpriseList">
+            <summary>
+            签约单位
+            </summary>
+        </member>
         <member name="T:WYJK.Web.Controllers.Mvc.EnterpriseController">
             <summary>
             签约企业

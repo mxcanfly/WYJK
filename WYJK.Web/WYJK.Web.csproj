@@ -1859,6 +1859,7 @@
     <Content Include="Views\User\_PermissionEdit.cshtml" />
     <Content Include="Views\SocialSecurity\SocialSecurityWaitingStop.cshtml" />
     <Content Include="Views\User\GetUserList.cshtml" />
+    <Content Include="Views\User\TestDapper.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\lib\Highcharts\4.1.7\exporting-server\java\highcharts-export\highcharts-export-convert\target\generated-sources\annotations\" />
