@@ -64,13 +64,13 @@ namespace WYJK.Data.ServiceImpl
         public bool AddEnterprise(EnterpriseSocialSecurity model)
         {
             string sqlStr = "insert into EnterpriseSocialSecurity(EnterpriseName,EnterpriseArea,ContactUser,ContactTel,Fax,Email"
-                                                                  + ",OfficeTel,HouseholdProperty,OrgAddress,SocialAvgSalary,MinSocial"
+                                                                  + ",OfficeTel,OrgAddress,SocialAvgSalary,MinSocial"
                                                                   + ",MaxSocial,CompYangLao,CompYiLiao,CompShiYe,CompGongShang,CompShengYu"
                                                                   + ",PersonalYangLao,PersonalYiLiao,PersonalShiYeTown,PersonalShiYeRural,PersonalGongShang"
                                                                   + ",PersonalShengYu,MinAccumulationFund,MaxAccumulationFund,CompProportion"
                                                                   + ",PersonalProportion,IsDefault)"
                                                                   + " values(@EnterpriseName,@EnterpriseArea,@ContactUser,@ContactTel,@Fax,@Email"
-                                                                  + ",@OfficeTel,@HouseholdProperty,@OrgAddress,@SocialAvgSalary,@MinSocial"
+                                                                  + ",@OfficeTel,@OrgAddress,@SocialAvgSalary,@MinSocial"
                                                                   + ",@MaxSocial,@CompYangLao,@CompYiLiao,@CompShiYe,@CompGongShang,@CompShengYu"
                                                                   + ",@PersonalYangLao,@PersonalYiLiao,@PersonalShiYeTown,@PersonalShiYeRural,@PersonalGongShang"
                                                                   + ",@PersonalShengYu,@MinAccumulationFund,@MaxAccumulationFund,@CompProportion"
@@ -83,7 +83,7 @@ namespace WYJK.Data.ServiceImpl
                 new SqlParameter("Fax",model.Fax),
                 new SqlParameter("Email",model.Email),
                 new SqlParameter("OfficeTel",model.OfficeTel),
-                new SqlParameter("HouseholdProperty",model.HouseholdProperty),
+                //new SqlParameter("HouseholdProperty",model.HouseholdProperty),
                 new SqlParameter("OrgAddress",model.OrgAddress),
                 new SqlParameter("SocialAvgSalary",model.SocialAvgSalary),
                 new SqlParameter("MinSocial",model.MinSocial),
@@ -150,7 +150,7 @@ namespace WYJK.Data.ServiceImpl
         /// <returns></returns>
         public bool UpdateEnterprise(EnterpriseSocialSecurity model)
         {
-            string sqlstr = "update EnterpriseSocialSecurity set EnterpriseName=@EnterpriseName,EnterpriseArea=@EnterpriseArea,ContactUser=@ContactUser,ContactTel=@ContactTel,Fax=@Fax,Email=@Email,OfficeTel=@OfficeTel,HouseholdProperty=@HouseholdProperty,OrgAddress=@OrgAddress,SocialAvgSalary=@SocialAvgSalary,MinSocial=@MinSocial,MaxSocial=@MaxSocial,CompYangLao=@CompYangLao,CompYiLiao=@CompYiLiao,CompShiYe=@CompShiYe,CompGongShang=@CompGongShang,CompShengYu=@CompShengYu,PersonalYangLao=@PersonalYangLao,PersonalYiLiao=@PersonalYiLiao,PersonalShiYeTown=@PersonalShiYeTown,PersonalShiYeRural=@PersonalShiYeRural,PersonalGongShang=@PersonalGongShang,PersonalShengYu=@PersonalShengYu,MinAccumulationFund=@MinAccumulationFund,MaxAccumulationFund=@MaxAccumulationFund,CompProportion=@CompProportion,PersonalProportion=@PersonalProportion,IsDefault=@IsDefault where EnterpriseID=@EnterpriseID";
+            string sqlstr = "update EnterpriseSocialSecurity set EnterpriseName=@EnterpriseName,EnterpriseArea=@EnterpriseArea,ContactUser=@ContactUser,ContactTel=@ContactTel,Fax=@Fax,Email=@Email,OfficeTel=@OfficeTel,OrgAddress=@OrgAddress,SocialAvgSalary=@SocialAvgSalary,MinSocial=@MinSocial,MaxSocial=@MaxSocial,CompYangLao=@CompYangLao,CompYiLiao=@CompYiLiao,CompShiYe=@CompShiYe,CompGongShang=@CompGongShang,CompShengYu=@CompShengYu,PersonalYangLao=@PersonalYangLao,PersonalYiLiao=@PersonalYiLiao,PersonalShiYeTown=@PersonalShiYeTown,PersonalShiYeRural=@PersonalShiYeRural,PersonalGongShang=@PersonalGongShang,PersonalShengYu=@PersonalShengYu,MinAccumulationFund=@MinAccumulationFund,MaxAccumulationFund=@MaxAccumulationFund,CompProportion=@CompProportion,PersonalProportion=@PersonalProportion,IsDefault=@IsDefault where EnterpriseID=@EnterpriseID";
 
 
             int result = DbHelper.ExecuteSqlCommand(sqlstr, new
@@ -162,7 +162,7 @@ namespace WYJK.Data.ServiceImpl
                 Fax = model.Fax,
                 Email = model.Email,
                 OfficeTel = model.OfficeTel,
-                HouseholdProperty = model.HouseholdProperty,
+                //HouseholdProperty = model.HouseholdProperty,
                 OrgAddress = model.OrgAddress,
                 SocialAvgSalary = model.SocialAvgSalary,
                 MinSocial = model.MinSocial,
@@ -192,31 +192,31 @@ namespace WYJK.Data.ServiceImpl
         }
 
         /// <summary>
-        /// 根据地址和户口更新企业默认值
+        /// 根据地址更新企业默认值
         /// </summary>
         /// <param name="EnterpriseArea"></param>
         /// <param name="HouseholdProperty"></param>
         /// <returns></returns>
-        public void UpdateEnterpriseDefault(string EnterpriseArea, int HouseholdProperty)
+        public void UpdateEnterpriseDefault(string EnterpriseArea,int EnterpriseID)
         {
             string sqlHouseholdProperty = string.Empty;
-            switch (HouseholdProperty)
-            {
-                case (int)HouseholdPropertyEnum.InRural:
-                    sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InRural) +","+ Convert.ToString((int)HouseholdPropertyEnum.OutRural);
-                    break;
-                case (int)HouseholdPropertyEnum.OutRural:
-                    sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InRural) + "," + Convert.ToString((int)HouseholdPropertyEnum.OutRural);
-                    break;
-                case (int)HouseholdPropertyEnum.InTown:
-                    sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InTown) + "," + Convert.ToString((int)HouseholdPropertyEnum.OutTown);
-                    break;
-                case (int)HouseholdPropertyEnum.OutTown:
-                    sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InTown) + "," + Convert.ToString((int)HouseholdPropertyEnum.OutTown);
-                    break;
-            }
+            //switch (HouseholdProperty)
+            //{
+            //    case (int)HouseholdPropertyEnum.InRural:
+            //        sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InRural) +","+ Convert.ToString((int)HouseholdPropertyEnum.OutRural);
+            //        break;
+            //    case (int)HouseholdPropertyEnum.OutRural:
+            //        sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InRural) + "," + Convert.ToString((int)HouseholdPropertyEnum.OutRural);
+            //        break;
+            //    case (int)HouseholdPropertyEnum.InTown:
+            //        sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InTown) + "," + Convert.ToString((int)HouseholdPropertyEnum.OutTown);
+            //        break;
+            //    case (int)HouseholdPropertyEnum.OutTown:
+            //        sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InTown) + "," + Convert.ToString((int)HouseholdPropertyEnum.OutTown);
+            //        break;
+            //}
 
-            string sqlstr = $"update EnterpriseSocialSecurity set IsDefault = 0 where EnterpriseArea like '%{EnterpriseArea}%' and HouseholdProperty in ({sqlHouseholdProperty})";
+            string sqlstr = $"update EnterpriseSocialSecurity set IsDefault = 0 where EnterpriseArea like '%{EnterpriseArea}%' and EnterpriseID <>{EnterpriseID}";
 
             DbHelper.ExecuteSqlCommand(sqlstr, null);
 

@@ -39,10 +39,10 @@ namespace WYJK.Web.Controllers.Mvc
         [HttpGet]
         public ActionResult AddEnterprise()
         {
-            List<SelectListItem> UserTypeList = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
-            UserTypeList.Insert(0, new SelectListItem { Text = "请选择", Value = "" });
+            //List<SelectListItem> UserTypeList = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
+            //UserTypeList.Insert(0, new SelectListItem { Text = "请选择", Value = "" });
 
-            ViewData["HouseholdProperty"] = new SelectList(UserTypeList, "Value", "Text");
+            //ViewData["HouseholdProperty"] = new SelectList(UserTypeList, "Value", "Text");
 
             EnterpriseSocialSecurity model = new EnterpriseSocialSecurity();
 
@@ -82,7 +82,7 @@ namespace WYJK.Web.Controllers.Mvc
             //更新其他签约企业  注：满足省份|城市和户口类型  默认的只有一个
             if (model.IsDefault)
             {
-                _enterpriseService.UpdateEnterpriseDefault(ProvinceName + "|" + CityName, Convert.ToInt32(model.HouseholdProperty));
+                _enterpriseService.UpdateEnterpriseDefault(ProvinceName + "|" + CityName, 0);
             }
 
             //添加
@@ -139,10 +139,10 @@ namespace WYJK.Web.Controllers.Mvc
 
             EnterpriseSocialSecurity model = _enterpriseService.GetEnterpriseSocialSecurity(EnterpriseID);
 
-            List<SelectListItem> UserTypeList = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
-            UserTypeList.Insert(0, new SelectListItem { Text = "请选择", Value = "" });
+            //List<SelectListItem> UserTypeList = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
+            //UserTypeList.Insert(0, new SelectListItem { Text = "请选择", Value = "" });
 
-            ViewData["HouseholdProperty1"] = UserTypeList; //new SelectList(UserTypeList, "Value", "Text");
+            //ViewData["HouseholdProperty1"] = UserTypeList; 
 
             return View(model);
         }
@@ -179,7 +179,7 @@ namespace WYJK.Web.Controllers.Mvc
             //更新其他签约企业  注：满足省份|城市和户口类型  默认的只有一个
             if (model.IsDefault)
             {
-                _enterpriseService.UpdateEnterpriseDefault(ProvinceName + "|" + CityName, Convert.ToInt32(model.HouseholdProperty));
+                _enterpriseService.UpdateEnterpriseDefault(ProvinceName + "|" + CityName, model.EnterpriseID);
             }
 
             bool flag = _enterpriseService.UpdateEnterprise(model);
@@ -210,7 +210,8 @@ namespace WYJK.Web.Controllers.Mvc
         /// </summary>
         /// <param name="RelationEnterprise"></param>
         /// <returns></returns>
-        public ActionResult GetSocialSecurityList(int RelationEnterprise) {
+        public ActionResult GetSocialSecurityList(int RelationEnterprise)
+        {
 
             ViewData["SocialSecurityList"] = _socialSecurityService.GetSocialSecurityListByEnterpriseID(RelationEnterprise);
             ViewData["AccumulationFundList"] = _accumulationFundService.GetAccumulationFundListByEnterpriseID(RelationEnterprise);

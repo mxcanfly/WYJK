@@ -71,11 +71,11 @@ namespace WYJK.Entity
         [Required(ErrorMessage ="办公电话必填")]
         public string OfficeTel { get; set; }
 
-        /// <summary>
-        /// 户口类型
-        /// </summary>
-        [Required(ErrorMessage ="户口类型必填")]
-        public string HouseholdProperty { get; set; }
+        ///// <summary>
+        ///// 户口类型
+        ///// </summary>
+        //[Required(ErrorMessage ="户口类型必填")]
+        //public string HouseholdProperty { get; set; }
 
         /// <summary>
         /// 机构地址

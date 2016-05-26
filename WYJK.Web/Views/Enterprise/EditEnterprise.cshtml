@@ -18,7 +18,7 @@
             $(".Huialert.Huialert-info").fadeOut(2000);
 
 
-            //户口类型选择 农村：1、3 城镇：2、4
+            @*//户口类型选择 农村：1、3 城镇：2、4
             $("#HouseholdProperty").change(function () {
 
                 var value = $(this).find("option:selected").val();
@@ -41,7 +41,7 @@
             } else if ('@Convert.ToInt32(Model.HouseholdProperty)' == '@Convert.ToInt32(HouseholdPropertyEnum.InTown)' || '@Convert.ToInt32(Model.HouseholdProperty)' == '@Convert.ToInt32(HouseholdPropertyEnum.OutTown)') {
                 $("#PersonalShiYeTown").attr("disabled", false);
                 $("#PersonalShiYeRural").attr("disabled", true);
-            }
+            }*@
 
             //社保基数计算
             $(".base").blur(function () {
@@ -55,7 +55,8 @@
                 $(".proportion:not(:disabled)").each(function () {
                     proportion += Number($(this).val());
                 });
-                $("#proportionSum").text(proportion + "%");
+                $("#townProportionSum").text(proportion-$("#PersonalShiYeRural").val() + "%");
+                $("#ruralProportionSum").text(proportion-$("#PersonalShiYeTown").val() + "%");
             });
 
         })
@@ -135,14 +136,14 @@
                 @Html.TextBoxFor(m => m.OfficeTel, new { @class = "input-text" })
             </div>
             <div class="col-2">@Html.ValidationMessageFor(m => m.OfficeTel)</div>
-            <label class="form-label col-2">户口类型：</label>
-            <div class="formControls col-2">
-                @{
-                    var HouseholdProperty = ViewData["HouseholdProperty1"] as List<SelectListItem>;
-                }
-                @Html.DropDownListFor(m => m.HouseholdProperty, HouseholdProperty, new { @class = "input-text" })
-            </div>
-            <div class="col-2">@Html.ValidationMessageFor(m => m.HouseholdProperty)</div>
+            @*<label class="form-label col-2">户口类型：</label>
+                <div class="formControls col-2">
+                    @{
+                        var HouseholdProperty = ViewData["HouseholdProperty1"] as List<SelectListItem>;
+                    }
+                    @Html.DropDownListFor(m => m.HouseholdProperty, HouseholdProperty, new { @class = "input-text" })
+                </div>
+                <div class="col-2">@Html.ValidationMessageFor(m => m.HouseholdProperty)</div>*@
         </div>
         <div class="row cl">
             <label class="form-label col-2">机构地址：</label>
@@ -260,21 +261,26 @@
             <div class="col-2">@Html.ValidationMessageFor(m => m.PersonalShengYu)</div>
         </div>
         <div class="row cl">
-            <label class="form-label col-2">社保比例：</label>
-            <div class="formControls col-2" id="proportionSum" style="line-height:31px">
-                @{ 
-                    decimal value = 0;
-                    if (Convert.ToInt32(Model.HouseholdProperty) == Convert.ToInt32(HouseholdPropertyEnum.InRural) || Convert.ToInt32(Model.HouseholdProperty) == Convert.ToInt32(HouseholdPropertyEnum.OutRural))
-                    {
-                        value = Model.PersonalShiYeRural;
-                    }
-                    else if (Convert.ToInt32(Model.HouseholdProperty) == Convert.ToInt32(HouseholdPropertyEnum.InTown) || Convert.ToInt32(Model.HouseholdProperty) == Convert.ToInt32(HouseholdPropertyEnum.OutTown))
-                    {
-                        value = Model.PersonalShiYeTown;
-                    }
-                }
+            <label class="form-label col-2">社保(城镇)比例：</label>
+            <div class="formControls col-4" id="townProportionSum" style="line-height:31px">
+                @*@{
+                        decimal value = 0;
+                        if (Convert.ToInt32(Model.HouseholdProperty) == Convert.ToInt32(HouseholdPropertyEnum.InRural) || Convert.ToInt32(Model.HouseholdProperty) == Convert.ToInt32(HouseholdPropertyEnum.OutRural))
+                        {
+                            value = Model.PersonalShiYeRural;
+                        }
+                        else if (Convert.ToInt32(Model.HouseholdProperty) == Convert.ToInt32(HouseholdPropertyEnum.InTown) || Convert.ToInt32(Model.HouseholdProperty) == Convert.ToInt32(HouseholdPropertyEnum.OutTown))
+                        {
+                            value = Model.PersonalShiYeTown;
+                        }
+                    }*@
                 @Math.Round(Convert.ToDecimal(Model.CompYangLao + Model.CompYiLiao + Model.CompShiYe + Model.CompGongShang + Model.CompShengYu
-                + Model.PersonalYangLao + Model.PersonalYiLiao + value + Model.PersonalGongShang + Model.PersonalShengYu), 2)%
+                + Model.PersonalYangLao + Model.PersonalYiLiao + Model.PersonalShiYeTown + Model.PersonalGongShang + Model.PersonalShengYu), 2)%
+            </div>
+            <label class="form-label col-2">社保(农村)比例：</label>
+            <div class="formControls col-4" id="ruralProportionSum" style="line-height:31px">
+                @Math.Round(Convert.ToDecimal(Model.CompYangLao + Model.CompYiLiao + Model.CompShiYe + Model.CompGongShang + Model.CompShengYu
+                + Model.PersonalYangLao + Model.PersonalYiLiao + Model.PersonalShiYeRural + Model.PersonalGongShang + Model.PersonalShengYu), 2)%
             </div>
         </div>
         <div class="row cl" style="text-align:center;">

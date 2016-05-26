@@ -191,20 +191,20 @@ where SocialSecurityPeople.MemberID = @MemberID and (SocialSecurity.status = @st
         /// <returns></returns>
         public EnterpriseSocialSecurity GetDefaultEnterpriseSocialSecurityByArea(string area, string HouseholdProperty)
         {
-            string sqlHouseholdProperty = string.Empty;
-            if (HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.InRural)) ||
-                HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.OutRural)))
-            {
-                sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InRural) + "," + Convert.ToString((int)HouseholdPropertyEnum.OutRural);
-            }
-            else if (HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.InTown)) ||
-              HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.OutTown)))
-            {
-                sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InTown) + "," + Convert.ToString((int)HouseholdPropertyEnum.OutTown);
-            }
+            //string sqlHouseholdProperty = string.Empty;
+            //if (HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.InRural)) ||
+            //    HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.OutRural)))
+            //{
+            //    sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InRural) + "," + Convert.ToString((int)HouseholdPropertyEnum.OutRural);
+            //}
+            //else if (HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.InTown)) ||
+            //  HouseholdProperty == EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)((int)HouseholdPropertyEnum.OutTown)))
+            //{
+            //    sqlHouseholdProperty = Convert.ToString((int)HouseholdPropertyEnum.InTown) + "," + Convert.ToString((int)HouseholdPropertyEnum.OutTown);
+            //}
 
 
-            string sql = $"select * from EnterpriseSocialSecurity where enterpriseArea  like '%{area}%' and HouseholdProperty in ({sqlHouseholdProperty}) and IsDefault = 1";
+            string sql = $"select * from EnterpriseSocialSecurity where enterpriseArea  like '%{area}%' and IsDefault = 1";
             EnterpriseSocialSecurity model = DbHelper.QuerySingle<EnterpriseSocialSecurity>(sql);
             return model;
         }
@@ -229,7 +229,7 @@ where SocialSecurityPeople.MemberID = @MemberID and (SocialSecurity.status = @st
             }
 
 
-            string sql = $"select * from EnterpriseSocialSecurity where enterpriseArea  like '%{area}%' and HouseholdProperty in ({sqlHouseholdProperty})";
+            string sql = $"select * from EnterpriseSocialSecurity where enterpriseArea  like '%{area}%'";
             List<EnterpriseSocialSecurity> list = DbHelper.Query<EnterpriseSocialSecurity>(sql);
             return list;
         }

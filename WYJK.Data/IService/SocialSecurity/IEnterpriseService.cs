@@ -57,12 +57,12 @@ namespace WYJK.Data.IService
         bool UpdateEnterprise(EnterpriseSocialSecurity model);
 
         /// <summary>
-        /// 根据地址和户口更新企业默认值
+        /// 根据地址更新企业默认值
         /// </summary>
         /// <param name="EnterpriseArea"></param>
         /// <param name="HouseholdProperty"></param>
         /// <returns></returns>
-        void UpdateEnterpriseDefault(string EnterpriseArea, int HouseholdProperty);
+        void UpdateEnterpriseDefault(string EnterpriseArea,int EnterpriseID);
 
         /// <summary>
         /// 获取企业名称列表

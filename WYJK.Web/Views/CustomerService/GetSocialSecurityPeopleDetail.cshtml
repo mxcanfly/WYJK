@@ -124,7 +124,7 @@
             //社保签约单位改变时
             $("#SSEnterpriseList").change(function () {
                 $.ajax({
-                    url: '@Url.Action("GetSSEnterprise", "CustomerService")?EnterpriseID=' + $(this).val(),
+                    url: '@Url.Action("GetSSEnterprise", "CustomerService")?EnterpriseID=' + $(this).val()+"&HouseholdProperty="+$("#HouseholdProperty").val(),
                     type: 'get',
                     dataType: "json",
                     success: function (data) {

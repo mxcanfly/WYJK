@@ -40,22 +40,20 @@ namespace WYJK.Data.ServiceImpl
                 builder.Append($" and SocialSecurityPeople.IdentityCard like '%{parameter.IdentityCard}%'");
             }
 
-            string sqlCs = $@"select members.MemberID,members.UserType,Members.MemberName,Members.MemberPhone,members.Account, SocialSecurityPeople.SocialSecurityPeopleName,SocialSecurityPeople.SocialSecurityPeopleID ,SocialSecurityPeople.Status CustomerServiceStatus, SocialSecurityPeople.IdentityCard,SocialSecurity.Status SSstatus, socialsecurity.SocialSecurityException,AccumulationFund.Status AFStatus, AccumulationFund.AccumulationFundException,
-                             ISNULL((select SUM(SocialSecurity.SocialSecurityBase*socialsecurity.PayProportion/100) from SocialSecurityPeople
-left join SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID
-where MemberID = Members.MemberID and SocialSecurity.Status = 4 ),0)
-+
-ISNULL((select  SUM(AccumulationFund.AccumulationFundBase*AccumulationFund.PayProportion/100)  from SocialSecurityPeople
-left join AccumulationFund on SocialSecurityPeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID
-where MemberID = Members.MemberID and AccumulationFund.Status = 4),0) ArrearAmount 
+            string sqlCs = $@"select members.MemberID,members.UserType,Members.MemberName,Members.MemberPhone,members.Account, SocialSecurityPeople.SocialSecurityPeopleName,SocialSecurityPeople.SocialSecurityPeopleID ,SocialSecurityPeople.Status CustomerServiceStatus, SocialSecurityPeople.IdentityCard,SocialSecurity.Status SSstatus, socialsecurity.SocialSecurityException,AccumulationFund.Status AFStatus, AccumulationFund.AccumulationFundException,[order].OrderCode,[order].Status OrderStatus,
+                              ISNULL((select SUM(SocialSecurity.SocialSecurityBase*socialsecurity.PayProportion/100) from SocialSecurityPeople
+ left join SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID
+ where MemberID = Members.MemberID and SocialSecurity.Status = 4 ),0) +
+ ISNULL((select  SUM(AccumulationFund.AccumulationFundBase*AccumulationFund.PayProportion/100)  from SocialSecurityPeople
+ left join AccumulationFund on SocialSecurityPeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID
+ where MemberID = Members.MemberID and AccumulationFund.Status = 4),0) ArrearAmount 
                           from Members
                            left join SocialSecurityPeople on Members.MemberID = SocialSecurityPeople.MemberID
                            left join SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = socialsecurity.SocialSecurityPeopleID
-                           left join AccumulationFund on socialsecuritypeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID"
-                        + builder.ToString();
-            //+ " left join OrderDetails on socialsecuritypeople.SocialSecurityPeopleID = OrderDetails.SocialSecurityPeopleID"
-            //+ " left join [order] on[order].OrderCode = OrderDetails.OrderCode";
-            //+ " where members.MemberID = 18";
+                           left join AccumulationFund on socialsecuritypeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID
+               left join OrderDetails on socialsecuritypeople.SocialSecurityPeopleID = OrderDetails.SocialSecurityPeopleID
+               left join [order] on[order].OrderCode = OrderDetails.OrderCode"
+            + builder.ToString();
 
             string sqlStr = $"select * from (select ROW_NUMBER() OVER(ORDER BY Cs.MemberID )AS Row,Cs.* from ({sqlCs}) Cs) ss WHERE ss.Row BETWEEN @StartIndex AND @EndIndex";
 

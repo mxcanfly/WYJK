@@ -194,19 +194,19 @@ namespace WYJK.Web.Controllers.Mvc
         /// </summary>
         /// <param name="EnterpriseID"></param>
         /// <returns></returns>
-        public ActionResult GetSSEnterprise(int EnterpriseID)
+        public ActionResult GetSSEnterprise(int EnterpriseID,int HouseholdProperty)
         {
             EnterpriseSocialSecurity model = _enterpriseService.GetEnterpriseSocialSecurity(EnterpriseID);
             decimal SSMaxBase = Math.Round(model.SocialAvgSalary * model.MaxSocial / 100);
             decimal SSMinBase = Math.Round(model.SocialAvgSalary * model.MinSocial / 100);
             decimal value = 0;
-            if (Convert.ToInt32(model.HouseholdProperty) == (int)HouseholdPropertyEnum.InRural ||
-                Convert.ToInt32(model.HouseholdProperty) == (int)HouseholdPropertyEnum.OutRural)
+            if (HouseholdProperty == (int)HouseholdPropertyEnum.InRural ||
+                HouseholdProperty == (int)HouseholdPropertyEnum.OutRural)
             {
                 value = model.PersonalShiYeRural;
             }
-            else if (Convert.ToInt32(model.HouseholdProperty) == (int)HouseholdPropertyEnum.InTown ||
-                Convert.ToInt32(model.HouseholdProperty) == (int)HouseholdPropertyEnum.OutTown)
+            else if (HouseholdProperty == (int)HouseholdPropertyEnum.InTown ||
+                HouseholdProperty == (int)HouseholdPropertyEnum.OutTown)
             {
                 value = model.PersonalShiYeTown;
             }

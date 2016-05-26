@@ -1199,7 +1199,7 @@
             <param name="HouseHoldProperty"></param>
             <returns></returns>
         </member>
-        <member name="M:WYJK.Web.Controllers.Mvc.CustomerServiceController.GetSSEnterprise(System.Int32)">
+        <member name="M:WYJK.Web.Controllers.Mvc.CustomerServiceController.GetSSEnterprise(System.Int32,System.Int32)">
             <summary>
             根据签约单位ID获取签约单位信息
             </summary>
