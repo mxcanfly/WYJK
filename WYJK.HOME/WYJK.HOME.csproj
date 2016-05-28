@@ -209,6 +209,7 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Content\img\icons.psd" />
     <Content Include="scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\User\Register.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -229,6 +230,10 @@
     <ProjectReference Include="..\WYJK.Entity\WYJK.Entity.csproj">
       <Project>{1DE10B5E-467F-4A99-B116-AA662394E06E}</Project>
       <Name>WYJK.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WYJK.Framework\WYJK.Framework.csproj">
+      <Project>{2340DFBC-1933-407F-8EDB-E550B66D56AC}</Project>
+      <Name>WYJK.Framework</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

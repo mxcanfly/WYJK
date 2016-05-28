@@ -24,7 +24,8 @@
             <div class="container">
                 <ul class="nav navbar-nav">
                     <li class="">
-                        <a href="index.html" class="text-muted">
+                        
+                        <a href="@Url.Action("Index", "Index", new { }, "http")" class="text-muted">
                             <span class="bg-white icon-w-box am-text-middle">
                                 <i class="icon-w icon-home" aria-hidden="true"></i>
                             </span>
@@ -40,7 +41,7 @@
                         </a>
                     </li>
                     <li class="">
-                        <a href="about.html">
+                        <a href="@Url.Action("About", "Index", new { }, "http")">
                             <span class="bg-white icon-w-box am-text-middle">
                                 <i class="icon-w icon-man" aria-hidden="true"></i>
                             </span>
@@ -61,7 +62,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3 col-lg-3">
-                    <a href="index.html">
+                    <a href="@Url.Action("Index", "Index", new { }, "http")">
                         <img src="~/Content/img/logo.png" width="210" height="66">
                     </a>
                 </div>
@@ -78,16 +79,16 @@
                 <div class="col-md-3 col-lg-3">
                     <div class="text-right text-nowrap am-padding-top-xl">
                         <!--未登录-->
-                        <a href="login.html" class="orange">登录</a>
+                        <a href="@Url.Action("Login", "User", new { }, "http")" class="orange">登录</a>
                         <!--登陆之后-->
                         <span class="relative">
-                            <a href="#" class="dropdown-toggle orange" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <a href="@Url.Action("Info", "User", new { }, "http")" class="dropdown-toggle orange" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 我的账户
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
                                 <li class="">
-                                    <a href="user-info.html">
+                                    <a href="@Url.Action("Info", "User", new { }, "http")">
                                         <div class="am-padding-vertical-sm">
                                             我的账户
                                         </div>
