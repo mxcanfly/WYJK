@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace WYJK.HOME.Controllers
 {
-    public class IndexController : Controller
+    public class IndexController : BaseController
     {
         // GET: Index
         public ActionResult Index()

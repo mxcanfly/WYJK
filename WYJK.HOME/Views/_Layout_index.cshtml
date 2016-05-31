@@ -15,49 +15,13 @@
       <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script type="text/javascript" src="~/Scripts/jquery-1.12.3.min.js"></script>
 </head>
 
 <body>
     <div class="project">
         <!--header-->
-        <nav class="navbar navbar-default header-w navbar-static-top">
-            <div class="container">
-                <ul class="nav navbar-nav">
-                    <li class="">
-                        
-                        <a href="@Url.Action("Index", "Index", new { }, "http")" class="text-muted">
-                            <span class="bg-white icon-w-box am-text-middle">
-                                <i class="icon-w icon-home" aria-hidden="true"></i>
-                            </span>
-                            <span class="am-text-middle am-padding-left-xs">HOME</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="bg-white icon-w-box am-text-middle">
-                                <i class="icon-w icon-cubic" aria-hidden="true"></i>
-                            </span>
-                            <span class="am-text-middle am-padding-left-xs">官方微博</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="@Url.Action("About", "Index", new { }, "http")">
-                            <span class="bg-white icon-w-box am-text-middle">
-                                <i class="icon-w icon-man" aria-hidden="true"></i>
-                            </span>
-                            <span class="am-text-middle am-padding-left-xs">关于我们</span>
-                        </a>
-                    </li>
-                </ul>
-                <div class="navbar-right">
-                    <div class="am-padding-vertical-sm text-muted">
-                        <i class="icon-w icon-clock"></i>
-                        <span class="am-text-middle am-padding-horizontal-sm">2016-04-28</span>
-                        <span class="am-text-middle">星期四</span>
-                    </div>
-                </div>
-            </div>
-        </nav>
+        @Html.Partial("~/Views/Navbar.cshtml")
         <!--logo/搜索-->
         <div class="container">
             <div class="row">
@@ -263,8 +227,6 @@
             </div>
         </footer>
     </div>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="~/Scripts/jquery-1.12.3.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/superslide.2.1.js" type="text/javascript" charset="utf-8"></script>

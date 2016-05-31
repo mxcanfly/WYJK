@@ -1,6 +1,6 @@
 ﻿@model WYJK.HOME.Models.LoginViewModel
 @{
-    Layout = "~/Views/_Layout1.cshtml";
+    Layout = "~/Views/_Layout_white.cshtml";
 }
 
 <div class="bg-lightgrey">
@@ -20,7 +20,7 @@
                             @Html.ValidationSummary()
                         
                        </div></div>
-                    <form action="doLogin" method="post" id="userForm">
+                    <form action="Login" method="post" id="userForm">
                         <div class="input-group am-padding-top-xl">
                             <span class="input-group-addon" id="">
                                 <i class="glyphicon glyphicon-user"></i>
@@ -75,7 +75,7 @@
                         </div>
                         <!--登录按钮-->
                         <div class="am-padding-top-xl">
-                            <button type="button" class="btn btn-info bg-lightblue btn-lg btn-block" id="doLogin">立即登录</button>
+                            <button type="submit" class="btn btn-info bg-lightblue btn-lg btn-block" >立即登录</button>
                         </div>
                     </form>
                 </div>
@@ -86,9 +86,7 @@
 </div>
 <script>
     $(function () {
-       $("#doLogin").click(function(){
-            $("#userForm").submit();
-       });
+      
        $("#check_code,#re_code").click(function () {
            $("#check_code").attr("src", $("#check_code").attr("src") + "&" + $("#check_code").attr("src").length);
        });
