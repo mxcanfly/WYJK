@@ -1824,15 +1824,6 @@
     <Content Include="Views\BaseAudit\GetBaseAuditList.cshtml" />
     <Content Include="Views\Enterprise\GetSocialSecurityList.cshtml" />
     <None Include="Views\SocialSecurity\SocialSecurityWaitingHandle.cshtml" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
