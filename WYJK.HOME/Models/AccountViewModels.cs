@@ -6,10 +6,10 @@ using System.Web;
 
 namespace WYJK.HOME.Models
 {
-    public class LoginViewModel 
+    public class LoginViewModels
     {
         [Required]
-        [Display(Name = "用户名")]
+        [Display(Name = "电子邮件")]
         //[EmailAddress]
         public string Email { get; set; }
 
@@ -20,6 +20,7 @@ namespace WYJK.HOME.Models
 
         [Display(Name = "记住我?")]
         public bool RememberMe { get; set; }
+<<<<<<< HEAD
 
 
         [Required]
@@ -59,5 +60,7 @@ namespace WYJK.HOME.Models
         public bool Agreement { get; set; }
 
 
+=======
+>>>>>>> parent of d3c0f6e... 统一权限验证  注册  部分链接修正
     }
 }

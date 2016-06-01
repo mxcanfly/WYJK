@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -10,7 +8,6 @@ using WYJK.Data;
 using WYJK.Data.IServices;
 using WYJK.Data.ServiceImpl;
 using WYJK.Entity;
-using WYJK.Framework.Captcha;
 using WYJK.HOME.Models;
 
 namespace WYJK.HOME.Controllers
@@ -22,6 +19,7 @@ namespace WYJK.HOME.Controllers
         // GET: User
         public ActionResult Login()
         {
+<<<<<<< HEAD
             if (this.Session["UserInfo"]!=null)
             {
                 return Redirect("/User/Info");
@@ -35,30 +33,25 @@ namespace WYJK.HOME.Controllers
         [HttpPost]
         public ActionResult Login(LoginViewModel model)
         {
+=======
+            return View("Login");
+        }
 
+
+        public ActionResult Info()
+        {
+            return View("Info");
+        }
+
+>>>>>>> parent of d3c0f6e... 统一权限验证  注册  部分链接修正
+
+        public ActionResult DoLogin(LoginViewModels model)
+        {
             if (ModelState.IsValid)
             {
-                if (model.CheckCode.ToLower().Equals(Session["CheckCode"].ToString().ToLower()))
-                {
-                    string sql = $"SELECT * FROM Members where MemberName='{model.Email}' and Password='{model.Password}' ";
+                string sql = $"SELECT * FROM Members where MemberName='{model.Email}' and Password='{model.Password}' " ;
 
-                    Members users = DbHelper.QuerySingle<Members>(sql);
-
-                    if (users != null)
-                    {
-                        this.Session["UserInfo"] = users;
-                        return Redirect("/User/Info");
-                    }
-                    else
-                    {
-                        ViewBag.ErrorMessage = "用户名或密码错误";
-                    }
-                }
-                else
-                {
-                    ViewBag.ErrorMessage = "验证码输入错误";
-                }
-
+<<<<<<< HEAD
             }
             return View(model);
         }
@@ -147,14 +140,18 @@ namespace WYJK.HOME.Controllers
                 capatch.Options = options;
                 CaptchaResult captchaResult = capatch.DrawBackgroud().DrawLine().DrawText().Atomized().DrawBroder().DrawImage();
                 using (captchaResult)
+=======
+                Members users = DbHelper.QuerySingle<Members>(sql);
+
+                if (users!=null)
+>>>>>>> parent of d3c0f6e... 统一权限验证  注册  部分链接修正
                 {
-                    MemoryStream ms = new MemoryStream();
-                    captchaResult.Bitmap.Save(ms, ImageFormat.Gif);
-                    Session["CheckCode"] = captchaResult.Text;
-                    return File(ms.ToArray(), "image/gif");
+                    return Info();
                 }
+                
             }
+            ViewBag.ErrorMessage = "用户名或密码输入错误";
+            return Login();
         }
-        #endregion
     }
 }
