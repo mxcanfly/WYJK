@@ -116,17 +116,19 @@ namespace WYJK.HOME.Controllers
             return View(model);
         }
 
-        public ActionResult Info()
+        [NeedLogin]
+        public async Task<ActionResult> Info()
         {
             Members m = (Members)this.Session["UserInfo"];
 
-            string sql = $"SELECT * FROM Members where MemberID=" + 3; ;
+            string sql = "select * from Members where MemberID=@MemberID";
 
-            Members users = DbHelper.QuerySingle<Members>(sql);
-            return View("Info");
+            Members member = await DbHelper.QuerySingleAsync<Members>(sql, new { MemberID = m.MemberID });
+
+            return View(member);
         }
 
-        
+
         #region 显示验证码
         /// <summary>
         /// 显示验证码

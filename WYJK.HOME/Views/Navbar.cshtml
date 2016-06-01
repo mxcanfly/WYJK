@@ -3,7 +3,7 @@
     <div class="container">
         <ul class="nav navbar-nav">
             <li class="">
-                <a href="index.html" class="text-muted">
+                <a href="@Url.Action("Index","Index")" class="text-muted">
                     <span class="bg-white icon-w-box am-text-middle">
                         <i class="icon-w icon-home" aria-hidden="true"></i>
                     </span>
@@ -19,7 +19,7 @@
                 </a>
             </li>
             <li class="">
-                <a href="#">
+                <a href="@Url.Action("About","Index")">
                     <span class="bg-white icon-w-box am-text-middle">
                         <i class="icon-w icon-man" aria-hidden="true"></i>
                     </span>
@@ -30,8 +30,8 @@
         <div class="navbar-right">
             <div class="am-padding-vertical-sm text-muted">
                 <i class="icon-w icon-clock"></i>
-                <span class="am-text-middle am-padding-horizontal-sm">2016-04-28</span>
-                <span class="am-text-middle">星期四</span>
+                <span class="am-text-middle am-padding-horizontal-sm">@DateTime.Now.ToShortDateString()</span>
+                <span class="am-text-middle">@Session["WeekString"]</span>
             </div>
         </div>
     </div>

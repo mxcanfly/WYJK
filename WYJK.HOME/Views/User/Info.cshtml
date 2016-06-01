@@ -1,4 +1,5 @@
-﻿@{
+﻿@model WYJK.Entity.Members 
+@{
     Layout = "~/Views/User/_Layout_user.cshtml";
 }
 <div class="user-right-w pull-right am-margin-bottom-lg am-margin-left-lg">
@@ -24,7 +25,7 @@
                         真实姓名：
                     </div>
                     <div class="col-lg-10">
-                        蒋同学
+                        @Model.TrueName
                     </div>
                 </div>
             </li>
@@ -34,7 +35,7 @@
                         证件类型：
                     </div>
                     <div class="col-lg-10">
-                        身份证
+                        @Model.CertificateType
                     </div>
                 </div>
             </li>
@@ -44,7 +45,7 @@
                         证件号码：
                     </div>
                     <div class="col-lg-10">
-                        37112217801120275x
+                        @Model.CertificateNo
                     </div>
                 </div>
             </li>
@@ -54,17 +55,7 @@
                         政治面貌：
                     </div>
                     <div class="col-lg-10">
-                        共青团员
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-lg-2 col-md-2 col-sm-2">
-                        证件类型：
-                    </div>
-                    <div class="col-lg-10">
-                        身份证
+                        @Model.PoliticalStatus
                     </div>
                 </div>
             </li>
@@ -74,7 +65,7 @@
                         学 历：
                     </div>
                     <div class="col-lg-10">
-                        本科
+                        @Model.Education
                     </div>
                 </div>
             </li>
@@ -84,7 +75,7 @@
                         生 日：
                     </div>
                     <div class="col-lg-10">
-                        11.20
+                        @Model.Birthday.Value.ToShortDateString()
                     </div>
                 </div>
             </li>
@@ -94,7 +85,7 @@
                         性 别：
                     </div>
                     <div class="col-lg-10">
-                        女
+                        @(Model.Sex.Equals("0") ? "男" : "女")
                     </div>
                 </div>
             </li>
@@ -104,7 +95,7 @@
                         居住地址：
                     </div>
                     <div class="col-lg-10">
-                        青岛市市南区台湛路18栋1号
+                        @Model.Address
                     </div>
                 </div>
             </li>
@@ -114,7 +105,7 @@
                         手机号码：
                     </div>
                     <div class="col-lg-10">
-                        13506337985
+                        @Model.Phone
                     </div>
                 </div>
             </li>
@@ -124,7 +115,7 @@
                         邮 箱：
                     </div>
                     <div class="col-lg-10">
-                        1325223828@qq.com
+                        @Model.Email
                     </div>
                 </div>
             </li>
@@ -134,7 +125,7 @@
                         Q Q：
                     </div>
                     <div class="col-lg-10">
-                        1325223828
+                        @Model.QQ
                     </div>
                 </div>
             </li>
@@ -144,7 +135,7 @@
                         支付宝账号：
                     </div>
                     <div class="col-lg-10">
-                        13506337985
+                        @Model.Alipay
                     </div>
                 </div>
             </li>
@@ -154,7 +145,7 @@
                         银行账号：
                     </div>
                     <div class="col-lg-10">
-                        13506337985
+                        @Model.BankCardNo
                     </div>
                 </div>
             </li>
@@ -164,7 +155,7 @@
                         开 户 行：
                     </div>
                     <div class="col-lg-10">
-                        建设银行
+                        @Model.BankAccount
                     </div>
                 </div>
             </li>
@@ -174,7 +165,7 @@
                         开 户 人：
                     </div>
                     <div class="col-lg-10">
-                        蒋同学
+                        @Model.UserAccount
                     </div>
                 </div>
             </li>
@@ -184,7 +175,7 @@
                         第二联系人：
                     </div>
                     <div class="col-lg-10">
-                        李华
+                        @Model.SecondContact
                     </div>
                 </div>
             </li>
@@ -194,7 +185,7 @@
                         第二联系人手机：
                     </div>
                     <div class="col-lg-10">
-                        18342918275
+                        @Model.SecondContactPhone
                     </div>
                 </div>
             </li>
@@ -204,7 +195,7 @@
                         投 保 地:
                     </div>
                     <div class="col-lg-10">
-                        山东青岛
+                        @Model.InsuranceArea
                     </div>
                 </div>
             </li>
@@ -214,7 +205,7 @@
                         户口性质：
                     </div>
                     <div class="col-lg-10">
-                        本地城镇
+                        @Model.HouseholdType
                     </div>
                 </div>
             </li>
