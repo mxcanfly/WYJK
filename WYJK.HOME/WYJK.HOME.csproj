@@ -217,6 +217,7 @@
     <Content Include="Views\User\Insurance.cshtml" />
     <Content Include="Views\User\_Layout_user.cshtml" />
     <Content Include="Views\Navbar.cshtml" />
+    <Content Include="Views\User\InfoChange.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

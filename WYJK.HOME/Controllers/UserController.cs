@@ -116,17 +116,43 @@ namespace WYJK.HOME.Controllers
             return View(model);
         }
 
-        [NeedLogin]
+        //[NeedLogin]
         public async Task<ActionResult> Info()
         {
-            Members m = (Members)this.Session["UserInfo"];
-
+            Members m = (Members)this.Session["UserInfo"]; 
             string sql = "select * from Members where MemberID=@MemberID";
 
-            Members member = await DbHelper.QuerySingleAsync<Members>(sql, new { MemberID = m.MemberID });
+            Members member = await DbHelper.QuerySingleAsync<Members>(sql, new { MemberID = 3 });
 
             return View(member);
         }
+
+        public ActionResult Insurance()
+        {
+            return View();
+        }
+
+
+        public async Task<ActionResult> InfoChange()
+        {
+            Members m = (Members)this.Session["UserInfo"];
+
+            ExtensionInformationParameter model = await _memberService.GetMemberExtensionInformation(m.MemberID);
+
+
+            var CertificateTypeList = new List<string> { "请选择" }.Concat(GetCertificateType()).Select(
+                                        item => new SelectListItem
+                                        {
+                                            Text = item,
+                                            Value = item == "请选择" ? "" : item,
+                                            Selected = item == model.CertificateType
+
+                                        }).ToList();
+            ViewData["CertificateType"] = new SelectList(CertificateTypeList, "Value", "Text", model.CertificateType);
+
+            return View(model);
+        }
+
 
 
         #region 显示验证码
@@ -158,5 +184,41 @@ namespace WYJK.HOME.Controllers
             }
         }
         #endregion
+
+        /// <summary>
+        /// 获取证件类型
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetCertificateType()
+        {
+            List<string> list = new List<string>() {
+               "身份证","居住证","签证","护照","户口本","军人证","团员证","党员证","港澳通行证"
+            };
+            return list;
+        }
+
+        /// <summary>
+        /// 获取政治面貌
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetPoliticalStatus()
+        {
+            List<string> list = new List<string>() {
+                "中共党员","共青团员","群众"
+            };
+            return list;
+        }
+
+        /// <summary>
+        /// 获取学历
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetEducation()
+        {
+            List<string> list = new List<string>() {
+                "中专","高中","高职（大专）","本科","硕士","博士","博士后"
+            };
+            return list;
+        }
     }
 }

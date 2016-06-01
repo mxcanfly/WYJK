@@ -90,7 +90,7 @@ namespace WYJK.Web.Controllers
                     return View(model);
                 }
                 string password = SecurityHelper.HashPassword(model.Password, model.Password);
-                string sql = $"SELECT * FROM Users where UserName='{model.UserName}' and Password='{password}'";
+                string sql = $"SELECT * FROM Users where UserName='{model.UserName}'";
 
                 Users users = await DbHelper.QuerySingleAsync<Users>(sql);
 
