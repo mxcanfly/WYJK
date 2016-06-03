@@ -11,6 +11,7 @@ using WYJK.Data.IServices;
 using WYJK.Data.ServiceImpl;
 using WYJK.Entity;
 using WYJK.Framework.Captcha;
+using WYJK.Framework.EnumHelper;
 using WYJK.HOME.Models;
 
 namespace WYJK.HOME.Controllers
@@ -127,9 +128,37 @@ namespace WYJK.HOME.Controllers
             return View(member);
         }
 
-        public ActionResult Insurance()
+        public ActionResult Insurance(PagedParameter parameter)
         {
-            return View();
+            Members m = (Members)this.Session["UserInfo"];
+            string sqlstr = $@"select SocialSecurityPeople.SocialSecurityPeopleID,
+                SocialSecurityPeople.SocialSecurityPeopleName,
+                SocialSecurity.PayTime SSPayTime,
+                SocialSecurity.AlreadyPayMonthCount SSAlreadyPayMonthCount,
+                SocialSecurity.PayMonthCount SSRemainingMonthCount,
+                SocialSecurity.Status SSStatus,
+                AccumulationFund.PayTime AFPayTime,
+                AccumulationFund.AlreadyPayMonthCount AFAlreadyPayMonthCount,
+                AccumulationFund.PayMonthCount AFRemainingMonthCount,
+                AccumulationFund.Status AFStatus
+                from SocialSecurityPeople
+                left join SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID
+                left
+                join AccumulationFund on SocialSecurityPeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID
+                where SocialSecurityPeople.MemberID = {m.MemberID}";
+            List<SocialSecurityPeoples> SocialSecurityPeopleList = DbHelper.Query<SocialSecurityPeoples>(sqlstr);
+
+            var c = SocialSecurityPeopleList.Skip(parameter.SkipCount).Take(parameter.TakeCount);
+
+            PagedResult<SocialSecurityPeoples>  page=new PagedResult<SocialSecurityPeoples>
+            {
+                PageIndex = parameter.PageIndex,
+                PageSize = parameter.PageSize,
+                TotalItemCount = SocialSecurityPeopleList.Count,
+                Items = c
+            };
+
+            return View(page);
         }
 
 
@@ -138,8 +167,16 @@ namespace WYJK.HOME.Controllers
             Members m = (Members)this.Session["UserInfo"];
 
             ExtensionInformationParameter model = await _memberService.GetMemberExtensionInformation(m.MemberID);
+            InfoChangeViewModel viewModel = new InfoChangeViewModel();
+            model.CopyTo(viewModel);
+            buildSelectList(viewModel);
+            return View(viewModel);
+        }
 
+        private void buildSelectList(InfoChangeViewModel model)
+        {
 
+            #region 证件类型
             var CertificateTypeList = new List<string> { "请选择" }.Concat(GetCertificateType()).Select(
                                         item => new SelectListItem
                                         {
@@ -150,7 +187,61 @@ namespace WYJK.HOME.Controllers
                                         }).ToList();
             ViewData["CertificateType"] = new SelectList(CertificateTypeList, "Value", "Text", model.CertificateType);
 
-            return View(model);
+            #endregion
+
+            #region 政治面貌
+            var PoliticalStatusList = new List<string> { "请选择" }.Concat(GetPoliticalStatus()).Select(
+                                        item => new SelectListItem
+                                        {
+                                            Text = item,
+                                            Value = item == "请选择" ? "" : item
+                                        }).ToList();
+
+            ViewData["PoliticalStatus"] = new SelectList(PoliticalStatusList, "Value", "Text", model.PoliticalStatus);
+            #endregion
+
+            #region 学历
+            var EducationList = new List<string> { "请选择" }.Concat(GetEducation()).Select(
+                                item => new SelectListItem
+                                {
+                                    Text = item,
+                                    Value = item == "请选择" ? "" : item
+                                }).ToList();
+
+            ViewData["Education"] = new SelectList(EducationList, "Value", "Text", model.Education);
+            #endregion
+
+            #region 户口性质
+            List<SelectListItem> UserTypeList = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
+            UserTypeList.Insert(0, new SelectListItem { Text = "请选择", Value = "" });
+            
+
+            ViewData["HouseholdType"] = new SelectList(UserTypeList, "Value", "Text",model.HouseholdType);
+            #endregion
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InfoChange(InfoChangeViewModel viewModel)
+        {
+
+            ExtensionInformationParameter model = new ExtensionInformationParameter();
+            viewModel.CopyTo(model);
+
+            if (ModelState.IsValid)
+            {
+                bool flag = await _memberService.ModifyMemberExtensionInformation(model);
+                assignMessage(flag ? "保存成功" : "保存失败", flag);
+
+                #region 日志记录
+                if (flag == true)
+                {
+                    LogService.WriteLogInfo(new Log { UserName = HttpContext.User.Identity.Name, Contents = string.Format("修改了用户{0}信息", (await _memberService.GetMemberInfo(model.MemberID)).MemberName) });
+                }
+                #endregion
+            }
+
+            buildSelectList(viewModel);
+            return View(viewModel);
         }
 
 

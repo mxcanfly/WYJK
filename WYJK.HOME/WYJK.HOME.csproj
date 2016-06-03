@@ -117,6 +117,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\css\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\css\bootstrap-theme.css" />
     <Content Include="Content\css\bootstrap-theme.min.css" />
@@ -153,6 +155,12 @@
     <Content Include="Content\img\photo.png" />
     <Content Include="Content\img\product-advantage.jpg" />
     <Content Include="Content\img\slider-arrow.png" />
+    <Content Include="Content\laypage\1.2\laypage.js" />
+    <Content Include="Content\laypage\1.2\skin\laypage.css" />
+    <Content Include="Content\laypage\1.3\laypage.js" />
+    <Content Include="Content\laypage\1.3\skin\laypage.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="scripts\ai.0.15.0-build58334.js" />
     <Content Include="scripts\ai.0.15.0-build58334.min.js" />
@@ -161,6 +169,10 @@
     <Content Include="scripts\bootstrap.min.js" />
     <Content Include="scripts\fileinput.min.js" />
     <Content Include="scripts\fileinput_locale_zh.js" />
+    <Content Include="ClassDiagram1.cd" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="scripts\jquery-1.10.2.js" />
     <Content Include="scripts\jquery-1.10.2.min.js" />
@@ -218,6 +230,9 @@
     <Content Include="Views\User\_Layout_user.cshtml" />
     <Content Include="Views\Navbar.cshtml" />
     <Content Include="Views\User\InfoChange.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Message.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

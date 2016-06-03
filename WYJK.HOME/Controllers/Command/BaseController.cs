@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -22,11 +24,56 @@ namespace WYJK.HOME.Controllers
 
 
             string sql = "select * from Members where MemberID=@MemberID";
-            Members member = DbHelper.QuerySingle<Members>(sql, new { MemberID = 3 });
+            Members member = DbHelper.QuerySingle<Members>(sql, new { MemberID = 1 });
 
             requestContext.HttpContext.Session["UserInfo"] = member;
 
             return base.BeginExecute(requestContext, callback, state);
+        }
+
+        protected void assignMessage(String msg,Boolean success)
+        {
+            TempData["Message"] = msg;
+            TempData["MessageType"] = success;
+        }
+    }
+
+    public static class Common
+    {
+        
+        public static void CopyTo<T>(this object source, T target)
+            where T : class, new()
+        {
+            if (source == null)
+                return;
+
+            if (target == null)
+            {
+                target = new T();
+            }
+
+            foreach (var property in target.GetType().GetProperties())
+            {
+                var propertyValue = source.GetType().GetProperty(property.Name).GetValue(source, null);
+                if (propertyValue != null)
+                {
+                    if (propertyValue.GetType().IsClass)
+                    {
+
+                    }
+                    target.GetType().InvokeMember(property.Name, BindingFlags.SetProperty, null, target, new object[] { propertyValue });
+                }
+
+            }
+
+            foreach (var field in target.GetType().GetFields())
+            {
+                var fieldValue = source.GetType().GetField(field.Name).GetValue(source);
+                if (fieldValue != null)
+                {
+                    target.GetType().InvokeMember(field.Name, BindingFlags.SetField, null, target, new object[] { fieldValue });
+                }
+            }
         }
     }
 }
