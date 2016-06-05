@@ -131,26 +131,30 @@ namespace WYJK.HOME.Controllers
         public ActionResult Insurance(PagedParameter parameter)
         {
             Members m = (Members)this.Session["UserInfo"];
-            string sqlstr = $@"select SocialSecurityPeople.SocialSecurityPeopleID,
-                SocialSecurityPeople.SocialSecurityPeopleName,
-                SocialSecurity.PayTime SSPayTime,
-                SocialSecurity.AlreadyPayMonthCount SSAlreadyPayMonthCount,
-                SocialSecurity.PayMonthCount SSRemainingMonthCount,
-                SocialSecurity.Status SSStatus,
-                AccumulationFund.PayTime AFPayTime,
-                AccumulationFund.AlreadyPayMonthCount AFAlreadyPayMonthCount,
-                AccumulationFund.PayMonthCount AFRemainingMonthCount,
-                AccumulationFund.Status AFStatus
-                from SocialSecurityPeople
-                left join SocialSecurity on SocialSecurityPeople.SocialSecurityPeopleID = SocialSecurity.SocialSecurityPeopleID
-                left
-                join AccumulationFund on SocialSecurityPeople.SocialSecurityPeopleID = AccumulationFund.SocialSecurityPeopleID
-                where SocialSecurityPeople.MemberID = {m.MemberID}";
-            List<SocialSecurityPeoples> SocialSecurityPeopleList = DbHelper.Query<SocialSecurityPeoples>(sqlstr);
+            string sqlstr = $@"
+           SELECT 
 
-            var c = SocialSecurityPeopleList.Skip(parameter.SkipCount).Take(parameter.TakeCount);
+	                sp.SocialSecurityPeopleID,sp.SocialSecurityPeopleName,sp.IdentityCard,
+	
+	                sp.HouseholdProperty,convert(varchar(10),ss.PayTime,111) PayTime,convert(varchar(10),ss.StopDate,111) StopDate,ss.SocialSecurityBase,ss.Status SocialSecurityStatus,
+	                cast(round((ss.SocialSecurityBase*ss.PayProportion)/100,2) as numeric(12,2)) SocialSecurityAmount,
+	                af.AccumulationFundBase,
+	
+	                cast(round((af.AccumulationFundBase*af.PayProportion)/100,2) as numeric(12,2)) AccumulationFundAmount,
+	
+	
+	                af.Status AccumulationFundStatus
+	
+                from SocialSecurityPeople sp
+                left join SocialSecurity  ss on sp.SocialSecurityPeopleID=ss.SocialSecurityPeopleID
+                left join AccumulationFund af on sp.SocialSecurityPeopleID=af.SocialSecurityPeopleID
+            where sp.MemberID = {m.MemberID} order by sp.SocialSecurityPeopleID desc  ";
 
-            PagedResult<SocialSecurityPeoples>  page=new PagedResult<SocialSecurityPeoples>
+            List<InsuranceViewModel> SocialSecurityPeopleList = DbHelper.Query<InsuranceViewModel>(sqlstr);
+            
+            var c = SocialSecurityPeopleList.Skip(parameter.SkipCount-1).Take(parameter.TakeCount);
+
+            PagedResult<InsuranceViewModel>  page=new PagedResult<InsuranceViewModel>
             {
                 PageIndex = parameter.PageIndex,
                 PageSize = parameter.PageSize,
