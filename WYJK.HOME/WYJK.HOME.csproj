@@ -198,6 +198,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\Command\BaseController.cs" />
+    <Compile Include="Controllers\Command\Constant.cs" />
     <Compile Include="Controllers\Command\CusomterActionFilterAttributer.cs" />
     <Compile Include="Controllers\Command\NeedLoginAttribute.cs" />
     <Compile Include="Controllers\IndexController.cs" />

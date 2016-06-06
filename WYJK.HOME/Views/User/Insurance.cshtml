@@ -1,4 +1,4 @@
-﻿@model WYJK.Entity.PagedResult<WYJK.HOME.Models.InsuranceViewModel>
+﻿@model WYJK.Entity.PagedResult<WYJK.HOME.Models.InsuranceListViewModel>
 @{
     Layout = "~/Views/User/_Layout_user.cshtml";
 }
@@ -26,28 +26,25 @@
 <div class="user-right-w pull-right am-margin-bottom-lg am-margin-left-lg">
     <div class="panel panel-default bg-lightgrey am-margin-bottom-0">
         <div class="panel-heading">
+        @using (Html.BeginForm("Insurance", "User", FormMethod.Get))
+        {
             <h3 class="panel-title row">
                 <div class="col-lg-3">
-                    <input type="text" class="form-control" name="" id="" value="" placeholder="姓名">
+                    
+                    @Html.TextBox("SocialSecurityPeopleName", null,new { @class= "form-control" ,placeholder = "姓名" })
                 </div>
                 <div class="col-lg-3">
-                    <select class="form-control">
-                        <option value="">户籍性质</option>
-                        <option>1</option>
-                        <option>2</option>
-                    </select>
+                    @Html.DropDownList("HouseholdProperty", ViewData["HouseholdProperty"] as SelectList, new { @class = "form-control" })
                 </div>
                 <div class="col-lg-3">
-                    <select class="form-control">
-                        <option value="">参保城市</option>
-                        <option>1</option>
-                        <option>2</option>
-                    </select>
+                    @Html.TextBox("InsuranceArea", null, new { @class = "form-control", placeholder = "参保城市" })
                 </div>
                 <div class="col-lg-3 text-right">
-                    <button type="button" class="btn btn-info bg-lightblue">查询</button>
+                    <button type="submit" class="btn btn-info bg-lightblue">查询</button>
                 </div>
             </h3>
+        }
+           
         </div>
         <div class="insurance-list-w">
             <ul class="list-unstyled am-margin-0">
@@ -100,8 +97,12 @@
                                 </dd>
                                 <dd class="row am-padding-vertical-sm">
                                     <div class="col-lg-4">
-                                        社保状态：@item.SocialSecurityStatus
-                                        @EnumExt.GetEnumCustomDescription((SocialSecurityStatusEnum)item.SocialSecurityStatus.AsInt())
+                                        社保状态：
+                                        @if (item.SocialSecurityStatus != null)
+                                        {
+                                            @EnumExt.GetEnumCustomDescription((SocialSecurityStatusEnum)item.SocialSecurityStatus.AsInt())
+                                        }
+                                        
                                                                     
                                     </div>
                                     <div class="col-lg-4">

@@ -61,8 +61,14 @@ namespace WYJK.HOME.Models
 
 
     }
+    public class InsuranceViewModel: PagedParameter
+    {
+        public string SocialSecurityPeopleName { get; set; }
+        public string HouseholdProperty { get; set; }
+        public string InsuranceArea { get; set; }
+    }
 
-    public class InsuranceViewModel {
+    public class InsuranceListViewModel {
         
         public string SocialSecurityPeopleID { get; set; }
 
@@ -78,6 +84,7 @@ namespace WYJK.HOME.Models
         public string AccumulationFundStatus { get; set; }
        
     }
+
     public class InfoChangeViewModel
     {
 

@@ -128,39 +128,52 @@ namespace WYJK.HOME.Controllers
             return View(member);
         }
 
-        public ActionResult Insurance(PagedParameter parameter)
+        public ActionResult Insurance(InsuranceViewModel parameter)
         {
             Members m = (Members)this.Session["UserInfo"];
+            String where = "";
+            if (Convert.ToInt32(parameter.HouseholdProperty) > 0)
+            {
+                where += $@"and sp.HouseholdProperty='{parameter.HouseholdProperty}'";
+            }
+            if (parameter.InsuranceArea != null)
+            {
+                where += $@"and ss.HouseholdProperty='{parameter.HouseholdProperty}'";
+            }
+            if (parameter.SocialSecurityPeopleName != null)
+            {
+                where += $@"and sp.SocialSecurityPeopleName='{parameter.SocialSecurityPeopleName}'";
+            }
             string sqlstr = $@"
-           SELECT 
-
+                SELECT 
 	                sp.SocialSecurityPeopleID,sp.SocialSecurityPeopleName,sp.IdentityCard,
-	
 	                sp.HouseholdProperty,convert(varchar(10),ss.PayTime,111) PayTime,convert(varchar(10),ss.StopDate,111) StopDate,ss.SocialSecurityBase,ss.Status SocialSecurityStatus,
 	                cast(round((ss.SocialSecurityBase*ss.PayProportion)/100,2) as numeric(12,2)) SocialSecurityAmount,
-	                af.AccumulationFundBase,
-	
-	                cast(round((af.AccumulationFundBase*af.PayProportion)/100,2) as numeric(12,2)) AccumulationFundAmount,
-	
-	
-	                af.Status AccumulationFundStatus
-	
+	                af.AccumulationFundBase,	
+	                cast(round((af.AccumulationFundBase*af.PayProportion)/100,2) as numeric(12,2)) AccumulationFundAmount,	
+	                af.Status AccumulationFundStatus	
                 from SocialSecurityPeople sp
                 left join SocialSecurity  ss on sp.SocialSecurityPeopleID=ss.SocialSecurityPeopleID
                 left join AccumulationFund af on sp.SocialSecurityPeopleID=af.SocialSecurityPeopleID
-            where sp.MemberID = {m.MemberID} order by sp.SocialSecurityPeopleID desc  ";
+            where sp.MemberID = {m.MemberID} {where} order by sp.SocialSecurityPeopleID desc  ";
 
-            List<InsuranceViewModel> SocialSecurityPeopleList = DbHelper.Query<InsuranceViewModel>(sqlstr);
+            List<InsuranceListViewModel> SocialSecurityPeopleList = DbHelper.Query<InsuranceListViewModel>(sqlstr);
             
             var c = SocialSecurityPeopleList.Skip(parameter.SkipCount-1).Take(parameter.TakeCount);
+            
 
-            PagedResult<InsuranceViewModel>  page=new PagedResult<InsuranceViewModel>
+            PagedResult<InsuranceListViewModel>  page=new PagedResult<InsuranceListViewModel>
             {
                 PageIndex = parameter.PageIndex,
                 PageSize = parameter.PageSize,
                 TotalItemCount = SocialSecurityPeopleList.Count,
                 Items = c
             };
+
+            List<SelectListItem> UserTypeList = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
+            UserTypeList.Insert(0, new SelectListItem { Text = "请选择", Value = "" });
+
+            ViewData["HouseholdProperty"] = new SelectList(UserTypeList, "Value", "Text", parameter.HouseholdProperty);
 
             return View(page);
         }
@@ -248,6 +261,7 @@ namespace WYJK.HOME.Controllers
             return View(viewModel);
         }
 
+     
 
 
         #region 显示验证码
