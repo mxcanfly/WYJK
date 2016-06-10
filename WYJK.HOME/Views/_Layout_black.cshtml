@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewBag.title</title>
-
+    @RenderSection("Header", false)
     <!-- Bootstrap -->
     <link href="~/Content/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="~/Content/css/common.css">
@@ -146,7 +146,8 @@
     
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/project.js" type="text/javascript" charset="utf-8"></script>
+    @RenderSection("Footer",false)
+    
 
 
 </body>

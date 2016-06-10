@@ -1,0 +1,96 @@
+﻿
+@{
+    Layout = "~/Views/_Layout_black.cshtml";
+}
+<div class="bg-lightgrey">
+    <div class="container bg-white">
+        <div class="relative text-center">
+            <hr>
+            <span class="hrTitle-w left grey">
+                立即投保/新增参保人
+            </span>
+        </div>
+        <!--进度条-->
+        <div class="statusBox-w add-insurance am-padding-vertical-sm">
+            <ul class="clearfix am-padding-0">
+                <li class="">
+                    <b class="num pull-left">1</b>
+                    <span class="pull-left">添加参保人</span>
+                    <i class="icon-w pull-right"></i>
+                </li>
+                <li class="prev">
+                    <b class="num pull-left">2</b>
+                    <span class="pull-left">缴纳社保</span>
+                    <i class="icon-w pull-right"></i>
+                </li>
+                <li class="current">
+                    <b class="num pull-left">3</b>
+                    <span class="pull-left">缴纳公积金</span>
+                </li>
+            </ul>
+        </div>
+        <!--表单计算-->
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="" class="col-lg-2 col-lg-offset-1 control-label">参保地</label>
+                <div class="col-lg-3">
+                    <select name="" class="form-control">
+                        <option value="">请选择省份</option>
+                        <option value="">1</option>
+                    </select>
+                </div>
+                <div class="col-lg-3">
+                    <select name="" class="form-control">
+                        <option value="">请选择城市</option>
+                        <option value="">1</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-lg-2 col-lg-offset-1 control-label">社保基数</label>
+                <div class="col-lg-6">
+                    <input type="text" class="form-control" id="" placeholder="请输入社保基数">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-lg-2 col-lg-offset-1 control-label">起缴时间</label>
+                <div class="col-lg-6">
+                    <input type="text" class="form-control date" placeholder="请选择起缴年/月">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-lg-2 col-lg-offset-1 control-label">参保月份</label>
+                <div class="col-lg-6">
+                    <input type="text" class="form-control" id="" placeholder="请输入参保月份">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-lg-2 col-lg-offset-1 control-label">补交月份</label>
+                <div class="col-lg-6">
+                    <input type="text" class="form-control" id="" placeholder="请输入补交月份">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-lg-2 col-lg-offset-1 control-label">今年参保情况</label>
+                <div class="col-lg-6">
+                    在银行缴纳<input type="text" name="" id="" value="0" class="form-control input-sm-w am-margin-horizontal-sm">个月，
+                    在企业缴纳<input type="text" name="" id="" value="0" class="form-control input-sm-w am-margin-horizontal-sm">个月
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-lg-2 col-lg-offset-1 control-label">备注</label>
+                <div class="col-lg-6">
+                    <textarea class="form-control" rows="3" placeholder="请填写备注"></textarea>
+                </div>
+            </div>
+            <div class="form-group am-padding-vertical-xl">
+                <div class="row">
+                    <div class="col-lg-offset-4 col-lg-4 text-center">
+                        <button type="button" class="btn btn-info bg-lightblue btn-lg btn-block">确认参保</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>

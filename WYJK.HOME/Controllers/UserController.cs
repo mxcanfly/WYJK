@@ -128,17 +128,19 @@ namespace WYJK.HOME.Controllers
             return View(member);
         }
 
-        public ActionResult Insurance(InsuranceViewModel parameter)
+        public ActionResult Insurance(InsuranceQueryParamModel parameter)
         {
             Members m = (Members)this.Session["UserInfo"];
             String where = "";
             if (Convert.ToInt32(parameter.HouseholdProperty) > 0)
             {
-                where += $@"and sp.HouseholdProperty='{parameter.HouseholdProperty}'";
+                String hp = EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)(Int32.Parse(parameter.HouseholdProperty)));
+                where += $@"and sp.HouseholdProperty='{hp}'";
             }
             if (parameter.InsuranceArea != null)
             {
-                where += $@"and ss.HouseholdProperty='{parameter.HouseholdProperty}'";
+
+                where += $@"and ss.InsuranceArea='{parameter.InsuranceArea}'";
             }
             if (parameter.SocialSecurityPeopleName != null)
             {
@@ -157,12 +159,14 @@ namespace WYJK.HOME.Controllers
                 left join AccumulationFund af on sp.SocialSecurityPeopleID=af.SocialSecurityPeopleID
             where sp.MemberID = {m.MemberID} {where} order by sp.SocialSecurityPeopleID desc  ";
 
-            List<InsuranceListViewModel> SocialSecurityPeopleList = DbHelper.Query<InsuranceListViewModel>(sqlstr);
-            
-            var c = SocialSecurityPeopleList.Skip(parameter.SkipCount-1).Take(parameter.TakeCount);
-            
 
-            PagedResult<InsuranceListViewModel>  page=new PagedResult<InsuranceListViewModel>
+
+            List<InsuranceListViewModel> SocialSecurityPeopleList = DbHelper.Query<InsuranceListViewModel>(sqlstr);
+
+            var c = SocialSecurityPeopleList.Skip(parameter.SkipCount - 1).Take(parameter.TakeCount);
+
+
+            PagedResult<InsuranceListViewModel> page = new PagedResult<InsuranceListViewModel>
             {
                 PageIndex = parameter.PageIndex,
                 PageSize = parameter.PageSize,
@@ -170,12 +174,35 @@ namespace WYJK.HOME.Controllers
                 Items = c
             };
 
+            bulidHouseholdPropertyDropdown(parameter.HouseholdProperty);
+
+            return View(page);
+        }
+
+        private void bulidHouseholdPropertyDropdown(String value)
+        {
             List<SelectListItem> UserTypeList = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
             UserTypeList.Insert(0, new SelectListItem { Text = "请选择", Value = "" });
 
-            ViewData["HouseholdProperty"] = new SelectList(UserTypeList, "Value", "Text", parameter.HouseholdProperty);
+            ViewData["HouseholdProperty"] = new SelectList(UserTypeList, "Value", "Text", value);
+        }
 
-            return View(page);
+        public async Task<ActionResult> InsuranceAdd1(InsuranceAdd1ViewModel model)
+        {
+            bulidHouseholdPropertyDropdown(model.HouseholdProperty);
+            return View();
+        }
+
+        public async Task<ActionResult> InsuranceAdd2()
+        {
+
+            return View();
+        }
+
+        public async Task<ActionResult> InsuranceAdd3()
+        {
+
+            return View();
         }
 
 
@@ -189,6 +216,64 @@ namespace WYJK.HOME.Controllers
             buildSelectList(viewModel);
             return View(viewModel);
         }
+
+    
+        [HttpPost]
+        public async Task<ActionResult> InfoChange(InfoChangeViewModel viewModel)
+        {
+
+            ExtensionInformationParameter model = new ExtensionInformationParameter();
+            viewModel.CopyTo(model);
+
+            if (ModelState.IsValid)
+            {
+                bool flag = await _memberService.ModifyMemberExtensionInformation(model);
+                assignMessage(flag ? "保存成功" : "保存失败", flag);
+
+                #region 日志记录
+                if (flag == true)
+                {
+                    LogService.WriteLogInfo(new Log { UserName = HttpContext.User.Identity.Name, Contents = string.Format("修改了用户{0}信息", (await _memberService.GetMemberInfo(model.MemberID)).MemberName) });
+                }
+                #endregion
+            }
+
+            buildSelectList(viewModel);
+            return View(viewModel);
+        }
+
+
+
+
+        #region 显示验证码
+        /// <summary>
+        /// 显示验证码
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public FileContentResult Captcha()
+        {
+            CaptchaOptions options = new CaptchaOptions
+            {
+                GaussianDeviation = 0.4,
+                Height = 35,
+                Background = NoiseLevel.Low,
+                Line = NoiseLevel.Low
+            };
+            using (ICapatcha capatch = new FluentCaptcha())
+            {
+                capatch.Options = options;
+                CaptchaResult captchaResult = capatch.DrawBackgroud().DrawLine().DrawText().Atomized().DrawBroder().DrawImage();
+                using (captchaResult)
+                {
+                    MemoryStream ms = new MemoryStream();
+                    captchaResult.Bitmap.Save(ms, ImageFormat.Gif);
+                    Session["CheckCode"] = captchaResult.Text;
+                    return File(ms.ToArray(), "image/gif");
+                }
+            }
+        }
+        #endregion
 
         private void buildSelectList(InfoChangeViewModel model)
         {
@@ -231,68 +316,11 @@ namespace WYJK.HOME.Controllers
             #region 户口性质
             List<SelectListItem> UserTypeList = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
             UserTypeList.Insert(0, new SelectListItem { Text = "请选择", Value = "" });
-            
 
-            ViewData["HouseholdType"] = new SelectList(UserTypeList, "Value", "Text",model.HouseholdType);
+
+            ViewData["HouseholdType"] = new SelectList(UserTypeList, "Value", "Text", model.HouseholdType);
             #endregion
         }
-
-        [HttpPost]
-        public async Task<ActionResult> InfoChange(InfoChangeViewModel viewModel)
-        {
-
-            ExtensionInformationParameter model = new ExtensionInformationParameter();
-            viewModel.CopyTo(model);
-
-            if (ModelState.IsValid)
-            {
-                bool flag = await _memberService.ModifyMemberExtensionInformation(model);
-                assignMessage(flag ? "保存成功" : "保存失败", flag);
-
-                #region 日志记录
-                if (flag == true)
-                {
-                    LogService.WriteLogInfo(new Log { UserName = HttpContext.User.Identity.Name, Contents = string.Format("修改了用户{0}信息", (await _memberService.GetMemberInfo(model.MemberID)).MemberName) });
-                }
-                #endregion
-            }
-
-            buildSelectList(viewModel);
-            return View(viewModel);
-        }
-
-     
-
-
-        #region 显示验证码
-        /// <summary>
-        /// 显示验证码
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public FileContentResult Captcha()
-        {
-            CaptchaOptions options = new CaptchaOptions
-            {
-                GaussianDeviation = 0.4,
-                Height = 35,
-                Background = NoiseLevel.Low,
-                Line = NoiseLevel.Low
-            };
-            using (ICapatcha capatch = new FluentCaptcha())
-            {
-                capatch.Options = options;
-                CaptchaResult captchaResult = capatch.DrawBackgroud().DrawLine().DrawText().Atomized().DrawBroder().DrawImage();
-                using (captchaResult)
-                {
-                    MemoryStream ms = new MemoryStream();
-                    captchaResult.Bitmap.Save(ms, ImageFormat.Gif);
-                    Session["CheckCode"] = captchaResult.Text;
-                    return File(ms.ToArray(), "image/gif");
-                }
-            }
-        }
-        #endregion
 
         /// <summary>
         /// 获取证件类型
