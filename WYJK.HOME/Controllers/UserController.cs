@@ -128,82 +128,6 @@ namespace WYJK.HOME.Controllers
             return View(member);
         }
 
-        public ActionResult Insurance(InsuranceQueryParamModel parameter)
-        {
-            Members m = (Members)this.Session["UserInfo"];
-            String where = "";
-            if (Convert.ToInt32(parameter.HouseholdProperty) > 0)
-            {
-                String hp = EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)(Int32.Parse(parameter.HouseholdProperty)));
-                where += $@"and sp.HouseholdProperty='{hp}'";
-            }
-            if (parameter.InsuranceArea != null)
-            {
-
-                where += $@"and ss.InsuranceArea='{parameter.InsuranceArea}'";
-            }
-            if (parameter.SocialSecurityPeopleName != null)
-            {
-                where += $@"and sp.SocialSecurityPeopleName='{parameter.SocialSecurityPeopleName}'";
-            }
-            string sqlstr = $@"
-                SELECT 
-	                sp.SocialSecurityPeopleID,sp.SocialSecurityPeopleName,sp.IdentityCard,
-	                sp.HouseholdProperty,convert(varchar(10),ss.PayTime,111) PayTime,convert(varchar(10),ss.StopDate,111) StopDate,ss.SocialSecurityBase,ss.Status SocialSecurityStatus,
-	                cast(round((ss.SocialSecurityBase*ss.PayProportion)/100,2) as numeric(12,2)) SocialSecurityAmount,
-	                af.AccumulationFundBase,	
-	                cast(round((af.AccumulationFundBase*af.PayProportion)/100,2) as numeric(12,2)) AccumulationFundAmount,	
-	                af.Status AccumulationFundStatus	
-                from SocialSecurityPeople sp
-                left join SocialSecurity  ss on sp.SocialSecurityPeopleID=ss.SocialSecurityPeopleID
-                left join AccumulationFund af on sp.SocialSecurityPeopleID=af.SocialSecurityPeopleID
-            where sp.MemberID = {m.MemberID} {where} order by sp.SocialSecurityPeopleID desc  ";
-
-
-
-            List<InsuranceListViewModel> SocialSecurityPeopleList = DbHelper.Query<InsuranceListViewModel>(sqlstr);
-
-            var c = SocialSecurityPeopleList.Skip(parameter.SkipCount - 1).Take(parameter.TakeCount);
-
-
-            PagedResult<InsuranceListViewModel> page = new PagedResult<InsuranceListViewModel>
-            {
-                PageIndex = parameter.PageIndex,
-                PageSize = parameter.PageSize,
-                TotalItemCount = SocialSecurityPeopleList.Count,
-                Items = c
-            };
-
-            bulidHouseholdPropertyDropdown(parameter.HouseholdProperty);
-
-            return View(page);
-        }
-
-        private void bulidHouseholdPropertyDropdown(String value)
-        {
-            List<SelectListItem> UserTypeList = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
-            UserTypeList.Insert(0, new SelectListItem { Text = "请选择", Value = "" });
-
-            ViewData["HouseholdProperty"] = new SelectList(UserTypeList, "Value", "Text", value);
-        }
-
-        public async Task<ActionResult> InsuranceAdd1(InsuranceAdd1ViewModel model)
-        {
-            bulidHouseholdPropertyDropdown(model.HouseholdProperty);
-            return View();
-        }
-
-        public async Task<ActionResult> InsuranceAdd2()
-        {
-
-            return View();
-        }
-
-        public async Task<ActionResult> InsuranceAdd3()
-        {
-
-            return View();
-        }
 
 
         public async Task<ActionResult> InfoChange()
@@ -217,7 +141,6 @@ namespace WYJK.HOME.Controllers
             return View(viewModel);
         }
 
-    
         [HttpPost]
         public async Task<ActionResult> InfoChange(InfoChangeViewModel viewModel)
         {
@@ -241,9 +164,6 @@ namespace WYJK.HOME.Controllers
             buildSelectList(viewModel);
             return View(viewModel);
         }
-
-
-
 
         #region 显示验证码
         /// <summary>

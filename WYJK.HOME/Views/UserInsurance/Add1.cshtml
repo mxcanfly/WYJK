@@ -2,6 +2,7 @@
 @{
     Layout = "~/Views/_Layout_black.cshtml";
 }
+
 @section Header {
     <link rel="stylesheet" type="text/css" href="~/Content/css/fileinput.min.css" />
 }
@@ -17,7 +18,10 @@
 			        });
     </script>
 }
+
 <div class="bg-lightgrey">
+
+
     <div class="container bg-white">
         <div class="relative text-center">
             <hr />
@@ -25,6 +29,7 @@
                 立即投保/新增参保人
             </span>
         </div>
+        @Html.Partial("~/Views/Message.cshtml")
         <!--进度条-->
         <div class="statusBox-w add-insurance am-padding-vertical-sm">
             <ul class="clearfix am-padding-0">
@@ -45,31 +50,33 @@
             </ul>
         </div>
         <!--表单计算-->
-        <form class="form-horizontal" action="@Url.Action("InsuranceAdd2","User")" method="post">
+        <form class="form-horizontal" action="@Url.Action("Add1","UserInsurance")" method="post">
             <div class="form-group">
                 <label for="" class="col-lg-2 col-lg-offset-2 control-label">姓名</label>
                 <div class="col-lg-4">
-                    
-                    @Html.TextBoxFor(m=>m.SocialSecurityPeopleName,new {@class= "form-control", placeholder = "请输入姓名" })
+
+
+
+                    @Html.TextBoxFor(m=>m.SocialSecurityPeopleName, new { @class = "form-control", @placeholder = "请输入姓名" })
                 </div>
             </div>
             <div class="form-group">
                 <label for="" class="col-lg-2 col-lg-offset-2 control-label">身份证</label>
                 <div class="col-lg-4">
-                    
-                    @Html.TextBoxFor(m => m.IdentityCard, new { @class = "form-control", placeholder = "请输入身份证号码" })
+                    @Html.TextBoxFor(m => m.IdentityCard,new { @class = "form-control", @placeholder = "请输入姓名" })
                 </div>
             </div>
             <div class="form-group">
                 <label for="" class="col-lg-2 col-lg-offset-2 control-label">身份证照片</label>
                 <div class="col-lg-7">
-                    <input id="file-5" name="IdentityCardPhoto" value="@Model.IdentityCardPhoto" class="file" type="file" placeholder="" multiple="multiple">
+                    <input id="file-5" name="IdentityCardPhoto" value="" class="file" type="file" placeholder="" multiple="multiple">
+
                 </div>
             </div>
             <div class="form-group">
                 <label for="" class="col-lg-2 col-lg-offset-2 control-label">户籍性质</label>
                 <div class="col-lg-4">
-                    @Html.DropDownListFor(m=>m.HouseholdProperty, ViewData["HouseholdProperty"] as SelectList, new { @class = "form-control" })
+                    @Html.DropDownList("HouseholdProperty", ViewData["HouseholdProperty"] as SelectList, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">

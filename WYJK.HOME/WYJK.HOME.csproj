@@ -202,6 +202,7 @@
     <Compile Include="Controllers\Command\CusomterActionFilterAttributer.cs" />
     <Compile Include="Controllers\Command\NeedLoginAttribute.cs" />
     <Compile Include="Controllers\IndexController.cs" />
+    <Compile Include="Controllers\UserInsuranceController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -228,7 +229,7 @@
     <Content Include="scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\User\Register.cshtml" />
     <Content Include="Views\User\Left.cshtml" />
-    <Content Include="Views\User\Insurance.cshtml" />
+    <Content Include="Views\UserInsurance\Index.cshtml" />
     <Content Include="Views\User\_Layout_user.cshtml" />
     <Content Include="Views\Navbar.cshtml" />
     <Content Include="Views\User\InfoChange.cshtml" />
@@ -236,9 +237,9 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Message.cshtml" />
     <Content Include="Views\_Pager.cshtml" />
-    <Content Include="Views\User\InsuranceAdd1.cshtml" />
-    <Content Include="Views\User\InsuranceAdd3.cshtml" />
-    <Content Include="Views\User\InsuranceAdd2.cshtml" />
+    <Content Include="Views\UserInsurance\Add1.cshtml" />
+    <Content Include="Views\UserInsurance\Add3.cshtml" />
+    <Content Include="Views\UserInsurance\Add2.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

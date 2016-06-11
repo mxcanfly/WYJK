@@ -44,7 +44,7 @@ namespace WYJK.HOME.Models
         /// 身份证号
         /// </summary>		
         [Required]
-        [MaxLength(18)]
+        
         [MinLength(18)]
         [Display(Name = "身份证号")]
         public string IdentityCard { get; set; }
@@ -57,7 +57,7 @@ namespace WYJK.HOME.Models
         /// <summary>
         /// 身份证照片数组
         /// </summary>
-        [Required]
+       
         [Display(Name = "身份证照片数组")]
         public string[] ImgUrls { get; set; }
         /// <summary>
@@ -67,4 +67,77 @@ namespace WYJK.HOME.Models
         [Display(Name = "户口性质")]
         public string HouseholdProperty { get; set; }
     }
+
+
+    public class InsuranceAdd2ViewModel
+    {
+        [Required]
+        [Display(Name = "参保地")]
+        public string InsuranceArea { get; set; }
+
+        [Required]
+        [Display(Name = "社保基数")]
+        public string SocialSecurityBase { get; set; }
+
+        [Required]
+        [Display(Name = "起缴时间")]
+        public string PayTime { get; set; }
+
+        [Required]
+        [Display(Name = "参保月份")]
+        public string AlreadyPayMonthCount { get; set; }
+
+        [Required]
+        [Display(Name = "补交月份")]
+        public string PayBeforeMonthCount { get; set; }
+
+        [Required]
+        [Display(Name = " 在企业缴纳")]
+        public string BankPayMonth { get; set; }
+
+        [Required]
+        [Display(Name = "在银行缴纳")]
+        public string EnterprisePayMonth { get; set; }
+        
+        [Display(Name = "备注")]
+        public string Note { get; set; }
+         
+    }
+
+
+    public class InsuranceAdd3ViewModel
+    {
+        [Required]
+        [Display(Name = "参保地")]
+        public string InsuranceArea { get; set; }
+
+        [Required]
+        [Display(Name = "公积金基数")]
+        public string AccumulationFundBase { get; set; }
+
+        [Required]
+        [Display(Name = "起缴时间")]
+        public string PayTime { get; set; }
+
+        [Required]
+        [Display(Name = "参保月份")]
+        public string AlreadyPayMonthCount { get; set; }
+
+        [Required]
+        [Display(Name = "补交月份")]
+        public string PayBeforeMonthCount { get; set; }
+
+        [Required]
+        [Display(Name = " 在企业缴纳")]
+        public string BankPayMonth { get; set; }
+
+        [Required]
+        [Display(Name = "在银行缴纳")]
+        public string EnterprisePayMonth { get; set; }
+
+        [Display(Name = "备注")]
+        public string Note { get; set; }
+
+    }
+
 }
