@@ -1,8 +1,15 @@
 ﻿@{
     Layout = "~/Views/_Layout_black.cshtml";
 }
+
+
+@section Header{
+    @RenderSection("Header", false)
+}
+
 @section Footer{
     <script src="~/Scripts/project.js" type="text/javascript" charset="utf-8"></script>
+    @RenderSection("Footer", false)
 }
 <div class="bg-lightgrey">
     <div class="container">

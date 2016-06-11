@@ -36,7 +36,20 @@ namespace WYJK.HOME.Controllers
             TempData["Message"] = msg;
             TempData["MessageType"] = success;
         }
+
+        public Int32 MemberId()
+        {
+            Members m = (Members)Session["UserInfo"];
+            if (m==null)
+            {
+                Redirect("~/User/Login");
+                return 0;
+            }
+            return m.MemberID;
+        }
+
     }
+
 
     public static class Common
     {

@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="cateMenu text-center" id="cateMenu">
-        <ul class="am-margin-0 am-padding-0">
+        <ul class="am-margin-0 am-padding-0" id="leftMenu">
             <li class="active">
                 <div class="cate-tag">
                     <a href="@Url.Action("Info", "User")" class="white center-block">
@@ -90,7 +90,7 @@
             </li>
             <li class="">
                 <div class="cate-tag">
-                    <a href="user-order-all.html" class="white center-block">
+                    <a href="@Url.Action("Index", "UserOrder")" class="white center-block">
                         <i class="icon-w icon-order-w am-margin-right-xs"></i>
                         <span class="am-text-middle">我的订单</span>
                     </a>
@@ -98,15 +98,15 @@
             </li>
             <li class="">
                 <div class="cate-tag">
-                    <a href="user-apply-withdraw.html" class="white center-block">
+                    <a href="@Url.Action("Index", "UserApply")" class="white center-block">
                         <i class="icon-w icon-submit-w am-margin-right-xs"></i>
                         <span class="am-text-middle">提现申请</span>
                     </a>
                 </div>
             </li>
-            <li class="">
+            <li class="" id="userLoanItem">
                 <div class="cate-tag">
-                    <a href="user-myLoan.html" class="white center-block">
+                    <a href="@Url.Action("Index", "UserLoan")" class="white center-block">
                         <i class="icon-w icon-list-w am-margin-right-xs"></i>
                         <span class="am-text-middle">我的借款</span>
                     </a>
