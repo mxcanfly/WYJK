@@ -1,8 +1,9 @@
-﻿@model PagedResult<InsuranceListViewModel>
+﻿@model PagedResult<MemberLoanAuditList>
 @{
     Layout = "~/Views/User/_Layout_user.cshtml";
     ViewBag.Title = "我的借款";
 }
+@Html.Partial("~/Views/_Pager.cshtml") 
 @section Header{
     <script>
         $(function () {
@@ -19,19 +20,15 @@
             <div class="panel panel-default bg-lightgrey am-margin-bottom-0">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        <form action="" method="post" class="form-inline">
+                        <form action="@Url.Action("Index","UserLoan")" method="get" class="form-inline">
+                            @Html.Hidden("PageIndex")
                             <div class="clearfix">
                                 <div class="form-group pull-left">
                                     <label for="" class="am-padding-right-sm">审核状态</label>
-                                    <select name="" class="form-control">
-                                        <option value="">全部</option>
-                                        <option value="">待审核</option>
-                                        <option value="">未通过</option>
-                                        <option value="">已通过</option>
-                                    </select>
+                                    @Html.DropDownList("Status", ViewData["StatusType"] as List<SelectListItem>, new { @class = "form-control" })
                                 </div>
                                 <div class="pull-right">
-                                    <button type="button" class="btn btn-info bg-lightblue">查询</button>
+                                    <button type="submit" class="btn btn-info bg-lightblue">查询</button>
                                 </div>
                             </div>
                         </form>
@@ -47,24 +44,24 @@
                                     <dl class="am-margin-0">
                                         <dd class="row am-padding-vertical-sm">
                                             <div class="col-lg-4">
-                                                总循环额度：500000
+                                                总循环额度：@item.TotalAmount
                                             </div>
                                             <div class="col-lg-4">
-                                                已用循环额度：200000
+                                                已用循环额度：@item.AlreadyUsedAmount
                                             </div>
                                             <div class="col-lg-4">
-                                                可用循环额度：50000
+                                                可用循环额度：@item.AvailableAmount
                                             </div>
                                         </dd>
                                         <dd class="row am-padding-vertical-sm">
                                             <div class="col-lg-4">
-                                                状态：<span class="text-primary">已通过</span>
+                                                状态：<span class="text-primary">@EnumExt.GetEnumCustomDescription((LoanAuditEnum)Convert.ToInt32(item.Status))</span>
                                             </div>
                                             <div class="col-lg-4">
-                                                提交时间：2016-01-18
+                                                提交时间：@(item.ApplyDate == null ? "--" : Convert.ToString(item.ApplyDate))
                                             </div>
                                             <div class="col-lg-4">
-                                                审核时间：2016-04-12
+                                                审核时间：@(item.AuditDate == null ? "--" : Convert.ToString(item.AuditDate))
                                             </div>
                                         </dd>
                                         <dd class="row am-padding-vertical-sm">
@@ -86,26 +83,6 @@
                     </ul>
                 </div>
                 <!--分页-->
-                <div class="text-center">
-                    <nav>
-                        <ul class="pagination">
-                            <li>
-                                <a href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li class="active"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li>
-                                <a href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+                <div id="pager" style="margin-top: 20px;"></div>
             </div>
         </div>

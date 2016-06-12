@@ -56,7 +56,7 @@ namespace WYJK.HOME.Controllers
 
             List<InsuranceListViewModel> SocialSecurityPeopleList = DbHelper.Query<InsuranceListViewModel>(sqlstr);
 
-            var c = SocialSecurityPeopleList.Skip(parameter.SkipCount - 1).Take(parameter.TakeCount);
+            var c = SocialSecurityPeopleList.Skip(parameter.SkipCount - 1).Take(parameter.PageSize);
 
 
             PagedResult<InsuranceListViewModel> page = new PagedResult<InsuranceListViewModel>

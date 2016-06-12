@@ -24,6 +24,14 @@ namespace WYJK.HOME.Controllers
         public ActionResult Index(LoanQueryParamsModel parameter)
         {
 
+            String where = "";
+
+            int  status = 0;
+            if (Int32.TryParse(parameter.Status, out status))
+            {
+                where += $@" and Status={status}";
+            }
+
             String sql = $@"
                 select 
 	                MemberLoanAudit.ID,Members.MemberID,Members.MemberName,members.MemberPhone,
@@ -32,23 +40,26 @@ namespace WYJK.HOME.Controllers
                 from MemberLoanAudit
 	                left join MemberLoan on MemberLoanAudit.MemberID = MemberLoan.MemberID
 	                left join Members on  MemberLoanAudit.MemberID = Members.MemberID 
-                where 1=1 and Members.MemberID={MemberId()}";
+                where 1=1 {where} and Members.MemberID={MemberId()}";
 
-            List<InsuranceListViewModel> SocialSecurityPeopleList = DbHelper.Query<InsuranceListViewModel>(sql);
+            List<MemberLoanAuditList> SocialSecurityPeopleList = DbHelper.Query<MemberLoanAuditList>(sql);
 
             var c = SocialSecurityPeopleList.Skip(parameter.SkipCount - 1).Take(parameter.TakeCount);
+             
 
-
-            PagedResult<InsuranceListViewModel> page = new PagedResult<InsuranceListViewModel>
+            PagedResult<MemberLoanAuditList> page = new PagedResult<MemberLoanAuditList>
             {
                 PageIndex = parameter.PageIndex,
                 PageSize = parameter.PageSize,
-
                 TotalItemCount = SocialSecurityPeopleList.Count,
                 Items = c
             };
-            
-            return View();
+
+            List<SelectListItem> selectList = new List<SelectListItem> { new SelectListItem() { Value = "", Text = "全部" } };
+            selectList.AddRange(EnumExt.GetSelectList(typeof(LoanAuditEnum)));
+            ViewData["StatusType"] = selectList;
+
+            return View(page);
         }
 
 
