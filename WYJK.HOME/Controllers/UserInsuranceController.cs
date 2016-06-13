@@ -37,7 +37,7 @@ namespace WYJK.HOME.Controllers
             {
                 where += $@"and sp.SocialSecurityPeopleName='{parameter.SocialSecurityPeopleName}'";
             }
-            string sqlstr = $@"
+            string sqlstr = $@" 
                 SELECT 
 	                sp.SocialSecurityPeopleID,sp.SocialSecurityPeopleName,sp.IdentityCard,
 	                sp.HouseholdProperty,convert(varchar(10),ss.PayTime,111) PayTime,convert(varchar(10),ss.StopDate,111) StopDate,ss.SocialSecurityBase,ss.Status SocialSecurityStatus,
