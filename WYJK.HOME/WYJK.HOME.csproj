@@ -207,6 +207,7 @@
     <Compile Include="Controllers\Command\CusomterActionFilterAttributer.cs" />
     <Compile Include="Controllers\Command\NeedLoginAttribute.cs" />
     <Compile Include="Controllers\IndexController.cs" />
+    <Compile Include="Controllers\UserApplyController.cs" />
     <Compile Include="Controllers\UserLoanController.cs" />
     <Compile Include="Controllers\UserInsuranceController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -248,6 +249,7 @@
     <Content Include="Views\UserInsurance\Add3.cshtml" />
     <Content Include="Views\UserInsurance\Add2.cshtml" />
     <Content Include="Views\UserLoan\Index.cshtml" />
+    <Content Include="Views\UserApply\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

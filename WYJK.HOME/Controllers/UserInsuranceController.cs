@@ -18,8 +18,6 @@ namespace WYJK.HOME.Controllers
 {
     public class UserInsuranceController : BaseController
     {
-        private readonly IMemberService _memberService = new MemberService();
-
 
         public ActionResult Index(InsuranceQueryParamModel parameter)
         {
