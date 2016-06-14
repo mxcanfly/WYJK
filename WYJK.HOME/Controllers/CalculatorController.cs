@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WYJK.Entity;
+using WYJK.Framework.EnumHelper;
 using WYJK.HOME.Service;
 
 namespace WYJK.HOME.Controllers
@@ -17,6 +18,10 @@ namespace WYJK.HOME.Controllers
         {
             //获取省份
             ViewBag.Provinces = EntityListToSelctList(regionSv.GetProvince(),"请选择省份");
+            //获取户籍
+            List<SelectListItem> UserTypeList = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
+            UserTypeList.Insert(0, new SelectListItem { Text = "请选择户籍性质", Value = "0" });
+            ViewBag.UserTypes = UserTypeList;
 
             return View();
         }

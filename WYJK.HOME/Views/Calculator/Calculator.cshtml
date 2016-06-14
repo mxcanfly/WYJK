@@ -31,13 +31,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">户籍性质</label>
                     <div class="col-lg-3 col-md-5 col-sm-5">
-                        <select class="form-control">
-                            <option>请选择户籍性质</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                        </select>
+                        @Html.DropDownList("usertype", ViewBag.UserTypes as List<SelectListItem>, new { @class = "form-control" })
                     </div>
                 </div>
                 <div class="form-group">
