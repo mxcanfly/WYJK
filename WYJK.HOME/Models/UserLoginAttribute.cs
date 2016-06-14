@@ -13,11 +13,11 @@ namespace WYJK.HOME.Models
             if (filterContext.HttpContext.Session["UserInfo"] == null)
             {
                 filterContext.RequestContext.HttpContext.Response.Redirect("~/User/Login");
-                return;
             }
 
 
         }
+
 
     }
 }
