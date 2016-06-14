@@ -23,10 +23,10 @@ namespace WYJK.HOME.Controllers
             requestContext.HttpContext.Session["WeekString"] = weekDays[n];
 
 
-            string sql = "select * from Members where MemberID=@MemberID";
-            Members member = DbHelper.QuerySingle<Members>(sql, new { MemberID = 1 });
+            //string sql = "select * from Members where MemberID=@MemberID";
+            //Members member = DbHelper.QuerySingle<Members>(sql, new { MemberID = 1 });
 
-            requestContext.HttpContext.Session["UserInfo"] = member;
+            //requestContext.HttpContext.Session["UserInfo"] = member;
 
             return base.BeginExecute(requestContext, callback, state);
         }

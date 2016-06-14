@@ -13,6 +13,7 @@ using WYJK.Entity;
 using WYJK.Framework.Captcha;
 using WYJK.Framework.EnumHelper;
 using WYJK.HOME.Models;
+using WYJK.Framework.Helpers;
 
 namespace WYJK.HOME.Controllers
 {
@@ -23,25 +24,20 @@ namespace WYJK.HOME.Controllers
         // GET: User
         public ActionResult Login()
         {
-            if (this.Session["UserInfo"]!=null)
-            {
-                return Redirect("/User/Info");
-            }
-            else
-            {
-                return View();
-            }
+            return View();
         }
 
         [HttpPost]
         public ActionResult Login(LoginViewModel model)
         {
-
             if (ModelState.IsValid)
             {
                 if (model.CheckCode.ToLower().Equals(Session["CheckCode"].ToString().ToLower()))
                 {
-                    string sql = $"SELECT * FROM Members where MemberName='{model.Email}' and Password='{model.Password}' ";
+                    //对密码进行加密
+                    string pwd = SecurityHelper.HashPassword(model.Password,model.Password);
+
+                    string sql = $"SELECT * FROM Members where MemberName='{model.MemberName}' and Password='{pwd}' ";
 
                     Members users = DbHelper.QuerySingle<Members>(sql);
 
@@ -121,11 +117,11 @@ namespace WYJK.HOME.Controllers
         public async Task<ActionResult> Info()
         {
             Members m = (Members)this.Session["UserInfo"]; 
-            string sql = "select * from Members where MemberID=@MemberID";
+            //string sql = "select * from Members where MemberID=@MemberID";
 
-            Members member = await DbHelper.QuerySingleAsync<Members>(sql, new { MemberID = 3 });
+            //Members member = await DbHelper.QuerySingleAsync<Members>(sql, new { MemberID = 3 });
 
-            return View(member);
+            return View(m);
         }
 
 
