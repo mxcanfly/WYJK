@@ -92,23 +92,29 @@
         <nav class="navbar navbar-default navlist-w navbar-static-top am-margin-top-lg am-margin-bottom-0">
             <div class="container">
                 <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="index.html" class="">
+
+                    @{ 
+                        //获取action名称
+                        string action = ViewContext.RouteData.Values["action"].ToString();
+                    }
+
+                    <li class="@(action == "Index" ? "active":"")">
+                        <a href="/Index/Index" class="">
                             <span class="am-text-default">首页</span>
                         </a>
                     </li>
-                    <li class="">
-                        <a href="insurance.html" class="">
+                    <li class="@(action == "Insurance" ? "active":"")">
+                        <a href="/Index/Insurance" class="">
                             <span class="am-text-default">社保/公积金</span>
                         </a>
                     </li>
-                    <li class="">
-                        <a href="loan.html" class="">
+                    <li class="@(action == "Loan" ? "active":"")">
+                        <a href="/Index/Loan" class="">
                             <span class="am-text-default">无忧借款</span>
                         </a>
                     </li>
-                    <li class="">
-                        <a href="about.html" class="">
+                    <li class="@(action == "About" ? "active":"")">
+                        <a href="/Index/About" class="">
                             <span class="am-text-default">关于我们</span>
                         </a>
                     </li>

@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "首页";
     Layout = "~/Views/_Layout_index.cshtml";
 }
 <!--三等分-->
@@ -8,7 +8,7 @@
     <div class="container">
         <ul class="am-margin-bottom-0 clearfix list-unstyled">
             <li>
-                <a href="user-insurance-add1.html" class="text-center am-padding-vertical-xxl black border-blue">
+                <a href="/UserInsurance/Index" class="text-center am-padding-vertical-xxl black border-blue">
                     <i class="icon-w icon-lg-shebao"></i>
                     <div class="am-padding-top-lg">缴社保</div>
                     <div class="am-text-xs grey">
@@ -84,46 +84,23 @@
                     </div>
                 </div>
                 <ul class="am-padding-left-0 list-unstyled">
-                    <li>
-                        <div class="row">
-                            <div class="col-lg-10 am-padding-left-0 am-text-truncate">
-                                <a href="#" target="_blank" class="text-muted">新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目</a>
+
+                    @{ List<Information> list = ViewBag.insuranceInfos as List<Information>;}
+
+                    @foreach (Information item in list)
+                    {
+                        <li>
+                            <div class="row">
+                                <div class="col-lg-10 am-padding-left-0 am-text-truncate">
+                                    <a href="#" target="_blank" class="text-muted">@item.Name</a>
+                                </div>
+                                <div class="col-lg-2 grey text-right am-padding-right-0">
+                                    03-28
+                                </div>
                             </div>
-                            <div class="col-lg-2 grey text-right am-padding-right-0">
-                                03-28
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="row">
-                            <div class="col-lg-10 am-padding-left-0 am-text-truncate">
-                                <a href="#" target="_blank" class="text-muted">目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目</a>
-                            </div>
-                            <div class="col-lg-2 grey text-right am-padding-right-0">
-                                03-28
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="row">
-                            <div class="col-lg-10 am-padding-left-0 am-text-truncate">
-                                <a href="#" target="_blank" class="text-muted">新闻条目新闻条目新闻条目新闻条目闻条目新闻条目</a>
-                            </div>
-                            <div class="col-lg-2 grey text-right am-padding-right-0">
-                                03-28
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="row">
-                            <div class="col-lg-10 am-padding-left-0 am-text-truncate">
-                                <a href="#" target="_blank" class="text-muted">新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新条目</a>
-                            </div>
-                            <div class="col-lg-2 grey text-right am-padding-right-0">
-                                03-28
-                            </div>
-                        </div>
-                    </li>
+                        </li>
+                    }
+
                 </ul>
             </div>
             <div class="col-lg-6">
@@ -138,46 +115,21 @@
                     </div>
                 </div>
                 <ul class="am-padding-left-0 list-unstyled">
-                    <li>
-                        <div class="row">
-                            <div class="col-lg-10 am-padding-left-0 am-text-truncate">
-                                <a href="#" target="_blank" class="text-muted">新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目</a>
+
+                    @foreach (Information item in list)
+                    {
+                        <li>
+                            <div class="row">
+                                <div class="col-lg-10 am-padding-left-0 am-text-truncate">
+                                    <a href="#" target="_blank" class="text-muted">@item.Name</a>
+                                </div>
+                                <div class="col-lg-2 grey text-right am-padding-right-0">
+                                    03-28
+                                </div>
                             </div>
-                            <div class="col-lg-2 grey text-right am-padding-right-0">
-                                03-28
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="row">
-                            <div class="col-lg-10 am-padding-left-0 am-text-truncate">
-                                <a href="#" target="_blank" class="text-muted">目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目</a>
-                            </div>
-                            <div class="col-lg-2 grey text-right am-padding-right-0">
-                                03-28
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="row">
-                            <div class="col-lg-10 am-padding-left-0 am-text-truncate">
-                                <a href="#" target="_blank" class="text-muted">新闻条目新闻条目新闻条目新闻条目闻条目新闻条目</a>
-                            </div>
-                            <div class="col-lg-2 grey text-right am-padding-right-0">
-                                03-28
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="row">
-                            <div class="col-lg-10 am-padding-left-0 am-text-truncate">
-                                <a href="#" target="_blank" class="text-muted">新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新闻条目新条目</a>
-                            </div>
-                            <div class="col-lg-2 grey text-right am-padding-right-0">
-                                03-28
-                            </div>
-                        </div>
-                    </li>
+                        </li>
+                    }
+
                 </ul>
             </div>
         </div>

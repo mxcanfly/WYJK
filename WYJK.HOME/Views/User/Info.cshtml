@@ -75,7 +75,7 @@
                         生 日：
                     </div>
                     <div class="col-lg-10">
-                        @Model.Birthday.Value.ToShortDateString()
+                        @Model.Birthday
                     </div>
                 </div>
             </li>
@@ -85,7 +85,7 @@
                         性 别：
                     </div>
                     <div class="col-lg-10">
-                        @(Model.Sex.Equals("0") ? "男" : "女")
+                        @(Model.Sex == null ? "" : Model.Sex.Equals("0") ? "男" : "女")
                     </div>
                 </div>
             </li>

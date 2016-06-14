@@ -21,7 +21,16 @@ namespace WYJK.HOME.Controllers
 
         public ActionResult Index(InsuranceQueryParamModel parameter)
         {
+
+
             Members m = (Members)this.Session["UserInfo"];
+
+            if (m == null)
+            {
+                return Redirect("/User/Login");
+            }
+
+
             String where = "";
             if (Convert.ToInt32(parameter.HouseholdProperty) > 0)
             {

@@ -9,10 +9,20 @@ namespace WYJK.HOME.Models
 {
     public class LoginViewModel
     {
+        /// <summary>
+        /// 用户ID
+        /// </summary>		
+        public int MemberID { get; set; }
+        /// <summary>
+        /// 用户名
+        /// </summary>
         [Required]
         [Display(Name = "用户名")]
-        //[EmailAddress]
-        public string Email { get; set; }
+        public string MemberName { get; set; }
+        /// <summary>
+        /// 手机号
+        /// </summary>		
+        public string MemberPhone { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -25,7 +35,6 @@ namespace WYJK.HOME.Models
 
         [Required]
         [Display(Name = "验证码")]
-        //[EmailAddress]
         public string CheckCode { get; set; }
     }
 
