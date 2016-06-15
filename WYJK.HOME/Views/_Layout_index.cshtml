@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using WYJK.HOME.Models;
+
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
@@ -42,45 +44,56 @@
                 </div>
                 <div class="col-md-3 col-lg-3">
                     <div class="text-right text-nowrap am-padding-top-xl">
-                        <!--未登录-->
-                        <a href="@Url.Action("Login", "User", new { }, "http")" class="orange">登录</a>
-                        <!--登陆之后-->
-                        <span class="relative">
-                            <a href="@Url.Action("Info", "User", new { }, "http")" class="dropdown-toggle orange" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                我的账户
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
-                                <li class="">
-                                    <a href="@Url.Action("Info", "User", new { }, "http")">
-                                        <div class="am-padding-vertical-sm">
-                                            我的账户
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="user-insurance-index.html">
-                                        <div class="am-padding-vertical-sm">
-                                            参保人
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="user-order-all.html">
-                                        <div class="am-padding-vertical-sm">
-                                            我的订单
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="#">
-                                        <div class="am-padding-vertical-sm">
-                                            安全退出
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </span>
+
+                        @if (Common.CurrentUser == null)
+                        {
+                            <!--未登录-->
+                            <a href="@Url.Action("Login", "User", new { }, "http")" class="orange">登录</a>
+
+                        }
+                        else
+                        {
+                            <!--登陆之后-->
+                            <span class="relative">
+                                <a href="@Url.Action("Info", "User", new { }, "http")" class="dropdown-toggle orange" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    我的账户
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                    <li class="">
+                                        <a href="@Url.Action("Info", "User", new { }, "http")">
+                                            <div class="am-padding-vertical-sm">
+                                                我的账户
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="/UserInsurance/Index">
+                                            <div class="am-padding-vertical-sm">
+                                                参保人
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="/UserOrder/Index">
+                                            <div class="am-padding-vertical-sm">
+                                                我的订单
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="/User/LoginOut">
+                                            <div class="am-padding-vertical-sm">
+                                                安全退出
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </span>
+                        }
+
+
+                        
                         <!--消息-->
                         <span class="light-grey am-padding-horizontal-xs">|</span>
                         <a href="#" class="orange">消息</a>

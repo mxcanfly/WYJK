@@ -44,7 +44,7 @@ namespace WYJK.HOME.Controllers
                     if (users != null)
                     {
                         this.Session["UserInfo"] = users;
-                        return Redirect("/User/Info");
+                        return Redirect("/Index/Index");
                     }
                     else
                     {
@@ -60,7 +60,7 @@ namespace WYJK.HOME.Controllers
             return View(model);
         }
 
-        public ActionResult LoginOut(LoginViewModel model)
+        public ActionResult LoginOut()
         {
             this.Session["UserInfo"] = null;
             return Redirect("/Index/Index");
