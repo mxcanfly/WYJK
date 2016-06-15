@@ -11,7 +11,16 @@
     </div>
     <div class="cateMenu text-center" id="cateMenu">
         <ul class="am-margin-0 am-padding-0" id="leftMenu">
-            <li class="active">
+
+
+            @{
+                //获取controller名称
+                string controller = ViewContext.RouteData.Values["controller"].ToString();
+                //获取action名称
+                string action = ViewContext.RouteData.Values["action"].ToString();
+            }
+
+            <li class="@(controller == "User" ? "active":"")">
                 <div class="cate-tag">
                     <a href="@Url.Action("Info", "User")" class="white center-block">
                         <i class="icon-w icon-man-w am-margin-right-xs"></i>
@@ -19,7 +28,7 @@
                     </a>
                 </div>
             </li>
-            <li class="">
+            <li class="@(controller == "UserInsurance" ? "active":"")">
                 <div class="cate-tag">
                     <a href="@Url.Action("Index", "UserInsurance")" class="white center-block">
                         <i class="icon-w icon-people-w am-margin-right-xs"></i>
@@ -39,12 +48,12 @@
                             </a>
                         </dd>
                         <dd>
-                            <a href="@Url.Action("chageSB", "UserInsurance")" class="white center-block">
+                            <a href="@Url.Action("ChangeSB", "UserInsurance")" class="white center-block">
                                 社保基数变更
                             </a>
                         </dd>
                         <dd>
-                            <a href="@Url.Action("ChageFund", "UserInsurance")" class="white center-block">
+                            <a href="@Url.Action("ChangeFund", "UserInsurance")" class="white center-block">
                                 公积金基数变更
                             </a>
                         </dd>
@@ -61,9 +70,9 @@
                     </dl>
                 </div>
             </li>
-            <li class="">
+            <li class="@(controller == "UserAccount" ? "active":"")">
                 <div class="cate-tag">
-                    <a href="user-account.html" class="white center-block">
+                    <a href="/UserAccount/MyAccount" class="white center-block">
                         <i class="icon-w icon-files-w am-margin-right-xs"></i>
                         <span class="am-text-middle">我的账户</span>
                     </a>
@@ -71,12 +80,12 @@
                 <div class="list-item-w" style="display: none; top: 48px;">
                     <dl class="am-margin-0">
                         <dd>
-                            <a href="user-account-charge.html" class="white center-block">
+                            <a href="/UserAccount/Charge" class="white center-block">
                                 充值
                             </a>
                         </dd>
                         <dd>
-                            <a href="user-account-withdraw.html" class="white center-block">
+                            <a href="/UserAccount/WithDraw" class="white center-block">
                                 提现
                             </a>
                         </dd>
@@ -96,14 +105,15 @@
                     </a>
                 </div>
             </li>
-            <li class="">
+            <li class="@(controller == "UserApplyWithDraw" ? "active":"")">
                 <div class="cate-tag">
-                    <a href="@Url.Action("Index", "UserApply")" class="white center-block">
+                    <a href="@Url.Action("Index", "UserApplyWithDraw")" class="white center-block">
                         <i class="icon-w icon-submit-w am-margin-right-xs"></i>
                         <span class="am-text-middle">提现申请</span>
                     </a>
                 </div>
             </li>
+
             <li class="" id="userLoanItem">
                 <div class="cate-tag">
                     <a href="@Url.Action("Index", "UserLoan")" class="white center-block">

@@ -211,7 +211,9 @@
     <Compile Include="Controllers\InfomationController.cs" />
     <Compile Include="Controllers\LoanCalculatorController.cs" />
     <Compile Include="Controllers\LoanController.cs" />
+    <Compile Include="Controllers\UserAccountController.cs" />
     <Compile Include="Controllers\UserApplyController.cs" />
+    <Compile Include="Controllers\UserApplyWithDrawController.cs" />
     <Compile Include="Controllers\UserLoanController.cs" />
     <Compile Include="Controllers\UserInsuranceController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -269,6 +271,15 @@
     <Content Include="Views\Loan\Loan.cshtml" />
     <Content Include="Views\LoanCalculator\CalculatorSecond.cshtml" />
     <Content Include="Views\User\Password.cshtml" />
+    <Content Include="Views\UserApplyWithDraw\Index.cshtml" />
+    <Content Include="Views\UserAccount\MyAccount.cshtml" />
+    <Content Include="Views\UserAccount\Charge.cshtml" />
+    <Content Include="Views\UserAccount\WithDraw.cshtml" />
+    <Content Include="Views\UserInsurance\ChangeSB.cshtml" />
+    <Content Include="Views\UserInsurance\ChangeFund.cshtml" />
+    <Content Include="Views\UserInsurance\RecSB.cshtml" />
+    <Content Include="Views\UserInsurance\RecFund.cshtml" />
+    <Content Include="Views\UserOrder\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -281,7 +292,7 @@
     <Folder Include="scripts\locales\" />
     <Folder Include="Views\Infomation\" />
     <Folder Include="Views\Templates\" />
-    <Folder Include="Views\UserOrder\" />
+    <Folder Include="Views\UserWithDraw\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WYJK.Data\WYJK.Data.csproj">

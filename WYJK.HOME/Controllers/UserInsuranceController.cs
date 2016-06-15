@@ -156,9 +156,41 @@ namespace WYJK.HOME.Controllers
 
         }
 
+        /// <summary>
+        /// 社保基数变更
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ChangeSB()
+        {
+            return View();
+        }
 
+        /// <summary>
+        /// 公积金基数变更
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ChangeFund()
+        {
+            return View();
+        }
 
+        /// <summary>
+        /// 社保基数变更历史
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult RecSB()
+        {
+            return View();
+        }
 
-       
+        /// <summary>
+        /// 公积金基数变更历史
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult RecFund()
+        {
+            return View();
+        }
+
     }
 }
