@@ -50,7 +50,7 @@ namespace WYJK.HOME.Models
         public string IdentityCard { get; set; }
         /// <summary>
         /// 身份证照片
-        /// </summary>		
+        /// </summary>
         [Required]
         [Display(Name = "身份证照片")]
         public string IdentityCardPhoto { get; set; }

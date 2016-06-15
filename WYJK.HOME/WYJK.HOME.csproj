@@ -290,6 +290,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="scripts\locales\" />
+    <Folder Include="Uploads\" />
     <Folder Include="Views\Infomation\" />
     <Folder Include="Views\Templates\" />
     <Folder Include="Views\UserWithDraw\" />

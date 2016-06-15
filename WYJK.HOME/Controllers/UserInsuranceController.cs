@@ -98,7 +98,7 @@ namespace WYJK.HOME.Controllers
         [HttpGet]
         public ActionResult Add1()
         {
-            String HouseholdProperty = "";
+            string HouseholdProperty = "";
             if (Session["InsuranceAdd1ViewModel"] != null)
             {
                 HouseholdProperty = ((InsuranceAdd1ViewModel)Session["InsuranceAdd1ViewModel"]).HouseholdProperty;
@@ -110,9 +110,15 @@ namespace WYJK.HOME.Controllers
 
         public ActionResult UploadIDCard()
         {
+            var files = Request.Files;
+            HttpPostedFileBase file = files[0];
+            string fielName = DateTime.Now.ToString("yyyyMMddHHmmss") + Path.GetExtension(file.FileName);
 
+            string path = Server.MapPath(Path.Combine("/Uploads", fielName));
 
-            return View();
+            file.SaveAs(path);
+            
+            return Json(fielName);
         }
 
 
@@ -121,8 +127,10 @@ namespace WYJK.HOME.Controllers
         {
             if (ModelState.IsValid)
             {
+                model.ImgUrls = model.IdentityCardPhoto.Substring(1).Split(',');
+
                 Session["InsuranceAdd1ViewModel"] = model;
-                return Redirect("InsuranceAdd2");
+                return RedirectToAction("Add2");
             }
             else
             {
