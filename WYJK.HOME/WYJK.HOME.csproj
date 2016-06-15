@@ -222,7 +222,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Common.cs" />
+    <Compile Include="Models\CommonHelper.cs" />
     <Compile Include="Models\InsuranceViewModel.cs" />
     <Compile Include="Models\QueryParamsModel.cs" />
     <Compile Include="Models\UserLoginAttribute.cs" />

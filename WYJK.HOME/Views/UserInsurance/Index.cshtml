@@ -35,7 +35,7 @@
                         <div class="col-lg-1">
                             <div class="checkbox">
                                 <label>
-                                    @item.SocialSecurityPeopleID
+                                    @Html.Hidden("people_"+@item.SocialSecurityPeopleID, @item.SocialSecurityPeopleID)
                                     <input type="checkbox" id="" value="@item.SocialSecurityPeopleID" aria-label="...">
                                 </label>
                             </div>

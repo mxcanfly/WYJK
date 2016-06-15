@@ -24,5 +24,20 @@ namespace WYJK.HOME.Service
             return DbHelper.QuerySingle<Members>(sql);
         }
 
+        /// <summary>
+        /// 根据id获取用户信息
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        public Members UserInfos(int memberId)
+        {
+            string sql = $@"select 
+	                            *
+                            from Members
+	                            where MemberID = {memberId}";
+
+            return DbHelper.QuerySingle<Members>(sql);
+        }
+
     }
 }

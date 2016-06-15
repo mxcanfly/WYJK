@@ -45,7 +45,7 @@
                 <div class="col-md-3 col-lg-3">
                     <div class="text-right text-nowrap am-padding-top-xl">
 
-                        @if (Common.CurrentUser == null)
+                        @if (CommonHelper.CurrentUser == null)
                         {
                             <!--未登录-->
                             <a href="@Url.Action("Login", "User", new { }, "http")" class="orange">登录</a>

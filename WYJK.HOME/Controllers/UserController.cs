@@ -24,6 +24,8 @@ namespace WYJK.HOME.Controllers
 
         UserMemberService userSv = new UserMemberService();
 
+        #region 登录、注册、找回密码
+
         // GET: User
         public ActionResult Login()
         {
@@ -145,26 +147,25 @@ namespace WYJK.HOME.Controllers
             return View();
         }
 
+        #endregion
+
+        #region 个人信息
+
         /// <summary>
         /// 个人信息
         /// </summary>
         /// <returns></returns>
-        public async Task<ActionResult> Info()
+        public ActionResult Info()
         {
-            Members m = (Members)this.Session["UserInfo"]; 
-
-            return View(m);
+            return View(userSv.UserInfos(CommonHelper.CurrentUser.MemberID));
         }
-
-
 
         public async Task<ActionResult> InfoChange()
         {
-            Members m = (Members)this.Session["UserInfo"];
-
-            ExtensionInformationParameter model = await _memberService.GetMemberExtensionInformation(m.MemberID);
+            ExtensionInformationParameter model = await _memberService.GetMemberExtensionInformation(CommonHelper.CurrentUser.MemberID);
             InfoChangeViewModel viewModel = new InfoChangeViewModel();
             model.CopyTo(viewModel);
+            //获取下拉列表的数据
             buildSelectList(viewModel);
             return View(viewModel);
         }
@@ -192,6 +193,8 @@ namespace WYJK.HOME.Controllers
             buildSelectList(viewModel);
             return View(viewModel);
         }
+
+        #endregion
 
         #region 显示验证码
         /// <summary>
@@ -222,6 +225,8 @@ namespace WYJK.HOME.Controllers
             }
         }
         #endregion
+
+        #region 基础信息获取
 
         private void buildSelectList(InfoChangeViewModel model)
         {
@@ -270,6 +275,7 @@ namespace WYJK.HOME.Controllers
             #endregion
         }
 
+
         /// <summary>
         /// 获取证件类型
         /// </summary>
@@ -305,5 +311,7 @@ namespace WYJK.HOME.Controllers
             };
             return list;
         }
+
+        #endregion
     }
 }

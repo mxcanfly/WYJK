@@ -7,7 +7,7 @@ using System.Web.SessionState;
 
 namespace WYJK.HOME.Models
 {
-    public class Common
+    public class CommonHelper
     {
         /// <summary>
         /// 获取当前用户

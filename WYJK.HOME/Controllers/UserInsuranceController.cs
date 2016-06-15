@@ -18,10 +18,15 @@ namespace WYJK.HOME.Controllers
 {
     public class UserInsuranceController : BaseController
     {
+        #region 参保人列表
 
+        /// <summary>
+        /// 参保人列表
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         public ActionResult Index(InsuranceQueryParamModel parameter)
         {
-
 
             Members m = (Members)this.Session["UserInfo"];
 
@@ -31,10 +36,10 @@ namespace WYJK.HOME.Controllers
             }
 
 
-            String where = "";
+            string where = "";
             if (Convert.ToInt32(parameter.HouseholdProperty) > 0)
             {
-                String hp = EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)(Int32.Parse(parameter.HouseholdProperty)));
+                string hp = EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)(Int32.Parse(parameter.HouseholdProperty)));
                 where += $@"and sp.HouseholdProperty='{hp}'";
             }
             if (parameter.InsuranceArea != null)
@@ -82,10 +87,14 @@ namespace WYJK.HOME.Controllers
         private void bulidHouseholdPropertyDropdown(String value)
         {
             List<SelectListItem> UserTypeList = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
-            UserTypeList.Insert(0, new SelectListItem { Text = "请选择", Value = "" });
+            UserTypeList.Insert(0, new SelectListItem { Text = "户籍性质", Value = "" });
 
             ViewData["HouseholdProperty"] = new SelectList(UserTypeList, "Value", "Text", value);
         }
+
+        #endregion
+
+
         [HttpGet]
         public ActionResult Add1()
         {
@@ -98,6 +107,13 @@ namespace WYJK.HOME.Controllers
             return View(Session["InsuranceAdd1ViewModel"]);
         }
 
+
+        public ActionResult UploadIDCard()
+        {
+
+
+            return View();
+        }
 
 
         [HttpPost]
