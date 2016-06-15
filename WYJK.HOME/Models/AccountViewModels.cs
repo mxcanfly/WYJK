@@ -38,6 +38,32 @@ namespace WYJK.HOME.Models
         public string CheckCode { get; set; }
     }
 
+    public class PasswordViewModel
+    {
+        /// <summary>
+        /// 用户名
+        /// </summary>
+        [Required]
+        [Display(Name = "用户名")]
+        public string MemberName { get; set; }
+        /// <summary>
+        /// 手机号
+        /// </summary>
+        [Required]
+        [Display(Name = "手机号")]
+        public string MemberPhone { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "密码")]
+        public string Password { get; set; }
+
+        [Required]
+        [Display(Name = "短信验证码")]
+        public string SMSCheckCode { get; set; }
+
+    }
+
     public class RegisterViewModel
     {
         [Required]

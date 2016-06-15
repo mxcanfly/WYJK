@@ -14,12 +14,15 @@ using WYJK.Framework.Captcha;
 using WYJK.Framework.EnumHelper;
 using WYJK.HOME.Models;
 using WYJK.Framework.Helpers;
+using WYJK.HOME.Service;
 
 namespace WYJK.HOME.Controllers
 {
     public class UserController : BaseController
     {
         private readonly IMemberService _memberService = new MemberService();
+
+        UserMemberService userSv = new UserMemberService();
 
         // GET: User
         public ActionResult Login()
@@ -113,13 +116,42 @@ namespace WYJK.HOME.Controllers
             return View(model);
         }
 
-        //[NeedLogin]
+
+        public ActionResult Password()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Password(PasswordViewModel pwd)
+        {
+            if (ModelState.IsValid)
+            {
+                Dictionary<bool,string> result = await _memberService.ForgetPassword(new MemberForgetPasswordModel { MemberName=pwd.MemberName, MemberPhone= pwd.MemberPhone, Password = pwd.Password });
+
+                if (result.First().Key)//成功
+                {
+                    //跳转到登录页面
+                    this.Session["UserInfo"] = userSv.Password(pwd);
+                    return Redirect("/User/Info");
+
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "用户名或手机号错误！";
+                }
+            }
+
+            return View();
+        }
+
+        /// <summary>
+        /// 个人信息
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> Info()
         {
             Members m = (Members)this.Session["UserInfo"]; 
-            //string sql = "select * from Members where MemberID=@MemberID";
-
-            //Members member = await DbHelper.QuerySingleAsync<Members>(sql, new { MemberID = 3 });
 
             return View(m);
         }
