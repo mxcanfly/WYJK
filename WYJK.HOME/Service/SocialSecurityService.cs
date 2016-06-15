@@ -8,6 +8,36 @@ namespace WYJK.HOME.Service
 {
     public class SocialSecurityService
     {
+        #region 用户借款条件考察
+
+
+        /// <summary>
+        /// 是否进行过身价计算
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        public bool LoanCalculator(int memberId)
+        {
+            string sql = $@"select 
+	                            COUNT(ID) from MemberLoan
+                            where MemberID = {memberId}";
+
+            int count = DbHelper.QuerySingle<int>(sql);
+
+            if (count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+
+        /// <summary>
+        /// 是否缴费满三个月
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
         public bool PayedMonthCount(int memberId)
         {
             string sql = $@"select 
@@ -41,6 +71,8 @@ namespace WYJK.HOME.Service
 
             return list.Count > 0 ? true : false;
         }
+
+        #endregion
 
     }
 }

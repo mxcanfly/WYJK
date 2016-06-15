@@ -209,6 +209,7 @@
     <Compile Include="Controllers\Command\NeedLoginAttribute.cs" />
     <Compile Include="Controllers\IndexController.cs" />
     <Compile Include="Controllers\InfomationController.cs" />
+    <Compile Include="Controllers\LoanCalculatorController.cs" />
     <Compile Include="Controllers\LoanController.cs" />
     <Compile Include="Controllers\UserApplyController.cs" />
     <Compile Include="Controllers\UserLoanController.cs" />
@@ -261,6 +262,9 @@
     <Content Include="Views\_Layout_SocialSecurity.cshtml" />
     <Content Include="Views\Shared\_Partial_Bottom.cshtml" />
     <Content Include="Views\Calculator\Calculator.cshtml" />
+    <Content Include="Views\LoanCalculator\CalculatorFirst.cshtml" />
+    <Content Include="Views\Loan\Loan.cshtml" />
+    <Content Include="Views\LoanCalculator\CalculatorSecond.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -272,7 +276,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="scripts\locales\" />
     <Folder Include="Views\Infomation\" />
-    <Folder Include="Views\Loan\" />
     <Folder Include="Views\Templates\" />
   </ItemGroup>
   <ItemGroup>

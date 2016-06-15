@@ -14,7 +14,10 @@ namespace WYJK.HOME.Controllers
         SocialSecurityService sss = new SocialSecurityService();
 
 
-        
+        /// <summary>
+        /// 借款
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Loan()
         {
             //判断用户是否登录
@@ -36,7 +39,11 @@ namespace WYJK.HOME.Controllers
                 return Redirect("/UserInsurance/Index");
             }
 
-            //判断是否计算过身价
+            //判断是否计算过身价（MemberLoan : 个人借款表中是否有本人数据）
+            if (!sss.LoanCalculator(m.MemberID))//没有进行过身价计算
+            {
+                return Redirect("/LoanCalculator/CalculatorFirst");
+            }
 
             //跳转到借款页面
             return View();
