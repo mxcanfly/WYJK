@@ -34,23 +34,15 @@
         <form class="form-horizontal" action="@Url.Action("Add2","UserInsurance")" method="post">
             <div class="form-group">
                 <label for="" class="col-lg-2 col-lg-offset-1 control-label">参保地</label>
-               <!--
+               
                 <div class="col-lg-3">
-                    <select name="" class="form-control">
-                        <option value="">请选择省份</option>
-                        <option value="">1</option>
-                    </select>
+                    @Html.DropDownList("province", ViewBag.Provinces as List<SelectListItem>, new { @class = "form-control" })
                 </div>
                 <div class="col-lg-3">
-                    <select name="" class="form-control">
-                        <option value="">请选择城市</option>
-                        <option value="">1</option>
+                    <select id="city" name="city" class="form-control">
+                        <option>请选择城市</option>
                     </select>
                 </div>    
-               -->
-                <div class="col-lg-6">
-                    @Html.TextBoxFor(m=>m.InsuranceArea,new {@class="form-control" , placeholder="参保地" })
-                </div>
             </div>
             <div class="form-group">
                 <label for="" class="col-lg-2 col-lg-offset-1 control-label">社保基数</label>
@@ -93,14 +85,14 @@
             <div class="form-group am-padding-top-xl">
                 <div class="row">
                     <div class="col-lg-offset-4 col-lg-4 text-center">
-                        <button type="button" id="confirm" class="btn btn-info bg-lightblue btn-lg btn-block">确认参保</button>
+                        <button type="submit" id="confirm" class="btn btn-info bg-lightblue btn-lg btn-block">确认参保</button>
                     </div>
                 </div>
             </div>
             <div class="form-group am-padding-bottom-xl">
                 <div class="row">
                     <div class="col-lg-offset-4 col-lg-4 text-center">
-                        <button type="button" id="next" class="btn btn-info bg-lightblue btn-lg btn-block">下一步</button>
+                        <button type="submit" formaction="/UserInsurance/Add2Next" id="next" class="btn btn-info bg-lightblue btn-lg btn-block">下一步</button>
                     </div>
                 </div>
             </div>
@@ -110,14 +102,27 @@
 </div>
 
 @section Header{
-    <script>
-        $(function () {
-            $("#confirm").click(function () {
-                $("form").attr("action","@Url.Action("InsuranceConfirm", "User")").submit();
-            });
-            $("#next").click(function () {
-                $("form").submit();
-            });
-        })
-    </script>
+<link href="~/Content/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="~/scripts/ProvinceAndCity.js"></script>
+<script src="/scripts/bootstrap-datetimepicker.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/scripts/locales/bootstrap-datetimepicker.zh-CN.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+			    $(document).ready(function() {
+			        inputDatepicker();
+			    });
+
+			    function inputDatepicker(){
+			        $('#PayTime').datetimepicker({
+			            language: 'zh-CN',
+			            format: 'yyyy-mm',
+			            weekStart: 1,
+			            autoclose: 1,
+			            todayHighlight: 1,
+			            startView: 4,
+			            minView: 3,
+			            forceParse: 0
+			        });
+			    }
+
+</script>
 }

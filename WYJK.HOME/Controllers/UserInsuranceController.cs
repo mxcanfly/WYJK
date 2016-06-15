@@ -13,11 +13,14 @@ using WYJK.Entity;
 using WYJK.Framework.Captcha;
 using WYJK.Framework.EnumHelper;
 using WYJK.HOME.Models;
+using WYJK.HOME.Service;
 
 namespace WYJK.HOME.Controllers
 {
     public class UserInsuranceController : BaseController
     {
+        RegionService regionSv = new RegionService();
+
         #region 参保人列表
 
         /// <summary>
@@ -142,19 +145,36 @@ namespace WYJK.HOME.Controllers
         [HttpGet]
         public ActionResult Add2()
         {
-            return View(Session["InsuranceAdd2ViewModel"]);
+            //获取省份
+            ViewBag.Provinces = CommonHelper.EntityListToSelctList(regionSv.GetProvince(), "请选择省份");
+            return View();
         }
         [HttpPost]
         public ActionResult Add2(InsuranceAdd2ViewModel model)
         {
             if (ModelState.IsValid)
             {
-                Session["InsuranceAdd2ViewModel"] = model;
-                return Redirect("InsuranceAdd3");
+                //保存数据到数据库
+                return RedirectToAction("Index");
             }
             else
             {
                 return View(model);
+            }
+
+        }
+
+        public ActionResult Add2Next(InsuranceAdd2ViewModel model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                Session["InsuranceAdd2ViewModel"] = model;
+                return RedirectToAction("Add3");
+            }
+            else
+            {
+                return RedirectToAction("Add2");
             }
 
         }

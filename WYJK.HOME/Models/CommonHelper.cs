@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using WYJK.Entity;
 using System.Web.SessionState;
+using System.Web.Mvc;
 
 namespace WYJK.HOME.Models
 {
@@ -24,6 +25,21 @@ namespace WYJK.HOME.Models
 
 
             }
+        }
+
+        public static List<SelectListItem> EntityListToSelctList(List<Region> list, string promt = "请选择")
+        {
+            List<SelectListItem> selList = new List<SelectListItem>();
+
+            selList.Insert(0, new SelectListItem { Text = promt, Value = "0" });
+
+            foreach (Region item in list)
+            {
+                selList.Add(new SelectListItem { Text = item.RegionName, Value = item.RegionCode });
+            }
+
+            return selList;
+
         }
 
     }

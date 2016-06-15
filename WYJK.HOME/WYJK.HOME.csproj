@@ -190,6 +190,7 @@
     <Content Include="scripts\modernizr-2.6.2.js" />
     <Content Include="scripts\npm.js" />
     <Content Include="scripts\project.js" />
+    <Content Include="scripts\ProvinceAndCity.js" />
     <Content Include="scripts\respond.js" />
     <Content Include="scripts\respond.min.js" />
     <Content Include="scripts\superslide.2.1.js" />

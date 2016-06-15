@@ -71,7 +71,6 @@ namespace WYJK.HOME.Models
 
     public class InsuranceAdd2ViewModel
     {
-        [Required]
         [Display(Name = "参保地")]
         public string InsuranceArea { get; set; }
 
