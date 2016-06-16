@@ -181,22 +181,18 @@ namespace WYJK.HOME.Controllers
 
                 if (id > 0)
                 {
-                    Session["SocialSecurityPeopleID"] = null;
-
-                    #warning todo 生成订单
-
-                    return RedirectToAction("Index");
+                    return Redirect("/UserOrder/Create");
                 }
                 else
                 {
-                    return View(model);
+                    return RedirectToAction("Add2");
                 }
 
                 
             }
             else
             {
-                return View(model);
+                return RedirectToAction("Add2");
             }
 
         }
@@ -221,12 +217,12 @@ namespace WYJK.HOME.Controllers
                 }
                 else
                 {
-                    return View("Add2",model);
+                    return RedirectToAction("Add2");
                 }
             }
             else
             {
-                return View("Add2", model);
+                return RedirectToAction("Add2");
             }
 
         }
@@ -235,7 +231,7 @@ namespace WYJK.HOME.Controllers
         public int AddLocalSocialSecurity(InsuranceAdd2ViewModel model)
         {
             SocialSecurity socialSecurity = new SocialSecurity();
-            SocialSecurityPeople people = (SocialSecurityPeople)Session["SocialSecurityPeopleID"];
+            SocialSecurityPeople people = (SocialSecurityPeople)Session["SocialSecurityPeople"];
             socialSecurity.SocialSecurityPeopleID = people.SocialSecurityPeopleID;
             //socialSecurity.SocialSecurityPeopleID = 49;
 
@@ -273,12 +269,12 @@ namespace WYJK.HOME.Controllers
         {
             if (ModelState.IsValid)
             {
-                SocialSecurityPeople people = (SocialSecurityPeople)Session["SocialSecurityPeopleID"];
+                SocialSecurityPeople people = (SocialSecurityPeople)Session["SocialSecurityPeople"];
                 
                 AccumulationFund accumulationFund = new AccumulationFund();
 
-                //accumulationFund.SocialSecurityPeopleID = people.SocialSecurityPeopleID;
-                accumulationFund.SocialSecurityPeopleID = 49;
+                accumulationFund.SocialSecurityPeopleID = people.SocialSecurityPeopleID;
+                //accumulationFund.SocialSecurityPeopleID = 49;
                 //accumulationFund.AccumulationFundArea = string.Format("{0}|{1}", Request["provinceText"], Request["city"]);
                 accumulationFund.AccumulationFundArea = "山东省|青岛市|崂山区";
                 accumulationFund.AccumulationFundBase = model.AccumulationFundBase;
@@ -293,18 +289,17 @@ namespace WYJK.HOME.Controllers
 
                 if (id > 0)
                 {
-                    #warning todo 生成订单
                     //跳转到确认页面
-                    return null;
+                    return Redirect("/UserOrder/Create");
                 }
                 else
                 {
-                    return View("Add3", model);
+                    return RedirectToAction("Add3");
                 }
             }
             else
             {
-                return View("Add3", model);
+                return RedirectToAction("Add3");
             }
 
         }

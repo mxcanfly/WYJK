@@ -8,6 +8,6 @@ namespace WYJK.HOME.Models
 {
     public class LoanQueryParamsModel: PagedParameter
     {
-        public String Status { get; set; }
+        public string Status { get; set; }
     }
 }

@@ -231,6 +231,7 @@
     <Compile Include="Service\InfomationService.cs" />
     <Compile Include="Service\RegionService.cs" />
     <Compile Include="Service\SocialSecurityService.cs" />
+    <Compile Include="Service\UserLoanService.cs" />
     <Compile Include="Service\UserMemberService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -281,6 +282,9 @@
     <Content Include="Views\UserInsurance\RecSB.cshtml" />
     <Content Include="Views\UserInsurance\RecFund.cshtml" />
     <Content Include="Views\UserOrder\Index.cshtml" />
+    <Content Include="Views\UserOrder\Create.cshtml" />
+    <Content Include="Views\UserOrder\Pay.cshtml" />
+    <Content Include="Views\UserLoan\Detail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

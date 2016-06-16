@@ -106,9 +106,8 @@ namespace WYJK.HOME.Models
 
     public class InsuranceAdd3ViewModel
     {
-        [Required]
         [Display(Name = "参保地")]
-        public string InsuranceArea { get; set; }
+        public string AccumulationFundArea { get; set; }
 
         [Required]
         [Display(Name = "公积金基数")]

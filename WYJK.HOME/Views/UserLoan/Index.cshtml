@@ -1,4 +1,4 @@
-﻿@model PagedResult<MemberLoanAuditList>
+﻿@model PagedResult<MemberLoanAudit>
 @{
     Layout = "~/Views/User/_Layout_user.cshtml";
     ViewBag.Title = "我的借款";
@@ -44,13 +44,13 @@
                                     <dl class="am-margin-0">
                                         <dd class="row am-padding-vertical-sm">
                                             <div class="col-lg-4">
-                                                总循环额度：@item.TotalAmount
+                                                借款额度：@item.ApplyAmount
                                             </div>
                                             <div class="col-lg-4">
-                                                已用循环额度：@item.AlreadyUsedAmount
+                                                还款期限：@EnumExt.GetEnumCustomDescription((LoanTermEnum)int.Parse(item.LoanTerm))
                                             </div>
                                             <div class="col-lg-4">
-                                                可用循环额度：@item.AvailableAmount
+                                                还款方式：@EnumExt.GetEnumCustomDescription((LoanMethodEnum)int.Parse(item.LoanMethod))
                                             </div>
                                         </dd>
                                         <dd class="row am-padding-vertical-sm">
@@ -58,10 +58,10 @@
                                                 状态：<span class="text-primary">@EnumExt.GetEnumCustomDescription((LoanAuditEnum)Convert.ToInt32(item.Status))</span>
                                             </div>
                                             <div class="col-lg-4">
-                                                提交时间：@(item.ApplyDate == null ? "--" : Convert.ToString(item.ApplyDate))
+                                                提交时间：@(item.ApplyDate == null ? "--" : item.ApplyDate.ToString("yyyy-MM-dd"))
                                             </div>
                                             <div class="col-lg-4">
-                                                审核时间：@(item.AuditDate == null ? "--" : Convert.ToString(item.AuditDate))
+                                                审核时间：@(item.AuditDate.Year == 1900 ? "--" : item.AuditDate.ToString("yyyy-MM-dd"))
                                             </div>
                                         </dd>
                                         <dd class="row am-padding-vertical-sm">
@@ -72,7 +72,7 @@
                                                 <a href="loan-payback-s1.html" class="orange">我要还款</a>
                                             </div>
                                             <div class="col-lg-4">
-                                                <a href="user-myLoan-detail.html" class="orange">查看详情</a>
+                                                <a href="/UserLoan/Detail/@item.ID" class="orange">查看详情</a>
                                             </div>
                                         </dd>
                                     </dl>

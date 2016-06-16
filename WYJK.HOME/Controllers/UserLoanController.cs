@@ -13,6 +13,7 @@ using WYJK.Entity;
 using WYJK.Framework.Captcha;
 using WYJK.Framework.EnumHelper;
 using WYJK.HOME.Models;
+using WYJK.HOME.Service;
 
 namespace WYJK.HOME.Controllers
 {
@@ -20,11 +21,13 @@ namespace WYJK.HOME.Controllers
     {
         private readonly IMemberService _memberService = new MemberService();
 
+        UserLoanService loanSv = new UserLoanService();
+
 
         public ActionResult Index(LoanQueryParamsModel parameter)
         {
 
-            String where = "";
+            string where = "";
 
             int  status = 0;
             if (Int32.TryParse(parameter.Status, out status))
@@ -32,26 +35,28 @@ namespace WYJK.HOME.Controllers
                 where += $@" and Status={status}";
             }
 
-            String sql = $@"
-                select 
-	                MemberLoanAudit.ID,Members.MemberID,Members.MemberName,members.MemberPhone,
-	                MemberLoan.TotalAmount,memberloan.AlreadyUsedAmount,memberloan.AvailableAmount,
-	                MemberLoanAudit.ApplyAmount,MemberLoanAudit.Status,MemberLoanAudit.ApplyDate,MemberLoanAudit.AuditDate
-                from MemberLoanAudit
-	                left join MemberLoan on MemberLoanAudit.MemberID = MemberLoan.MemberID
-	                left join Members on  MemberLoanAudit.MemberID = Members.MemberID 
-                where 1=1 {where} and Members.MemberID={MemberId()}";
+            List<MemberLoanAudit> list = loanSv.GetUserLoans(CommonHelper.CurrentUser.MemberID,where);
 
-            List<MemberLoanAuditList> SocialSecurityPeopleList = DbHelper.Query<MemberLoanAuditList>(sql);
+            //string sql = $@"
+            //    select 
+            //     MemberLoanAudit.ID,Members.MemberID,Members.MemberName,members.MemberPhone,
+            //     MemberLoan.TotalAmount,memberloan.AlreadyUsedAmount,memberloan.AvailableAmount,
+            //     MemberLoanAudit.ApplyAmount,MemberLoanAudit.Status,MemberLoanAudit.ApplyDate,MemberLoanAudit.AuditDate
+            //    from MemberLoanAudit
+            //     left join MemberLoan on MemberLoanAudit.MemberID = MemberLoan.MemberID
+            //     left join Members on  MemberLoanAudit.MemberID = Members.MemberID 
+            //    where 1=1 {where} and Members.MemberID={MemberId()}";
 
-            var c = SocialSecurityPeopleList.Skip(parameter.SkipCount - 1).Take(parameter.TakeCount);
+            //List<MemberLoanAuditList> SocialSecurityPeopleList = DbHelper.Query<MemberLoanAuditList>(sql);
+
+            var c = list.Skip(parameter.SkipCount - 1).Take(parameter.TakeCount);
              
 
-            PagedResult<MemberLoanAuditList> page = new PagedResult<MemberLoanAuditList>
+            PagedResult<MemberLoanAudit> page = new PagedResult<MemberLoanAudit>
             {
                 PageIndex = parameter.PageIndex,
                 PageSize = parameter.PageSize,
-                TotalItemCount = SocialSecurityPeopleList.Count,
+                TotalItemCount = list.Count,
                 Items = c
             };
 
@@ -62,9 +67,15 @@ namespace WYJK.HOME.Controllers
             return View(page);
         }
 
+        public ActionResult Detail(int? id)
+        {
+            if (id != null)
+            {
+                return View(loanSv.GetLoadAuditDetail(id.Value));
+            }
 
-
-
+            return Redirect("/Index/Index");
+        }
 
     }
 }
