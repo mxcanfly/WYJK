@@ -285,6 +285,7 @@
     <Content Include="Views\UserOrder\Create.cshtml" />
     <Content Include="Views\UserOrder\Pay.cshtml" />
     <Content Include="Views\UserLoan\Detail.cshtml" />
+    <Content Include="Views\UserLoan\Payback1.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

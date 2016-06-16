@@ -77,5 +77,11 @@ namespace WYJK.HOME.Controllers
             return Redirect("/Index/Index");
         }
 
+
+        public ActionResult Payback1()
+        {
+            return View();
+        }
+
     }
 }
