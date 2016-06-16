@@ -19,6 +19,11 @@ namespace WYJK.HOME.Controllers
 {
     public class UserInsuranceController : BaseController
     {
+        ISocialSecurityService socialSv = new Data.ServiceImpl.SocialSecurityService();
+
+        WYJK.HOME.Service.SocialSecurityService localSocialSv = new Service.SocialSecurityService();
+
+
         RegionService regionSv = new RegionService();
 
         #region 参保人列表
@@ -87,12 +92,12 @@ namespace WYJK.HOME.Controllers
             return View(page);
         }
 
-        private void bulidHouseholdPropertyDropdown(String value)
+        private void bulidHouseholdPropertyDropdown(string value)
         {
             List<SelectListItem> UserTypeList = EnumExt.GetSelectList(typeof(HouseholdPropertyEnum));
             UserTypeList.Insert(0, new SelectListItem { Text = "户籍性质", Value = "" });
 
-            ViewData["HouseholdProperty"] = new SelectList(UserTypeList, "Value", "Text", value);
+            ViewData["HouseholdProperty"] = new SelectList(UserTypeList, "Value", "Text");
         }
 
         #endregion
@@ -101,16 +106,14 @@ namespace WYJK.HOME.Controllers
         [HttpGet]
         public ActionResult Add1()
         {
-            string HouseholdProperty = "";
-            if (Session["InsuranceAdd1ViewModel"] != null)
-            {
-                HouseholdProperty = ((InsuranceAdd1ViewModel)Session["InsuranceAdd1ViewModel"]).HouseholdProperty;
-            }
-            bulidHouseholdPropertyDropdown(HouseholdProperty);
-            return View(Session["InsuranceAdd1ViewModel"]);
+            bulidHouseholdPropertyDropdown("");
+            return View();
         }
 
-
+        /// <summary>
+        /// 处理身份证上传
+        /// </summary>
+        /// <returns></returns>
         public ActionResult UploadIDCard()
         {
             var files = Request.Files;
@@ -132,8 +135,27 @@ namespace WYJK.HOME.Controllers
             {
                 model.ImgUrls = model.IdentityCardPhoto.Substring(1).Split(',');
 
-                Session["InsuranceAdd1ViewModel"] = model;
-                return RedirectToAction("Add2");
+                SocialSecurityPeople socialPeople = new SocialSecurityPeople();
+                socialPeople.MemberID = CommonHelper.CurrentUser.MemberID;
+                socialPeople.IdentityCard = model.IdentityCard;
+                socialPeople.SocialSecurityPeopleName = model.SocialSecurityPeopleName;
+                socialPeople.IdentityCardPhoto = model.IdentityCardPhoto;
+                socialPeople.HouseholdProperty = model.HouseholdProperty;
+
+                int id = localSocialSv.AddSocialSecurityPeople(socialPeople);
+
+
+                if (id > 0)
+                {
+                    socialPeople.SocialSecurityPeopleID = id;
+                    Session["SocialSecurityPeople"] = socialPeople;
+                    return RedirectToAction("Add2");
+                }
+                else
+                {
+                    bulidHouseholdPropertyDropdown(model.HouseholdProperty);
+                    return View(model);
+                }
             }
             else
             {
@@ -155,7 +177,22 @@ namespace WYJK.HOME.Controllers
             if (ModelState.IsValid)
             {
                 //保存数据到数据库
-                return RedirectToAction("Index");
+                int id = AddLocalSocialSecurity(model);
+
+                if (id > 0)
+                {
+                    Session["SocialSecurityPeopleID"] = null;
+
+                    #warning todo 生成订单
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return View(model);
+                }
+
+                
             }
             else
             {
@@ -164,25 +201,71 @@ namespace WYJK.HOME.Controllers
 
         }
 
+        /// <summary>
+        /// 添加社保下一步
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public ActionResult Add2Next(InsuranceAdd2ViewModel model)
         {
 
             if (ModelState.IsValid)
             {
-                Session["InsuranceAdd2ViewModel"] = model;
-                return RedirectToAction("Add3");
+                
+                int id = AddLocalSocialSecurity(model);
+
+                if (id > 0)
+                {
+                    //保存数据到数据库
+                    return RedirectToAction("Add3");
+                }
+                else
+                {
+                    return View("Add2",model);
+                }
             }
             else
             {
-                return RedirectToAction("Add2");
+                return View("Add2", model);
             }
 
         }
 
+
+        public int AddLocalSocialSecurity(InsuranceAdd2ViewModel model)
+        {
+            SocialSecurity socialSecurity = new SocialSecurity();
+            SocialSecurityPeople people = (SocialSecurityPeople)Session["SocialSecurityPeopleID"];
+            socialSecurity.SocialSecurityPeopleID = people.SocialSecurityPeopleID;
+            //socialSecurity.SocialSecurityPeopleID = 49;
+
+            //socialSecurity.InsuranceArea = string.Format("{0}|{1}",Request["provinceText"], Request["city"]);
+            socialSecurity.InsuranceArea = "山东省|青岛市|崂山区";
+            socialSecurity.HouseholdProperty = people.HouseholdProperty;
+            //socialSecurity.HouseholdProperty = "本市城镇";
+
+            socialSecurity.SocialSecurityBase = model.SocialSecurityBase;
+            socialSecurity.PayProportion = 0;
+            socialSecurity.PayTime = model.PayTime;
+            socialSecurity.PayMonthCount = model.PayMonthCount;
+            socialSecurity.PayBeforeMonthCount = model.PayBeforeMonthCount;
+            socialSecurity.BankPayMonth = model.BankPayMonth;
+            socialSecurity.EnterprisePayMonth = model.EnterprisePayMonth;
+            socialSecurity.Note = model.Note;
+            socialSecurity.RelationEnterprise = 0;
+            //保存数据到数据库
+            int id = socialSv.AddSocialSecurity(socialSecurity);
+
+            return id;
+        }
+
+
         [HttpGet]
         public ActionResult Add3()
         {
-            return View(Session["InsuranceAdd3ViewModel"]);
+            //获取省份
+            ViewBag.Provinces = CommonHelper.EntityListToSelctList(regionSv.GetProvince(), "请选择省份");
+            return View();
         }
 
         [HttpPost]
@@ -190,12 +273,38 @@ namespace WYJK.HOME.Controllers
         {
             if (ModelState.IsValid)
             {
-                Session["InsuranceAdd3ViewModel"] = model;
-                return null;
+                SocialSecurityPeople people = (SocialSecurityPeople)Session["SocialSecurityPeopleID"];
+                
+                AccumulationFund accumulationFund = new AccumulationFund();
+
+                //accumulationFund.SocialSecurityPeopleID = people.SocialSecurityPeopleID;
+                accumulationFund.SocialSecurityPeopleID = 49;
+                //accumulationFund.AccumulationFundArea = string.Format("{0}|{1}", Request["provinceText"], Request["city"]);
+                accumulationFund.AccumulationFundArea = "山东省|青岛市|崂山区";
+                accumulationFund.AccumulationFundBase = model.AccumulationFundBase;
+                accumulationFund.PayProportion = 0;
+                accumulationFund.PayTime = model.PayTime;
+                accumulationFund.PayMonthCount = model.PayMonthCount;
+                accumulationFund.PayBeforeMonthCount = model.PayBeforeMonthCount;
+                accumulationFund.Note = model.Note;
+                accumulationFund.RelationEnterprise = 0;
+
+                int id = socialSv.AddAccumulationFund(accumulationFund);
+
+                if (id > 0)
+                {
+                    #warning todo 生成订单
+                    //跳转到确认页面
+                    return null;
+                }
+                else
+                {
+                    return View("Add3", model);
+                }
             }
             else
             {
-                return View("InsuranceAdd3", model);
+                return View("Add3", model);
             }
 
         }

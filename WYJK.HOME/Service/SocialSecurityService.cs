@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using WYJK.Data;
+using WYJK.Entity;
 
 namespace WYJK.HOME.Service
 {
@@ -73,6 +77,46 @@ namespace WYJK.HOME.Service
         }
 
         #endregion
+
+
+        public int AddSocialSecurityPeople(SocialSecurityPeople socialSecurityPeople)
+        {
+            DbParameter[] parameters = new DbParameter[]{
+                new SqlParameter("@Flag", SqlDbType.Bit) { Direction = ParameterDirection.Output },
+                //参保人
+                new SqlParameter("@MemberID", SqlDbType.Int) { Value = socialSecurityPeople.MemberID },
+                new SqlParameter("@SocialSecurityPeopleName", SqlDbType.NVarChar, 50) { Value = socialSecurityPeople.SocialSecurityPeopleName },
+                new SqlParameter("@IdentityCard", SqlDbType.NVarChar, 50) { Value = socialSecurityPeople.IdentityCard },
+                new SqlParameter("@IdentityCardPhoto", SqlDbType.NVarChar, 512) { Value = socialSecurityPeople.IdentityCardPhoto },
+                new SqlParameter("@HouseholdProperty", SqlDbType.NVarChar,512) { Value=socialSecurityPeople.HouseholdProperty },
+            };
+
+            string sql = @"insert into SocialSecurityPeople
+	                                        (
+	                                        MemberID,
+	                                        SocialSecurityPeopleName,
+	                                        IdentityCard,
+	                                        IdentityCardPhoto,
+	                                        HouseholdProperty,
+	                                        IsPaySocialSecurity,
+	                                        IsPayAccumulationFund
+	                                        )
+                                        values
+	                                        (
+	                                        @MemberID,
+	                                        @SocialSecurityPeopleName,
+	                                        @IdentityCard,
+	                                        @IdentityCardPhoto,
+	                                        @HouseholdProperty,
+	                                        0,
+	                                        0
+	                                        )";
+
+            int id = DbHelper.ExecuteSqlCommandScalar(sql, parameters);
+
+            return id;
+
+        }
 
     }
 }

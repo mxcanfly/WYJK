@@ -76,27 +76,27 @@ namespace WYJK.HOME.Models
 
         [Required]
         [Display(Name = "社保基数")]
-        public string SocialSecurityBase { get; set; }
+        public decimal SocialSecurityBase { get; set; }
 
         [Required]
         [Display(Name = "起缴时间")]
-        public string PayTime { get; set; }
+        public DateTime PayTime { get; set; }
 
         [Required]
         [Display(Name = "参保月份")]
-        public string AlreadyPayMonthCount { get; set; }
+        public int PayMonthCount { get; set; }
 
         [Required]
         [Display(Name = "补交月份")]
-        public string PayBeforeMonthCount { get; set; }
+        public int PayBeforeMonthCount { get; set; }
 
         [Required]
         [Display(Name = " 在企业缴纳")]
-        public string BankPayMonth { get; set; }
+        public int BankPayMonth { get; set; }
 
         [Required]
         [Display(Name = "在银行缴纳")]
-        public string EnterprisePayMonth { get; set; }
+        public int EnterprisePayMonth { get; set; }
         
         [Display(Name = "备注")]
         public string Note { get; set; }
@@ -112,27 +112,27 @@ namespace WYJK.HOME.Models
 
         [Required]
         [Display(Name = "公积金基数")]
-        public string AccumulationFundBase { get; set; }
+        public decimal AccumulationFundBase { get; set; }
 
         [Required]
         [Display(Name = "起缴时间")]
-        public string PayTime { get; set; }
+        public DateTime PayTime { get; set; }
 
         [Required]
         [Display(Name = "参保月份")]
-        public string AlreadyPayMonthCount { get; set; }
+        public int PayMonthCount { get; set; }
 
         [Required]
         [Display(Name = "补交月份")]
-        public string PayBeforeMonthCount { get; set; }
+        public int PayBeforeMonthCount { get; set; }
 
         [Required]
         [Display(Name = " 在企业缴纳")]
-        public string BankPayMonth { get; set; }
+        public int BankPayMonth { get; set; }
 
         [Required]
         [Display(Name = "在银行缴纳")]
-        public string EnterprisePayMonth { get; set; }
+        public int EnterprisePayMonth { get; set; }
 
         [Display(Name = "备注")]
         public string Note { get; set; }

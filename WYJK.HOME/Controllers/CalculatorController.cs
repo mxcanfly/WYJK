@@ -34,7 +34,7 @@ namespace WYJK.HOME.Controllers
         /// <returns></returns>
         public ActionResult CitysByProvince(int id)
         {
-            return Json(CommonHelper.EntityListToSelctList(regionSv.GetCitys(id), "请选择城市"), JsonRequestBehavior.AllowGet);
+            return Json(regionSv.GetCitys(id), JsonRequestBehavior.AllowGet);
 
         }
 
