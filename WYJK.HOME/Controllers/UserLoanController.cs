@@ -17,7 +17,8 @@ using WYJK.HOME.Service;
 
 namespace WYJK.HOME.Controllers
 {
-    public class UserLoanController : BaseController
+
+    public class UserLoanController : BaseFilterController
     {
         private readonly IMemberService _memberService = new MemberService();
 
@@ -67,6 +68,11 @@ namespace WYJK.HOME.Controllers
             return View(page);
         }
 
+        /// <summary>
+        /// 贷款详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Detail(int? id)
         {
             if (id != null)
@@ -77,10 +83,58 @@ namespace WYJK.HOME.Controllers
             return Redirect("/Index/Index");
         }
 
+        /// <summary>
+        /// 还款1
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Payback1(int? id)
+        {
+            if (id != null)
+            {
+                return View(loanSv.GetLoadAuditDetail(id.Value));
+            }
+            return Redirect("/Index/Index");
+        }
 
-        public ActionResult Payback1()
+        /// <summary>
+        /// 还款1
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Payback1(MemberLoanAudit audit)
+        {
+            return RedirectToAction("Payback2");
+        }
+
+        /// <summary>
+        /// 还款二
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Payback2()
         {
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult Payback2(MemberLoanAudit audit)
+        {
+            return RedirectToAction("Payback3"); ;
+        }
+
+        /// <summary>
+        /// 还款三
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Payback3()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Payback3(MemberLoanAudit audit)
+        {
+            return RedirectToAction("Index");
         }
 
     }

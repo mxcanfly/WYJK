@@ -4,11 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace WYJK.HOME.Models
+namespace WYJK.HOME.Controllers
 {
-    public class UserLoginAttribute: ActionFilterAttribute
+    public class BaseFilterController : Controller
     {
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (filterContext.HttpContext.Session["UserInfo"] == null)
             {
@@ -17,7 +17,6 @@ namespace WYJK.HOME.Models
 
             base.OnActionExecuting(filterContext);
         }
-
 
     }
 }

@@ -1,4 +1,4 @@
-﻿
+﻿@model MemberLoanAudit
 @{
     ViewBag.Title = "Payback1";
     Layout = "~/Views/_Layout_black.cshtml";
@@ -12,15 +12,16 @@
                 还款（一）
             </span>
         </div>
+        
         <!--表单计算-->
         <div class="am-padding-xl">
-            <form class="form-horizontal">
+            <form class="form-horizontal" action="/UserLoan/Payback1" method="post">
                 <div class="row am-margin-bottom-lg">
                     <div class="col-lg-2 col-md-2 col-sm-2 text-right">
                         <strong>还款账号</strong>
                     </div>
                     <div class="col-lg-9 col-md-9 col-sm-9">
-                        62305820000009369730
+                        @CommonHelper.CurrentUser.BankCardNo
                     </div>
                 </div>
                 <div class="row am-margin-vertical-lg">
@@ -28,7 +29,7 @@
                         <strong>贷款金额（元）</strong>
                     </div>
                     <div class="col-lg-9 col-md-9 col-sm-9">
-                        2000000
+                        @Model.ApplyAmount
                     </div>
                 </div>
                 <div class="row am-margin-vertical-lg">
@@ -44,7 +45,7 @@
                         <strong>账户余额（元）</strong>
                     </div>
                     <div class="col-lg-9 col-md-9 col-sm-9">
-                        50000
+                        @CommonHelper.CurrentUser.Account
                     </div>
                 </div>
                 <div class="form-group">
@@ -64,12 +65,12 @@
                         <strong>还款金额（元）</strong>
                     </div>
                     <div class="col-lg-9 col-md-9 col-sm-9">
-                        50000
+                        @Model.ApplyAmount
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-lg-offset-4 col-lg-4 text-center">
-                        <a href="loan-payback-s2.html" class="btn btn-info bg-lightblue btn-lg btn-block">继续</a>
+                        <input type="submit" class="btn btn-info bg-lightblue btn-lg btn-block" value="继续"/>
                     </div>
                 </div>
             </form>

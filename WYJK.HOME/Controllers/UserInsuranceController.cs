@@ -17,7 +17,7 @@ using WYJK.HOME.Service;
 
 namespace WYJK.HOME.Controllers
 {
-    public class UserInsuranceController : BaseController
+    public class UserInsuranceController : BaseFilterController
     {
         ISocialSecurityService socialSv = new Data.ServiceImpl.SocialSecurityService();
 

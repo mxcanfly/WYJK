@@ -203,6 +203,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BaseFilterController.cs" />
     <Compile Include="Controllers\CalculatorController.cs" />
     <Compile Include="Controllers\Command\BaseController.cs" />
     <Compile Include="Controllers\Command\Constant.cs" />
@@ -286,6 +287,8 @@
     <Content Include="Views\UserOrder\Pay.cshtml" />
     <Content Include="Views\UserLoan\Detail.cshtml" />
     <Content Include="Views\UserLoan\Payback1.cshtml" />
+    <Content Include="Views\UserLoan\Payback2.cshtml" />
+    <Content Include="Views\UserLoan\Payback3.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -297,6 +300,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="scripts\locales\" />
     <Folder Include="Uploads\" />
+    <Folder Include="Views\BaseFilter\" />
     <Folder Include="Views\Infomation\" />
     <Folder Include="Views\Templates\" />
     <Folder Include="Views\UserWithDraw\" />

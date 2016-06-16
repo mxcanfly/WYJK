@@ -155,11 +155,13 @@ namespace WYJK.HOME.Controllers
         /// 个人信息
         /// </summary>
         /// <returns></returns>
+        [UserLogin]
         public ActionResult Info()
         {
             return View(userSv.UserInfos(CommonHelper.CurrentUser.MemberID));
         }
 
+        [UserLogin]
         public async Task<ActionResult> InfoChange()
         {
             ExtensionInformationParameter model = await _memberService.GetMemberExtensionInformation(CommonHelper.CurrentUser.MemberID);
@@ -170,6 +172,7 @@ namespace WYJK.HOME.Controllers
             return View(viewModel);
         }
 
+        [UserLogin]
         [HttpPost]
         public async Task<ActionResult> InfoChange(InfoChangeViewModel viewModel)
         {

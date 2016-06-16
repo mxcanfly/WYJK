@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace WYJK.HOME.Controllers
 {
-    public class UserApplyWithDrawController : Controller
+    public class UserApplyWithDrawController : BaseFilterController
     {
         // GET: UserApplyWithDraw
         public ActionResult Index()

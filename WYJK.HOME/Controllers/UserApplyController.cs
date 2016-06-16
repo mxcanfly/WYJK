@@ -16,7 +16,7 @@ using WYJK.HOME.Models;
 
 namespace WYJK.HOME.Controllers
 {
-    public class UserApplyController : BaseController
+    public class UserApplyController : BaseFilterController
     {
         public ActionResult Index(InsuranceQueryParamModel parameter)
         { 

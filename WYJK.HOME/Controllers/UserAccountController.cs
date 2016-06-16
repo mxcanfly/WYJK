@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace WYJK.HOME.Controllers
 {
-    public class UserAccountController : Controller
+    public class UserAccountController : BaseFilterController
     {
         // GET: UserAccount
         public ActionResult MyAccount()

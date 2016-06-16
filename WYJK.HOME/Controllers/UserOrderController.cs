@@ -8,7 +8,7 @@ using WYJK.HOME.Service;
 
 namespace WYJK.HOME.Controllers
 {
-    public class UserOrderController : Controller
+    public class UserOrderController : BaseFilterController
     {
         UserMemberService memberSv = new UserMemberService();
 
