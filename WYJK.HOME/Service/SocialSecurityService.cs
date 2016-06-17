@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using WYJK.Data;
 using WYJK.Entity;
+using WYJK.HOME.Models;
 
 namespace WYJK.HOME.Service
 {
@@ -78,7 +79,11 @@ namespace WYJK.HOME.Service
 
         #endregion
 
-
+        /// <summary>
+        /// 参保人添加
+        /// </summary>
+        /// <param name="socialSecurityPeople"></param>
+        /// <returns></returns>
         public int AddSocialSecurityPeople(SocialSecurityPeople socialSecurityPeople)
         {
             DbParameter[] parameters = new DbParameter[]{
@@ -116,6 +121,28 @@ namespace WYJK.HOME.Service
 
             return id;
 
+        }
+
+        /// <summary>
+        /// 参保信息确认
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public SocialSecurityPeopleViewModel SocialSecurityDetail(int id)
+        {
+            string sql = $@"select 
+	                        ssp.SocialSecurityPeopleID,
+	                        ssp.SocialSecurityPeopleName,
+	                        ss.InsuranceArea,
+	                        ssp.HouseholdProperty,
+	                        ss.PayTime,
+	                        ss.SocialSecurityBase,
+	                        af.AccumulationFundBase
+                        from SocialSecurityPeople ssp
+	                        left join SocialSecurity ss on ssp.SocialSecurityPeopleID = ss.SocialSecurityPeopleID
+	                        left join AccumulationFund af on ssp.SocialSecurityPeopleID = af.SocialSecurityPeopleID
+                        where ssp.SocialSecurityPeopleID = {id}";
+            return DbHelper.QuerySingle<SocialSecurityPeopleViewModel>(sql);
         }
 
     }

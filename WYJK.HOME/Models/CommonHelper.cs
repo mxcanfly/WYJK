@@ -5,11 +5,16 @@ using System.Web;
 using WYJK.Entity;
 using System.Web.SessionState;
 using System.Web.Mvc;
+using System.IO;
 
 namespace WYJK.HOME.Models
 {
     public class CommonHelper
     {
+        public static readonly string BasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UploadFiles");
+        public static readonly string[] ImageExt = { ".jpg", ".jpeg", ".png", ".gif" };
+
+
         /// <summary>
         /// 获取当前用户
         /// </summary>

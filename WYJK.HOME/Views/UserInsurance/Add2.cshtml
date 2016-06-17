@@ -101,3 +101,44 @@
     </div>
 
 </div>
+@section Footer
+{
+    <script>
+
+        $("#city").change(function () {
+
+            $.ajax({
+
+                url: 'http://192.168.0.16:8086/api/SocialSecurity/GetSocialSecurityBase',
+                dataType:'json',
+                success: function (data) {
+
+                    if (data.status == false) {
+                        $("#SocialSecurityBase").attr("placeholder", data.Message);
+                    }
+                    else {
+                        var fw = "参保基数范围(" + data.minBase + "-" + data.maxBase + ")";
+                        $("#SocialSecurityBase").attr("placeholder", fw);
+                    }
+
+                    
+
+                },
+                error: function (a,b,c) {
+                    console.log(a);
+                }
+
+
+            });
+
+
+
+
+        });
+
+
+
+    </script>
+
+
+}

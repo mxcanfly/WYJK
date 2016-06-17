@@ -53,7 +53,8 @@ namespace WYJK.HOME.Controllers
                         this.Session["UserInfo"] = users;
 
                         //回调到原中页面
-                        if (Request["returnUrl"] != null)
+
+                        if (!string.IsNullOrEmpty(Request["returnUrl"].ToString()))
                         {
                             return Redirect(Request["returnUrl"].ToString()); ;
                         }

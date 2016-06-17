@@ -1,4 +1,4 @@
-﻿
+﻿@model SocialSecurityPeopleViewModel
 @{
     ViewBag.Title = "Create";
     Layout = "~/Views/_Layout_SocialSecurity.cshtml";
@@ -60,24 +60,24 @@
                                 <dl class="am-margin-0">
                                     <dd class="row am-padding-vertical-sm">
                                         <div class="col-lg-4">
-                                            姓名：张三
+                                            姓名：@Model.SocialSecurityPeopleName
                                         </div>
                                         <div class="col-lg-4">
-                                            城市：青岛
+                                            城市：@Model.InsuranceArea
                                         </div>
                                         <div class="col-lg-4">
-                                            户籍性质：城镇
+                                            户籍性质：@Model.HouseholdProperty
                                         </div>
                                     </dd>
                                     <dd class="row am-padding-vertical-sm">
                                         <div class="col-lg-4">
-                                            起缴月份：2016-02
+                                            起缴月份：@Model.PayTime
                                         </div>
                                         <div class="col-lg-4">
                                             结束月份：2016-05
                                         </div>
                                         <div class="col-lg-4">
-                                            社保基数：2585
+                                            社保基数：@Model.SocialSecurityBase
                                         </div>
                                     </dd>
                                     <dd class="row am-padding-vertical-sm">
@@ -85,7 +85,7 @@
                                             社保：3577
                                         </div>
                                         <div class="col-lg-4">
-                                            公积金基数：1440
+                                            公积金基数：@Model.AccumulationFundBase
                                         </div>
                                         <div class="col-lg-4">
                                             公积金：444
@@ -105,56 +105,7 @@
                                 </dl>
                             </div>
                         </li>
-                        <li class="row bg-white">
-                            <div class="col-lg-12">
-                                <dl class="am-margin-0">
-                                    <dd class="row am-padding-vertical-sm">
-                                        <div class="col-lg-4">
-                                            姓名：张三
-                                        </div>
-                                        <div class="col-lg-4">
-                                            城市：青岛
-                                        </div>
-                                        <div class="col-lg-4">
-                                            户籍性质：城镇
-                                        </div>
-                                    </dd>
-                                    <dd class="row am-padding-vertical-sm">
-                                        <div class="col-lg-4">
-                                            起缴月份：2016-02
-                                        </div>
-                                        <div class="col-lg-4">
-                                            结束月份：2016-05
-                                        </div>
-                                        <div class="col-lg-4">
-                                            社保基数：2585
-                                        </div>
-                                    </dd>
-                                    <dd class="row am-padding-vertical-sm">
-                                        <div class="col-lg-4">
-                                            社保：3577
-                                        </div>
-                                        <div class="col-lg-4">
-                                            公积金基数：1440
-                                        </div>
-                                        <div class="col-lg-4">
-                                            公积金：444
-                                        </div>
-                                    </dd>
-                                    <dd class="row am-padding-vertical-sm">
-                                        <div class="col-lg-4">
-                                            冻结费：300
-                                        </div>
-                                        <div class="col-lg-4">
-                                            服务费：300
-                                        </div>
-                                        <div class="col-lg-4">
-                                            缴纳金额：7000
-                                        </div>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </li>
+                        
                     </ul>
                 </div>
                 <!--合计-->
@@ -181,7 +132,12 @@
                 <!--btn-->
                 <div class="row am-padding-vertical-lg">
                     <div class="col-lg-4 col-lg-offset-4">
-                        <button class="btn btn-info bg-lightblue btn-lg btn-block">提交订单</button>
+                        <form action="/UserOrder/Craete" method="post">
+
+                            @Html.HiddenFor(m => m.SocialSecurityPeopleID)
+                            <input type="submit" value="提交订单" class="btn btn-info bg-lightblue btn-lg btn-block" />
+                        </form>
+                        
                     </div>
                 </div>
             </div>

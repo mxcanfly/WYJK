@@ -120,11 +120,17 @@ namespace WYJK.HOME.Controllers
             HttpPostedFileBase file = files[0];
             string fielName = DateTime.Now.ToString("yyyyMMddHHmmss") + Path.GetExtension(file.FileName);
 
-            string path = Server.MapPath(Path.Combine("/Uploads", fielName));
+            string path = Path.Combine(CommonHelper.BasePath, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), fielName);
+            //生成文件夹
+            DirectoryInfo directory = new DirectoryInfo(Path.GetDirectoryName(path) ?? "");
+            if (directory.Exists == false)
+            {
+                directory.Create();
+            }
 
             file.SaveAs(path);
             
-            return Json(fielName);
+            return Json(path.Replace(CommonHelper.BasePath, "UploadFiles").Replace("\\", "/"));
         }
 
 
@@ -133,21 +139,20 @@ namespace WYJK.HOME.Controllers
         {
             if (ModelState.IsValid)
             {
-                model.ImgUrls = model.IdentityCardPhoto.Substring(1).Split(',');
-
                 SocialSecurityPeople socialPeople = new SocialSecurityPeople();
                 socialPeople.MemberID = CommonHelper.CurrentUser.MemberID;
                 socialPeople.IdentityCard = model.IdentityCard;
                 socialPeople.SocialSecurityPeopleName = model.SocialSecurityPeopleName;
-                socialPeople.IdentityCardPhoto = model.IdentityCardPhoto;
-                socialPeople.HouseholdProperty = model.HouseholdProperty;
+                socialPeople.IdentityCardPhoto = model.IdentityCardPhoto.Substring(1);
+                socialPeople.HouseholdProperty = EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)int.Parse(model.HouseholdProperty));
 
+                //保持参保人到数据库,返回参保人ID
                 int id = localSocialSv.AddSocialSecurityPeople(socialPeople);
-
 
                 if (id > 0)
                 {
                     socialPeople.SocialSecurityPeopleID = id;
+                    //把参保人保存到session中
                     Session["SocialSecurityPeople"] = socialPeople;
                     return RedirectToAction("Add2");
                 }
@@ -290,7 +295,7 @@ namespace WYJK.HOME.Controllers
                 if (id > 0)
                 {
                     //跳转到确认页面
-                    return Redirect("/UserOrder/Create");
+                    return Redirect("/UserOrder/Create/"+ people.SocialSecurityPeopleID);
                 }
                 else
                 {
