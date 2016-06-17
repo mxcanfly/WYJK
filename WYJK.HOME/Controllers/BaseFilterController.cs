@@ -10,9 +10,11 @@ namespace WYJK.HOME.Controllers
     {
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            string returnUrl = filterContext.HttpContext.Request.Url.ToString();
+
             if (filterContext.HttpContext.Session["UserInfo"] == null)
             {
-                filterContext.Result = new RedirectResult("~/User/Login");
+                filterContext.Result = new RedirectResult("~/User/Login?returnUrl="+ returnUrl);
             }
 
             base.OnActionExecuting(filterContext);

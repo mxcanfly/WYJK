@@ -29,6 +29,8 @@ namespace WYJK.HOME.Controllers
         // GET: User
         public ActionResult Login()
         {
+            ViewBag.ReturnUrl = Request["returnUrl"];
+
             return View();
         }
 
@@ -49,6 +51,13 @@ namespace WYJK.HOME.Controllers
                     if (users != null)
                     {
                         this.Session["UserInfo"] = users;
+
+                        //回调到原中页面
+                        if (Request["returnUrl"] != null)
+                        {
+                            return Redirect(Request["returnUrl"].ToString()); ;
+                        }
+
                         return Redirect("/Index/Index");
                     }
                     else
