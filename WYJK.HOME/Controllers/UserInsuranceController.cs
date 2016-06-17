@@ -103,6 +103,8 @@ namespace WYJK.HOME.Controllers
         #endregion
 
 
+        #region 参保人添加
+
         [HttpGet]
         public ActionResult Add1()
         {
@@ -186,7 +188,9 @@ namespace WYJK.HOME.Controllers
 
                 if (id > 0)
                 {
-                    return Redirect("/UserOrder/Create");
+                    SocialSecurityPeople people = (SocialSecurityPeople)Session["SocialSecurityPeople"];
+                    //跳转到确认页面
+                    return Redirect("/UserOrder/Create/" + people.SocialSecurityPeopleID);
                 }
                 else
                 {
@@ -308,6 +312,8 @@ namespace WYJK.HOME.Controllers
             }
 
         }
+
+        #endregion
 
         /// <summary>
         /// 社保基数变更

@@ -1,4 +1,4 @@
-﻿
+﻿@model Order
 @{
     ViewBag.Title = "Pay";
     Layout = "~/Views/_Layout_SocialSecurity.cshtml";
@@ -14,7 +14,7 @@
         </div>
         <!--表单计算-->
         <div class="am-padding-xl">
-            <form class="form-horizontal">
+            <form class="form-horizontal" method="post" action="/UserOrder/Pay">
                 <div class="form-group am-padding-left-xl">
                     <div class="radio">
                         <label>
@@ -38,7 +38,8 @@
                 </div>
                 <div class="form-group">
                     <div class="col-lg-offset-4 col-lg-4 text-center">
-                        <button type="reset" class="btn btn-info bg-lightblue btn-lg btn-block">确认</button>
+                        <button type="submit" class="btn btn-info bg-lightblue btn-lg btn-block">确认</button>
+                        @Html.HiddenFor(m=>m.OrderCode)
                     </div>
                 </div>
             </form>
