@@ -6,6 +6,7 @@ using WYJK.Entity;
 using System.Web.SessionState;
 using System.Web.Mvc;
 using System.IO;
+using WYJK.Framework.EnumHelper;
 
 namespace WYJK.HOME.Models
 {
@@ -44,6 +45,26 @@ namespace WYJK.HOME.Models
             }
 
             return selList;
+
+        }
+
+        /// <summary>
+        /// 根据枚举获取下拉列表
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="promt"></param>
+        /// <returns></returns>
+        public static List<SelectListItem> SelectListType(Type type, string promt = "")
+        {
+
+            List<SelectListItem> UserTypeList = EnumExt.GetSelectList(type);
+            if (!string.IsNullOrEmpty(promt))
+            {
+                UserTypeList.Insert(0, new SelectListItem { Text = promt, Value = "" });
+            }
+
+            return UserTypeList;
+
 
         }
 

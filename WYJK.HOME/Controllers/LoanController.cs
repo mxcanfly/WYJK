@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WYJK.Data.IService;
+using WYJK.Data.ServiceImpl;
 using WYJK.Entity;
+using WYJK.Framework.EnumHelper;
 using WYJK.HOME.Models;
 using WYJK.HOME.Service;
 
 namespace WYJK.HOME.Controllers
 {
-    public class LoanController : Controller
+    public class LoanController : BaseFilterController
     {
-        SocialSecurityService sss = new SocialSecurityService();
-
+        Service.SocialSecurityService sss = new Service.SocialSecurityService();
+        private ILoanMemberService _loanMemberService = new LoanMemberService();
+        private ILoanSubjectService _loanSubjectService = new LoanSubjectService();
 
         /// <summary>
         /// 借款
@@ -20,33 +24,57 @@ namespace WYJK.HOME.Controllers
         /// <returns></returns>
         public ActionResult Loan()
         {
-            //判断用户是否登录
-            Members m = (Members)this.Session["UserInfo"];
-            if (m == null)
-            {
-                return Redirect("/User/Login");
-            }
+            Members m = CommonHelper.CurrentUser;
 
-            //判断是否已缴费
-            if (!sss.ExistSocialPeople(m.MemberID))
+            //判断是否已缴费//缴费不满三个月
+            if (!sss.ExistSocialPeople(m.MemberID) || !sss.PayedMonthCount(m.MemberID))
             {
                 //添加社保人
                 return Redirect("/UserInsurance/Add1");
             }
-            //缴费不满三个月
-            if(!sss.PayedMonthCount(m.MemberID))
+
+            //判断是否计算过身价
+            if (_loanSubjectService.GetMemberValue(m.MemberID) == 0)//没有进行过身价计算
             {
-                return Redirect("/UserInsurance/Index");
+                return Redirect("/LoanCalculator/Calculator");
             }
 
-            //判断是否计算过身价（MemberLoan : 个人借款表中是否有本人数据）
-            if (!sss.LoanCalculator(m.MemberID))//没有进行过身价计算
+            //还款期限
+            ViewData["LoanTerm"] = new SelectList(CommonHelper.SelectListType(typeof(LoanTermEnum), "请选择还款期限"), "Value", "Text");
+            //还款方式
+            ViewData["LoanMethod"] =new SelectList(CommonHelper.SelectListType(typeof(LoanMethodEnum), "请选择还款方式"), "Value", "Text");
+
+            MemberLoanAuditViewModel model = new MemberLoanAuditViewModel();
+            model.AppayLoan = _loanMemberService.GetMemberLoanDetail(m.MemberID);
+
+            return View(model);
+
+        }
+
+        /// <summary>
+        /// 实现借款
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Loan(MemberLoanAuditViewModel model)
+        {
+            MemberLoanAuditParameter paramModel = new MemberLoanAuditParameter();
+
+            paramModel.ApplyAmount = model.ApplyAmount;
+            paramModel.LoanMethod = model.LoanMethod;
+            paramModel.LoanTerm = model.LoanTerm;
+            paramModel.MemberID = CommonHelper.CurrentUser.MemberID;
+
+            bool result = _loanMemberService.SubmitLoanApply(paramModel);
+
+            if (result)
             {
-                return Redirect("/LoanCalculator/CalculatorFirst");
+                return Redirect("/UserLoan/Index");
             }
 
-            //跳转到借款页面
-            return View();
+            return RedirectToAction("Loan");
+
             
         }
     }

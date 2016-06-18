@@ -98,7 +98,10 @@ namespace WYJK.HOME.Controllers
             UserTypeList.Insert(0, new SelectListItem { Text = "户籍性质", Value = "" });
 
             ViewData["HouseholdProperty"] = new SelectList(UserTypeList, "Value", "Text");
+
         }
+
+        
 
         #endregion
 
