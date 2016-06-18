@@ -1,4 +1,4 @@
-﻿@using WYJK.Entity;
+﻿@model SocialSecurityBase
 
 @{
     ViewBag.Title = "Calculator";
@@ -37,41 +37,29 @@
                 <div class="form-group">
                     <label for="" class="col-lg-2 col-md-2 col-sm-2 control-label">社保基数</label>
                     <div class="col-lg-3 col-md-5 col-sm-5">
-                        <input class="form-control" type="text" id="" placeholder="请输入社保基数">
+                        <input class="form-control" type="text" id="txtSSBase" name="txtSSBase" placeholder="请输入社保基数">
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-5">
                         <div class="am-padding-top-xs">
-                            基数范围：<span class="text-primary">2100~20000</span>
+                            基数范围：<span class="text-primary" id="ssBase"></span>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="" class="col-lg-2 col-md-2 col-sm-2 control-label">公积金基数</label>
                     <div class="col-lg-3 col-md-5 col-sm-5">
-                        <input class="form-control" type="text" id="" placeholder="请输入公积金基数">
+                        <input class="form-control" type="text" id="txtAFBase" name="txtAFBase" placeholder="请输入公积金基数">
                     </div>
                     <div class="col-lg-3 col-md-5 col-sm-5">
                         <div class="am-padding-top-xs">
-                            基数范围：<span class="text-primary">2100~20000</span>
+                            基数范围：<span class="text-primary" id="afBase"></span>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="" class="col-lg-2 col-md-2 col-sm-2 control-label">缴纳比例</label>
-                    <div class="col-lg-2 col-md-5 col-sm-5">
-                        <div class="am-padding-top-xs">
-                            个人：<span class="text-primary">10%</span>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-5 col-sm-5">
-                        <div class="am-padding-top-xs">
-                            公司：<span class="text-primary">20%</span>
-                        </div>
-                    </div>
-                </div>
+                
                 <div class="form-group">
                     <div class="col-lg-offset-2 col-lg-3">
-                        <button type="button" class="btn btn-info bg-lightblue btn-block">计算</button>
+                        <button id="calculatorBtn" type="button" class="btn btn-info bg-lightblue btn-block">计算</button>
                     </div>
                     <div class="col-lg-3">
                         <button type="reset" class="btn btn-info bg-lightblue btn-block">重置</button>
@@ -86,81 +74,11 @@
             <div class="relative text-center am-margin-bottom-xl">
                 <hr />
                 <span class="hrTitle-w grey">
-                    社保公积金缴费明细
+                    社保公积金缴费金额
                 </span>
             </div>
-            <table class="table table-bordered table-responsive calculator-result-w">
-                <tr class="info">
-                    <th rowspan="2">缴费项目</th>
-                    <th rowspan="2">社保基数</th>
-                    <th colspan="2">个人缴纳</th>
-                    <th colspan="2">企业缴纳</th>
-                </tr>
-                <tr class="info">
-                    <th>缴纳比例</th>
-                    <th>缴纳金额</th>
-                    <th>缴纳比例</th>
-                    <th>缴纳金额</th>
-                </tr>
-                <tr>
-                    <td>养老保险</td>
-                    <td>2561</td>
-                    <td>8%</td>
-                    <td>206</td>
-                    <td>10%</td>
-                    <td>402</td>
-                </tr>
-                <tr>
-                    <td>失业保险</td>
-                    <td>2561</td>
-                    <td>8%</td>
-                    <td>206</td>
-                    <td>10%</td>
-                    <td>402</td>
-                </tr>
-                <tr>
-                    <td>工伤保险</td>
-                    <td>2561</td>
-                    <td>8%</td>
-                    <td>206</td>
-                    <td>10%</td>
-                    <td>402</td>
-                </tr>
-                <tr>
-                    <td>生育保险</td>
-                    <td>2561</td>
-                    <td>8%</td>
-                    <td>206</td>
-                    <td>10%</td>
-                    <td>402</td>
-                </tr>
-                <tr>
-                    <td>医疗保险</td>
-                    <td>2561</td>
-                    <td>8%</td>
-                    <td>206</td>
-                    <td>10%</td>
-                    <td>402</td>
-                </tr>
-                <tr>
-                    <td>公积金</td>
-                    <td>2561</td>
-                    <td>8%</td>
-                    <td>206</td>
-                    <td>10%</td>
-                    <td>402</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>个人共缴纳</td>
-                    <td class="orange">527.53</td>
-                    <td>企业共缴纳</td>
-                    <td class="orange">527.53</td>
-                </tr>
-            </table>
-            <div class="text-right orange">
-                总缴纳：1743.56
+            <div class="text-right orange" id="divCalculatorResult">
+                
             </div>
         </div>
     </div>
@@ -170,6 +88,82 @@
 
     
 <script src="~/scripts/ProvinceAndCity.js"></script>
-    
+<script>
+
+    $("#usertype").change(function () {
+
+        var province = $("#province").val();
+        var provinceText = $("#province option[value=" + province + "]").text();
+
+        var city = $("#city").val();
+
+        var usertype = $("#usertype").val();
+        var usertypeText = $("#usertype option[value=" + usertype + "]").text();
+
+        console.log(provinceText + "==" + city + "===" + usertypeText);
+
+        $.ajax({
+
+            url: '/Calculator/GetSocialSecurityBase',
+            data: "area=山东省|青岛市|崂山区&householdProperty=" + usertypeText,
+            dataType: 'json',
+            success: function (data) {
+
+                console.log(data.MinBase);
+                $("#ssBase").html(data.MinBase + "-" + data.MaxBase);
+                $("#afBase").html(data.AFMinBase + "-" + data.AFMaxBase);
+
+
+
+            },
+            error: function (a, b, c) {
+                console.log(a);
+            }
+
+
+        });
+
+
+    });
+
+    $("#calculatorBtn").click(function () {
+
+        var province = $("#province").val();
+        var provinceText = $("#province option[value=" + province + "]").text();
+
+        var city = $("#city").val();
+
+        var usertype = $("#usertype").val();
+        var usertypeText = $("#usertype option[value=" + usertype + "]").text();
+
+        var ssbase = $("#txtSSBase").val();
+        var afbase = $("#txtAFBase").val();
+
+        $.ajax({
+
+            url: '/Calculator/CalculatorResult',
+            data: "InsuranceArea=山东省|青岛市|崂山区&HouseholdProperty=" + usertypeText + "&SocialSecurityBase=" + ssbase + "&AccountRecordBase=" + afbase,
+            dataType: 'json',
+            success: function (data) {
+
+                var result = "社保应缴纳：" + data.SocialSecuritAmount + " 公积金应缴纳：" + data.AccumulationFundAmount + " 共缴纳：" + data.TotalAmount;
+
+                $("#divCalculatorResult").html(result);
+
+
+            },
+            error: function (a, b, c) {
+                console.log(a);
+            }
+
+
+        });
+
+    });
+
+
+
+
+</script>    
     
 }

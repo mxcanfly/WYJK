@@ -229,6 +229,7 @@
     <Compile Include="Models\InsuranceViewModel.cs" />
     <Compile Include="Models\MemberLoanAuditViewModel.cs" />
     <Compile Include="Models\QueryParamsModel.cs" />
+    <Compile Include="Models\SocialSecurityBase.cs" />
     <Compile Include="Models\SocialSecurityPeopleViewModel.cs" />
     <Compile Include="Models\UserLoginAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

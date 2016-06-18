@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using WYJK.Data;
+using WYJK.Data.IServices;
 using WYJK.Entity;
 using WYJK.HOME.Models;
 
@@ -144,6 +145,13 @@ namespace WYJK.HOME.Service
                         where ssp.SocialSecurityPeopleID = {id}";
             return DbHelper.QuerySingle<SocialSecurityPeopleViewModel>(sql);
         }
+
+
+
+
+
+
+
 
     }
 }
