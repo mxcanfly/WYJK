@@ -17,16 +17,34 @@ namespace WYJK.HOME.Controllers
 {
     public class UserOrderController : BaseFilterController
     {
+        UserOrderService userOderSv = new UserOrderService();
+
         Service.SocialSecurityService sss = new Service.SocialSecurityService();
 
         private readonly IOrderService _orderService = new OrderService();
         private readonly ISocialSecurityService _socialSecurityService = new Data.ServiceImpl.SocialSecurityService();
 
+
         // GET: UserOrder
-        public ActionResult Index()
+        public ActionResult Index(PagedParameter parameter,int? id)
         {
-            return View();
+            List<UserOrderViewModel> list = userOderSv.GetOrderList(CommonHelper.CurrentUser.MemberID,id);
+
+            var c = list.Skip(parameter.SkipCount - 1).Take(parameter.PageSize);
+
+
+            UserOrderPageResult<UserOrderViewModel> page = new UserOrderPageResult<UserOrderViewModel>
+            {
+                PageIndex = parameter.PageIndex,
+                PageSize = parameter.PageSize,
+                TotalItemCount = list.Count,
+                Items = c,
+                Status = id
+            };
+
+            return View(page);
         }
+
 
         /// <summary>
         /// 订单确认
@@ -200,6 +218,22 @@ values({DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random(Guid.NewGuid().G
             }
 
             return Redirect("/UserOrder/Index");
+        }
+
+        /// <summary>
+        /// 订单详情
+        /// </summary>
+        /// <param name="orderCode"></param>
+        /// <returns></returns>
+        public ActionResult OrderDetail(string id)
+        {
+            //订单详情总计
+            OrderDetailForMobile detail =_orderService.GetOrderDetail(CommonHelper.CurrentUser.MemberID, id);
+            ViewBag.Detail = detail;
+
+            List<OrderDetaisViewModel> list = userOderSv.GetOrderDetails(id);
+
+            return View(list);
         }
 
     }
