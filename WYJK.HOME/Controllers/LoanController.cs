@@ -27,10 +27,15 @@ namespace WYJK.HOME.Controllers
             Members m = CommonHelper.CurrentUser;
 
             //判断是否已缴费//缴费不满三个月
-            if (!sss.ExistSocialPeople(m.MemberID) || !sss.PayedMonthCount(m.MemberID))
+            if (!sss.ExistSocialPeople(m.MemberID))
             {
                 //添加社保人
                 return Redirect("/UserInsurance/Add1");
+            }
+
+            if (!sss.PayedMonthCount(m.MemberID))
+            {
+                return Redirect("/UserInsurance/Index");
             }
 
             //判断是否计算过身价
