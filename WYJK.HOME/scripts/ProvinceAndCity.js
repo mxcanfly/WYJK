@@ -2,7 +2,7 @@
 $(function () {
 
     $("#province").change(function () {
-
+        
         var code = $(this).val();
         $("#provinceText").val($(this).find("option:selected").text());
         $.ajax({
@@ -10,11 +10,12 @@ $(function () {
             dataType: 'Json',
             success: function (data) {
                 $("#city").empty();
-                $("#city").append("<option>请选择城市<option>");
+                $("#city").append("<option>请选择城市</option>");
                 $.each(data, function (i, item) {
-                    console.log(item);
-                    $("#city").append("<option value='" + item.RegionName + "'>" + item.RegionName + "<option>");
+                    $("#city").append("<option value='" + item.RegionName + "'>" + item.RegionName + "</option>");
+                    
                 });
+                
             }
         });
 

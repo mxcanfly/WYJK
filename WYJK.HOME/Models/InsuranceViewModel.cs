@@ -44,14 +44,12 @@ namespace WYJK.HOME.Models
         /// 身份证号
         /// </summary>		
         [Required]
-        
         [MinLength(18)]
         [Display(Name = "身份证号")]
         public string IdentityCard { get; set; }
         /// <summary>
         /// 身份证照片
         /// </summary>
-        [Required]
         [Display(Name = "身份证照片")]
         public string IdentityCardPhoto { get; set; }
         /// <summary>

@@ -2,6 +2,13 @@
 @{
     Layout = "~/Views/_Layout_black.cshtml";
 }
+@section Header {
+    <style>
+        .field-validation-error {
+            color: red;
+        }
+    </style>
+}
 <div class="bg-lightgrey">
     <div class="container bg-white">
         <div class="relative text-center">
@@ -30,8 +37,10 @@
                 </li>
             </ul>
         </div>
+
+@using (Html.BeginForm("Confirm", "UserInsurance", FormMethod.Post, new { @class = "form-horizontal" }))
+{
         <!--表单计算-->
-        <form class="form-horizontal" action="@Url.Action("Confirm","UserInsurance")" method="post">
             <div class="form-group">
                 <label for="" class="col-lg-2 col-lg-offset-1 control-label">参保地</label>
                 <div class="col-lg-3">
@@ -48,24 +57,28 @@
                 <label for="" class="col-lg-2 col-lg-offset-1 control-label">公积金基数</label>
                 <div class="col-lg-6">
                     @Html.TextBoxFor(m => m.AccumulationFundBase, new { @class = "form-control", placeholder = "请输入公积金基数" })
+                    @Html.ValidationMessageFor(m => m.AccumulationFundBase)
                 </div>
             </div>
             <div class="form-group">
                 <label for="" class="col-lg-2 col-lg-offset-1 control-label">起缴时间</label>
                 <div class="col-lg-6">
                     @Html.TextBoxFor(m => m.PayTime, new { @class = "form-control", placeholder = "请选择起缴年/月" })
+                    @Html.ValidationMessageFor(m => m.PayTime)
                 </div>
             </div>
             <div class="form-group">
                 <label for="" class="col-lg-2 col-lg-offset-1 control-label">参保月份</label>
                 <div class="col-lg-6">
                     @Html.TextBoxFor(m => m.PayMonthCount, new { @class = "form-control", placeholder = "请输入参保月份" })
+                    @Html.ValidationMessageFor(m => m.PayMonthCount)
                 </div>
             </div>
             <div class="form-group">
                 <label for="" class="col-lg-2 col-lg-offset-1 control-label">补交月份</label>
                 <div class="col-lg-6">
                     @Html.TextBoxFor(m => m.PayBeforeMonthCount, new { @class = "form-control", placeholder = "请输入补交月份" })
+                    @Html.ValidationMessageFor(m => m.PayBeforeMonthCount)
                 </div>
             </div>
             <div class="form-group">
@@ -88,8 +101,6 @@
                     </div>
                 </div>
             </div>
-            
-        </form>
-    </div>
-
+}
+        </div>
 </div>
