@@ -38,12 +38,6 @@ namespace WYJK.HOME.Controllers
 
             Members m = (Members)this.Session["UserInfo"];
 
-            if (m == null)
-            {
-                return Redirect("/User/Login");
-            }
-
-
             string where = "";
             if (Convert.ToInt32(parameter.HouseholdProperty) > 0)
             {
@@ -101,9 +95,10 @@ namespace WYJK.HOME.Controllers
 
         }
 
-        
+
 
         #endregion
+
 
 
         #region 参保人添加
@@ -318,6 +313,9 @@ namespace WYJK.HOME.Controllers
 
         #endregion
 
+
+        #region 基数变更
+
         /// <summary>
         /// 社保基数变更
         /// </summary>
@@ -340,19 +338,87 @@ namespace WYJK.HOME.Controllers
         /// 社保基数变更历史
         /// </summary>
         /// <returns></returns>
-        public ActionResult RecSB()
+        public ActionResult RecSB(PagedParameter parameter)
         {
-            return View();
+            List<SocialSecurityPeopleViewModel> list = localSocialSv.GetBaseAjustRecord(0, CommonHelper.CurrentUser.MemberID);
+
+            var c = list.Skip(parameter.SkipCount - 1).Take(parameter.PageSize);
+
+
+            PagedResult<SocialSecurityPeopleViewModel> page = new PagedResult<SocialSecurityPeopleViewModel>
+            {
+                PageIndex = parameter.PageIndex,
+                PageSize = parameter.PageSize,
+                TotalItemCount = list.Count,
+                Items = c
+            };
+
+            return View(page);
         }
 
         /// <summary>
         /// 公积金基数变更历史
         /// </summary>
         /// <returns></returns>
-        public ActionResult RecFund()
+        public ActionResult RecFund(PagedParameter parameter)
         {
-            return View();
+            List<SocialSecurityPeopleViewModel> list = localSocialSv.GetBaseAjustRecord(1, CommonHelper.CurrentUser.MemberID);
+
+            var c = list.Skip(parameter.SkipCount - 1).Take(parameter.PageSize);
+
+
+            PagedResult<SocialSecurityPeopleViewModel> page = new PagedResult<SocialSecurityPeopleViewModel>
+            {
+                PageIndex = parameter.PageIndex,
+                PageSize = parameter.PageSize,
+                TotalItemCount = list.Count,
+                Items = c
+            };
+
+            return View(page);
         }
+
+        #endregion
+
+        /// <summary>
+        /// 停保
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult StopSocialSecurity()
+        {
+            if (Request["cbxSS"] != null)
+            {
+                string[] ids = Request["cbxSS"].Split(',');
+
+                bool result = localSocialSv.ApplyTopSocialSecurity("个人原因", ids);
+
+            }
+
+            return RedirectToAction("Index");
+
+        }
+
+        /// <summary>
+        /// 停公积金
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult StopAF()
+        {
+            if (Request["cbxSS"] != null)
+            {
+                string[] ids = Request["cbxSS"].Split(',');
+
+                bool result = localSocialSv.ApplyTopAccumulationFund("", ids);
+
+            }
+
+            return RedirectToAction("Index");
+
+        }
+
+
 
     }
 }

@@ -8,6 +8,7 @@ using System.Web;
 using WYJK.Data;
 using WYJK.Data.IServices;
 using WYJK.Entity;
+using WYJK.Framework.EnumHelper;
 using WYJK.HOME.Models;
 
 namespace WYJK.HOME.Service
@@ -147,11 +148,61 @@ namespace WYJK.HOME.Service
         }
 
 
+        /// <summary>
+        /// 申请停保
+        /// </summary>
+        /// <param name="stopReason"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public bool ApplyTopSocialSecurity(string stopReason,string[] ids)
+        {
 
+            string sql = $"update SocialSecurity set Status={(int)SocialSecurityStatusEnum.WaitingStop}, StopMethod = {(int)waitingTopEnum.Apply},ApplyStopDate=getdate(),StopReason='{stopReason}' where SocialSecurityPeopleID in ({string.Join(",", ids)})";
 
+            int result = DbHelper.ExecuteSqlCommand(sql, null);
 
+            return result > 0;
+        }
 
+        /// <summary>
+        /// 申请停公积金
+        /// </summary>
+        /// <param name="stopReason"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public bool ApplyTopAccumulationFund(string stopReason, string[] ids)
+        {
 
+            string sql = $"update AccumulationFund set Status={(int)SocialSecurityStatusEnum.WaitingStop}, StopMethod = {(int)waitingTopEnum.Apply},ApplyStopDate=getdate() where SocialSecurityPeopleID  in ({string.Join(",", ids)})";
+
+            int result = DbHelper.ExecuteSqlCommand(sql, null);
+
+            return result > 0;
+        }
+
+        /// <summary>
+        /// 获取社保公积金基数变更记录
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        public List<SocialSecurityPeopleViewModel> GetBaseAjustRecord(int type,int memberId)
+        {
+            List<SocialSecurityPeopleViewModel> list = new List<SocialSecurityPeopleViewModel>();
+
+            string sql = $@"select 
+	                        ssp.SocialSecurityPeopleName,
+	                        ssp.IdentityCard,
+	                        ssp.HouseholdProperty,
+	                        ba.CurrentBase,
+	                        ba.BaseAdjusted 
+                        from BaseAudit ba
+	                        left join SocialSecurityPeople ssp on ba.SocialSecurityPeopleID = ssp.SocialSecurityPeopleID
+                        where MemberID = {memberId} and ba.Type = {type}";
+
+            return DbHelper.Query<SocialSecurityPeopleViewModel>(sql);
+
+        }
 
     }
 }
