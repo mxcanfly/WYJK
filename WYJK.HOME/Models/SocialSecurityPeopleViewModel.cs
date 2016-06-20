@@ -20,6 +20,9 @@ namespace WYJK.HOME.Models
 
         public decimal BaseAdjusted { get; set; }
 
+        public SocialSecurityCalculation Calculation { get; set; }
+
+
 
     }
 }

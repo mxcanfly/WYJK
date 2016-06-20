@@ -74,7 +74,7 @@
                                             起缴月份：@Model.PayTime
                                         </div>
                                         <div class="col-lg-4">
-                                            结束月份：2016-05
+                                            结束月份：
                                         </div>
                                         <div class="col-lg-4">
                                             社保基数：@Model.SocialSecurityBase
@@ -82,24 +82,24 @@
                                     </dd>
                                     <dd class="row am-padding-vertical-sm">
                                         <div class="col-lg-4">
-                                            社保：3577
+                                            社保：@Model.Calculation.SocialSecuritAmount
                                         </div>
                                         <div class="col-lg-4">
                                             公积金基数：@Model.AccumulationFundBase
                                         </div>
                                         <div class="col-lg-4">
-                                            公积金：444
+                                            公积金：@Model.Calculation.AccumulationFundAmount
                                         </div>
                                     </dd>
                                     <dd class="row am-padding-vertical-sm">
                                         <div class="col-lg-4">
-                                            冻结费：300
+                                            冻结费：0
                                         </div>
                                         <div class="col-lg-4">
-                                            服务费：300
+                                            服务费：0
                                         </div>
                                         <div class="col-lg-4">
-                                            缴纳金额：7000
+                                            缴纳金额：@(Model.Calculation.SocialSecuritAmount + Model.Calculation.AccumulationFundAmount)
                                         </div>
                                     </dd>
                                 </dl>
@@ -121,11 +121,11 @@
                     </thead>
                     <tbody>
                         <tr class="warning">
-                            <td>2100</td>
-                            <td>2000</td>
-                            <td>100</td>
+                            <td>@Model.Calculation.SocialSecuritAmount</td>
+                            <td>@Model.Calculation.AccumulationFundAmount</td>
                             <td>0</td>
-                            <td class="orange">2100</td>
+                            <td>20</td>
+                            <td class="orange">@(Model.Calculation.SocialSecuritAmount + Model.Calculation.AccumulationFundAmount + 20)</td>
                         </tr>
                     </tbody>
                 </table>

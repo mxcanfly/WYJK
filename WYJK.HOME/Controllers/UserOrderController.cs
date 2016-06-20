@@ -54,7 +54,8 @@ namespace WYJK.HOME.Controllers
         public ActionResult Create(int? id)
         {
             SocialSecurityPeopleViewModel ssp = sss.SocialSecurityDetail(id.Value);
-
+            //保费计算
+            ssp.Calculation = _socialSecurityService.GetSocialSecurityCalculationResult(ssp.InsuranceArea, ssp.HouseholdProperty, ssp.SocialSecurityBase, ssp.AccumulationFundBase);
             return View(ssp);
         }
 
@@ -102,8 +103,8 @@ namespace WYJK.HOME.Controllers
 
         public ActionResult Pay(string id)
         {
-            Order order = new Order {  OrderCode = id};
-            return View(order);
+            OrderDetaisViewModel detail = userOderSv.GetOrderDetails(id)[0];
+            return View(detail);
         }
 
         [HttpPost]

@@ -11,7 +11,7 @@ using WYJK.HOME.Service;
 
 namespace WYJK.HOME.Controllers
 {
-    public class CalculatorController : Controller
+    public class CalculatorController : BaseFilterController
     {
         RegionService regionSv = new RegionService();
 
