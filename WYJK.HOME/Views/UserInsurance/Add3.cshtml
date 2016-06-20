@@ -57,28 +57,28 @@
                 <label for="" class="col-lg-2 col-lg-offset-1 control-label">公积金基数</label>
                 <div class="col-lg-6">
                     @Html.TextBoxFor(m => m.AccumulationFundBase, new { @class = "form-control", placeholder = "请输入公积金基数" })
-                    @Html.ValidationMessageFor(m => m.AccumulationFundBase)
+                    @*@Html.ValidationMessageFor(m => m.AccumulationFundBase)*@
                 </div>
             </div>
             <div class="form-group">
                 <label for="" class="col-lg-2 col-lg-offset-1 control-label">起缴时间</label>
                 <div class="col-lg-6">
                     @Html.TextBoxFor(m => m.PayTime, new { @class = "form-control", placeholder = "请选择起缴年/月" })
-                    @Html.ValidationMessageFor(m => m.PayTime)
+                    @*@Html.ValidationMessageFor(m => m.PayTime)*@
                 </div>
             </div>
             <div class="form-group">
                 <label for="" class="col-lg-2 col-lg-offset-1 control-label">参保月份</label>
                 <div class="col-lg-6">
                     @Html.TextBoxFor(m => m.PayMonthCount, new { @class = "form-control", placeholder = "请输入参保月份" })
-                    @Html.ValidationMessageFor(m => m.PayMonthCount)
+                    @*@Html.ValidationMessageFor(m => m.PayMonthCount)*@
                 </div>
             </div>
             <div class="form-group">
                 <label for="" class="col-lg-2 col-lg-offset-1 control-label">补交月份</label>
                 <div class="col-lg-6">
                     @Html.TextBoxFor(m => m.PayBeforeMonthCount, new { @class = "form-control", placeholder = "请输入补交月份" })
-                    @Html.ValidationMessageFor(m => m.PayBeforeMonthCount)
+                    @*@Html.ValidationMessageFor(m => m.PayBeforeMonthCount)*@
                 </div>
             </div>
             <div class="form-group">
@@ -104,3 +104,49 @@
 }
         </div>
 </div>
+
+@section Footer
+{
+    <script>
+
+        $("#city").change(function () {
+
+            var province = $("#province").val();
+            var provinceText = $("#province option[value=" + province + "]").text();
+
+            var city = $("#city").val();
+
+            var area = provinceText + "|" + city;
+
+            //console.log(provinceText + "==" + city + "===" + usertypeText);
+
+            $.ajax({
+
+                url: '/Calculator/GetSocialSecurityBase',
+                data: 'area=' + area + '&householdProperty=""',
+                dataType: 'json',
+                success: function (data) {
+
+                    if (data.AFMinBase == 0) {
+
+                        $("#AccumulationFundBase").attr("placeholder", "(暂无该地区公积金基数范围)");
+                    }
+                    else {
+                        $("#AccumulationFundBase").attr("placeholder", "公积金基数(" + data.AFMinBase + "-" + data.AFMaxBase + ")");
+                    }
+                },
+                error: function (a, b, c) {
+                    console.log('cuowu');
+                }
+
+
+            });
+
+        });
+
+
+
+    </script>
+
+
+}

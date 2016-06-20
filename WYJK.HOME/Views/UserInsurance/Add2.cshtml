@@ -51,8 +51,6 @@
             <div class="col-lg-3">
                 <select id="city" name="city" class="form-control">
                     <option>请选择城市</option>
-                    <option>请选择城市</option>
-                    <option>请选择城市</option>
                 </select>
             </div>
         </div>
@@ -60,14 +58,14 @@
             <label for="" class="col-lg-2 col-lg-offset-1 control-label">社保基数</label>
             <div class="col-lg-6">
                 @Html.TextBoxFor(m => m.SocialSecurityBase, new { @class = "form-control", placeholder = "请输入社保基数" })
-                @Html.ValidationMessageFor(m => m.SocialSecurityBase)
+                @*@Html.ValidationMessageFor(m => m.SocialSecurityBase)*@
             </div>
         </div>
         <div class="form-group">
             <label for="" class="col-lg-2 col-lg-offset-1 control-label">起缴时间</label>
             <div class="col-lg-6">
                 @Html.TextBoxFor(m => m.PayTime, new { @class = "form-control", placeholder = "请选择起缴年/月" })
-                @Html.ValidationMessageFor(m => m.PayTime)
+                @*@Html.ValidationMessageFor(m => m.PayTime)*@
             </div>
         </div>
         <div class="form-group">
@@ -75,14 +73,14 @@
             <div class="col-lg-6">
 
                 @Html.TextBoxFor(m => m.PayMonthCount, new { @class = "form-control", placeholder = "请输入参保月份" })
-                @Html.ValidationMessageFor(m => m.PayMonthCount)
+                @*@Html.ValidationMessageFor(m => m.PayMonthCount)*@
             </div>
         </div>
         <div class="form-group">
             <label for="" class="col-lg-2 col-lg-offset-1 control-label">补交月份</label>
             <div class="col-lg-6">
                 @Html.TextBoxFor(m => m.PayBeforeMonthCount, new { @class = "form-control", placeholder = "请输入补交月份" })
-                @Html.ValidationMessageFor(m => m.PayBeforeMonthCount)
+                @*@Html.ValidationMessageFor(m => m.PayBeforeMonthCount)*@
             </div>
         </div>
         <div class="form-group">
@@ -121,36 +119,39 @@
 {
     <script>
 
-        //$("#city").change(function () {
+        $("#city").change(function () {
 
-        //    $.ajax({
+            var province = $("#province").val();
+            var provinceText = $("#province option[value=" + province + "]").text();
 
-        //        url: 'http://192.168.0.16:8086/api/SocialSecurity/GetSocialSecurityBase',
-        //        dataType:'json',
-        //        success: function (data) {
+            var city = $("#city").val();
 
-        //            if (data.status == false) {
-        //                $("#SocialSecurityBase").attr("placeholder", data.Message);
-        //            }
-        //            else {
-        //                var fw = "参保基数范围(" + data.minBase + "-" + data.maxBase + ")";
-        //                $("#SocialSecurityBase").attr("placeholder", fw);
-        //            }
+            var area = provinceText + "|" + city;
 
-                    
+            //console.log(provinceText + "==" + city + "===" + usertypeText);
 
-        //        },
-        //        error: function (a,b,c) {
-        //            console.log(a);
-        //        }
+            $.ajax({
+
+                url: '/Calculator/GetSocialSecurityBase',
+                data: 'area=' + area + '&householdProperty=""',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.MinBase == 0) {
+
+                        $("#SocialSecurityBase").attr("placeholder", "(暂无该地区社保基数范围)");
+                    }
+                    else {
+                        $("#SocialSecurityBase").attr("placeholder", "社保基数(" + data.MinBase + "-" + data.MaxBase + ")");
+                    }
+                },
+                error: function (a, b, c) {
+                    console.log(a);
+                }
 
 
-        //    });
+            });
 
-
-
-
-        //});
+        });
 
 
 

@@ -60,14 +60,27 @@ namespace WYJK.HOME.Controllers
         {
             EnterpriseSocialSecurity model = _socialSecurity.GetDefaultEnterpriseSocialSecurityByArea(area, householdProperty);
 
-            decimal minBase = Math.Round(model.SocialAvgSalary * (model.MinSocial / 100));
-            decimal maxBase = Math.Round(model.SocialAvgSalary * (model.MaxSocial / 100));
+            decimal minBase = 0;
+            decimal maxBase = 0;
+            decimal aFMinBase = 0;
+            decimal aFMaxBase = 0;
+
+
+            if (model != null)
+            {
+                minBase = Math.Round(model.SocialAvgSalary * (model.MinSocial / 100));
+                maxBase = Math.Round(model.SocialAvgSalary * (model.MaxSocial / 100));
+                aFMinBase = model.MinAccumulationFund;
+                aFMaxBase = model.MaxAccumulationFund;
+            }
+
+            
 
             Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
             dict["MinBase"] = minBase;
             dict["MaxBase"] = maxBase;
-            dict["AFMinBase"] = model.MinAccumulationFund;
-            dict["AFMaxBase"] = model.MaxAccumulationFund;
+            dict["AFMinBase"] = aFMinBase;
+            dict["AFMaxBase"] = aFMaxBase;
 
 
             return Json(dict,JsonRequestBehavior.AllowGet);

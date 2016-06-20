@@ -69,14 +69,14 @@
                     <label for="" class="col-lg-2 col-lg-offset-2 control-label">姓名</label>
                     <div class="col-lg-4">
                         @Html.TextBoxFor(m => m.SocialSecurityPeopleName, new { @class = "form-control", @placeholder = "请输入姓名" })
-                        @Html.ValidationMessageFor(m => m.SocialSecurityPeopleName)
+                        @*@Html.ValidationMessageFor(m => m.SocialSecurityPeopleName)*@
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="" class="col-lg-2 col-lg-offset-2 control-label">身份证</label>
                     <div class="col-lg-4">
                         @Html.TextBoxFor(m => m.IdentityCard, new { @class = "form-control", @placeholder = "请输入身份证" })
-                        @Html.ValidationMessageFor(m => m.IdentityCard)
+                        @*@Html.ValidationMessageFor(m => m.IdentityCard)*@
                     </div>
                 </div>
                 <div class="form-group">
@@ -92,10 +92,8 @@
                 <div class="form-group">
                     <label for="" class="col-lg-2 col-lg-offset-2 control-label">户籍性质</label>
                     <div class="col-lg-4">
-                        @*@Html.DropDownList("HouseholdProperty", ViewData["HouseholdProperty"] as SelectList, new { @class = "form-control" })*@
-
                         @Html.DropDownListFor(m => m.HouseholdProperty, ViewData["HouseholdProperty"] as SelectList, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.HouseholdProperty)
+                        @*@Html.ValidationMessageFor(m => m.HouseholdProperty)*@
                     </div>
                 </div>
                 <div class="form-group">
