@@ -206,7 +206,7 @@
                         户口性质：
                     </div>
                     <div class="col-lg-10">
-                        @Model.HouseholdType
+                        @(!string.IsNullOrEmpty(Model.HouseholdType) ? EnumExt.GetEnumCustomDescription((HouseholdPropertyEnum)int.Parse(Model.HouseholdType)) : "")
                     </div>
                 </div>
             </li>
