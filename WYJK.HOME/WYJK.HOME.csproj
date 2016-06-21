@@ -232,6 +232,7 @@
     <Compile Include="Models\QueryParamsModel.cs" />
     <Compile Include="Models\SocialSecurityBase.cs" />
     <Compile Include="Models\SocialSecurityPeopleViewModel.cs" />
+    <Compile Include="Models\UserAccountPageModel.cs" />
     <Compile Include="Models\UserLoginAttribute.cs" />
     <Compile Include="Models\UserOrderPageResult.cs" />
     <Compile Include="Models\UserOrderViewModel.cs" />
