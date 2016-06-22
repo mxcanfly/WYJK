@@ -41,10 +41,11 @@ namespace WYJK.HOME.Controllers
             {
                 if (model.CheckCode.ToLower().Equals(Session["CheckCode"].ToString().ToLower()))
                 {
+
                     //对密码进行加密
                     string pwd = SecurityHelper.HashPassword(model.Password,model.Password);
 
-                    string sql = $"SELECT * FROM Members where MemberName='{model.MemberName}' and Password='{pwd}' ";
+                    string sql = $"SELECT * FROM Members where (MemberName='{model.MemberName.Replace("'","").Trim()}' or MemberPhone='{model.MemberName}' or Email='{model.MemberName}') and Password='{pwd}' ";
 
                     Members users = DbHelper.QuerySingle<Members>(sql);
 
