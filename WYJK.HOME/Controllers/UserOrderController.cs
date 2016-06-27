@@ -108,117 +108,15 @@ namespace WYJK.HOME.Controllers
         }
 
         [HttpPost]
-        public ActionResult Pay(Order model)
+        public ActionResult Pay(OrderDetaisViewModel detail)
         {
-            model.MemberID = CommonHelper.CurrentUser.MemberID;
+            //订单详情
+            detail = userOderSv.GetOrderDetails(detail.OrderCode)[0];
+            decimal totalMoney = detail.SocialSecurityAmount + detail.SocialSecurityServiceCost + detail.SocialSecurityFirstBacklogCost + detail.SocialSecurityFirstBacklogCost + detail.AccumulationFundServiceCost + detail.AccumulationFundFirstBacklogCost;
 
-            using (TransactionScope transaction = new TransactionScope())
-            {
-                try
-                {
-                    string sqlOrder = $"select * from [Order] where OrderCode={model.OrderCode}";
-                    Order order = DbHelper.QuerySingle<Order>(sqlOrder);
+            string url = $@"https://netpay.cmbchina.com/netpayment/BaseHttp.dll?TestPrePayC1?BranchID={PayHelper.BranchID}&CoNo={PayHelper.CoNo}&BillNo=100000&Amount=0.01&Date={DateTime.Now.ToString("yyyyMMdd")}&MerchantUrl={"http://localhost:65292/UserOrder/NoticeResult"}";
 
-                    string sqlOrderDetail = $"select * from OrderDetails where OrderCode ={model.OrderCode}";
-                    List<OrderDetails> orderDetailList = DbHelper.Query<OrderDetails>(sqlOrderDetail);
-
-                    int[] SocialSecurityPeopleIDS = new int[orderDetailList.Count];
-                    for (int i = 0; i < orderDetailList.Count; i++)
-                    {
-                        SocialSecurityPeopleIDS[i] = orderDetailList[i].SocialSecurityPeopleID;
-                    }
-
-                    string SocialSecurityPeopleIDStr = string.Join(",", SocialSecurityPeopleIDS);
-                    //判断所选参保人中有没有超过14号的
-                    string sqlstr = $"select * from SocialSecurity where SocialSecurityPeopleID in({SocialSecurityPeopleIDStr})";
-                    List<SocialSecurity> socialSecurityList = DbHelper.Query<SocialSecurity>(sqlstr);
-                    foreach (var socialSecurity in socialSecurityList)
-                    {
-                        if (socialSecurity.PayTime.Month < DateTime.Now.Month || (socialSecurity.PayTime.Month == DateTime.Now.Month && socialSecurity.PayTime.Day > 13))
-                        {
-                            ViewBag.ErrorMessage = "参保人日期已失效，请修改";
-                        }
-                    }
-
-                    string sqlstr1 = $"select * from AccumulationFund where SocialSecurityPeopleID in({SocialSecurityPeopleIDStr})";
-                    List<AccumulationFund> accumulationFundList = DbHelper.Query<AccumulationFund>(sqlstr1);
-                    foreach (var accumulationFund in accumulationFundList)
-                    {
-                        if (accumulationFund.PayTime.Month < DateTime.Now.Month || (accumulationFund.PayTime.Month == DateTime.Now.Month && accumulationFund.PayTime.Day > 13))
-                        {
-                            ViewBag.ErrorMessage = "参保人日期已失效，请修改";
-                        }
-                    }
-
-                    string sqlAccountRecord = "";
-                    string sqlSocialSecurityPeople = "";
-
-                    decimal memberAccount = DbHelper.QuerySingle<decimal>($"select Account from Members where MemberID = {model.MemberID}");
-                    //收支记录
-                    string ShouNote = "缴费：";
-                    string ZhiNote = string.Empty;
-                    decimal Bucha = 0;//补差
-                    decimal ZhiAccount = 0;//支出总额
-                    decimal accountNum = 0;//订单总额
-                    foreach (var orderDetail in orderDetailList)
-                    {
-                        sqlSocialSecurityPeople += $"update SocialSecurityPeople set IsPay=1 where SocialSecurityPeopleID ={orderDetail.SocialSecurityPeopleID};";
-
-                        accountNum += orderDetail.SocialSecurityAmount * orderDetail.SocialSecuritypayMonth + orderDetail.SocialSecurityFirstBacklogCost + orderDetail.SocialSecurityBuCha
-                            + orderDetail.AccumulationFundAmount * orderDetail.AccumulationFundpayMonth + orderDetail.AccumulationFundFirstBacklogCost;
-                        Bucha += orderDetail.SocialSecurityBuCha;
-                        ZhiAccount += orderDetail.SocialSecurityFirstBacklogCost + orderDetail.SocialSecurityBuCha + orderDetail.AccumulationFundFirstBacklogCost;
-                        ShouNote += (orderDetail.SocialSecurityAmount != 0 ? string.Format("{0}:{1}个月社保,单月保费:{2},社保待办费:{3},补差费:{4};", orderDetail.SocialSecurityPeopleName, orderDetail.SocialSecuritypayMonth, orderDetail.SocialSecurityAmount, orderDetail.SocialSecurityFirstBacklogCost, orderDetail.SocialSecurityBuCha) : string.Empty) + (orderDetail.AccumulationFundAmount != 0 ? string.Format("{0}:{1}个月公积金,单月公积金费:{2},公积金代办费:{3};", orderDetail.SocialSecurityPeopleName, orderDetail.AccumulationFundpayMonth, orderDetail.AccumulationFundAmount, orderDetail.AccumulationFundFirstBacklogCost) : string.Empty);
-                        ZhiNote += (orderDetail.SocialSecurityAmount != 0 ? string.Format("{0}:社保待办费:{1},补差费:{2};", orderDetail.SocialSecurityPeopleName, orderDetail.SocialSecurityFirstBacklogCost, orderDetail.SocialSecurityBuCha) : string.Empty) + (orderDetail.AccumulationFundAmount != 0 ? string.Format("{0}:公积金代办费:{1};", orderDetail.SocialSecurityPeopleName, orderDetail.AccumulationFundFirstBacklogCost) : string.Empty);
-
-                        #region 作废
-                        //sqlAccountRecord += $"insert into AccountRecord(SerialNum,MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,OperationType,Cost,Balance,CreateTime) values({DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000).ToString().PadLeft(3, '0')},{order.MemberID},{orderDetail.SocialSecurityPeopleID},'{orderDetail.SocialSecurityPeopleName}','收入','{model.PaymentMethod}','缴费',{accountNum},{memberAccount},getdate());";
-                        //memberAccount -= orderDetail.SocialSecurityFirstBacklogCost;
-                        //sqlAccountRecord += orderDetail.SocialSecurityFirstBacklogCost != 0 ? $"insert into AccountRecord(SerialNum,MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,OperationType,Cost,Balance,CreateTime) values({DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000).ToString().PadLeft(3, '0')},{order.MemberID},{orderDetail.SocialSecurityPeopleID},'{orderDetail.SocialSecurityPeopleName}','支出','余额','社保代办',{orderDetail.SocialSecurityFirstBacklogCost},{memberAccount},getdate());" : string.Empty;
-                        //memberAccount -= orderDetail.AccumulationFundFirstBacklogCost;
-                        //sqlAccountRecord += orderDetail.AccumulationFundFirstBacklogCost != 0 ? $"insert into AccountRecord(SerialNum,MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,OperationType,Cost,Balance,CreateTime) values({DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000).ToString().PadLeft(3, '0')},{order.MemberID},{orderDetail.SocialSecurityPeopleID},'{orderDetail.SocialSecurityPeopleName}','支出','余额','公积金代办',{orderDetail.AccumulationFundFirstBacklogCost},{memberAccount},getdate());" : string.Empty;
-                        #endregion
-                    }
-
-                    sqlAccountRecord += $@"insert into AccountRecord(SerialNum,MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,OperationType,Cost,Balance,CreateTime)
-values({DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random(Guid.NewGuid().GetHashCode()).Next(1000).ToString().PadLeft(3, '0')},{model.MemberID},'','','收入','{model.PaymentMethod}','{ShouNote}',{accountNum},{memberAccount + accountNum},getdate());
-                                       insert into AccountRecord(SerialNum,MemberID,SocialSecurityPeopleID,SocialSecurityPeopleName,ShouZhiType,LaiYuan,OperationType,Cost,Balance,CreateTime) 
-values({DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random(Guid.NewGuid().GetHashCode()).Next(1000).ToString().PadLeft(3, '0')},{model.MemberID},'','','支出','余额','{ZhiNote}',{ZhiAccount},{memberAccount + accountNum - ZhiAccount},getdate()); ";
-
-                    //更新未参保人的支付状态
-                    DbHelper.ExecuteSqlCommand(sqlSocialSecurityPeople, null);
-
-                    //计算出要进入个人账户的总额
-                    decimal Account = 0;
-                    orderDetailList.ForEach(n =>
-                    {
-                        Account += n.SocialSecurityAmount * n.SocialSecuritypayMonth + n.AccumulationFundAmount * n.AccumulationFundpayMonth;
-                    });
-                    //更新个人账户
-                    string sqlMember = $"update Members set Account=ISNULL(Account,0)+{Account},Bucha=ISNULL(Bucha,0)+{Bucha} where MemberID={order.MemberID}";
-                    int updateResult = DbHelper.ExecuteSqlCommand(sqlMember, null);
-                    if (!(updateResult > 0)) throw new Exception("更新个人账户失败");
-
-                    //更新记录
-                    DbHelper.ExecuteSqlCommand(sqlAccountRecord, null);
-
-                    //更新订单
-                    string sqlUpdateOrder = $"update [Order] set Status = {(int)OrderEnum.Auditing},PaymentMethod='{model.PaymentMethod}',PayTime=getdate() where OrderCode={model.OrderCode}";
-                    DbHelper.ExecuteSqlCommand(sqlUpdateOrder, null);
-
-                    transaction.Complete();
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.ErrorMessage = "失败";
-                }
-                finally
-                {
-                    transaction.Dispose();
-                }
-            }
-
-            return Redirect("/UserOrder/Index");
+            return Redirect(url);
         }
 
         /// <summary>
@@ -235,6 +133,29 @@ values({DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random(Guid.NewGuid().G
             List<OrderDetaisViewModel> list = userOderSv.GetOrderDetails(id);
 
             return View(list);
+        }
+
+        public ActionResult NoticeResult()
+        {
+            CMBCHINALib.FirmClient client = new CMBCHINALib.FirmClient();
+
+            string keyPath = Server.MapPath("/Libs/public.key");
+
+            string query = Request.Url.Query;
+
+            short fromBank = client.exCheckInfoFromBank(keyPath, query);
+
+            if (fromBank == 0)//来自银行
+            {
+                //修改数据
+                //userOderSv.Payed(new Order { MemberID=CommonHelper.CurrentUser.MemberID, OrderCode });
+            }
+            else
+            {
+                string errorMsg = client.exGetLastErr(fromBank);
+            }
+
+            return Redirect("/UserOrder/Index");
         }
 
     }
