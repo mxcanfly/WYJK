@@ -209,9 +209,6 @@
     <Compile Include="Controllers\BaseFilterController.cs" />
     <Compile Include="Controllers\CalculatorController.cs" />
     <Compile Include="Controllers\Command\BaseController.cs" />
-    <Compile Include="Controllers\Command\Constant.cs" />
-    <Compile Include="Controllers\Command\CusomterActionFilterAttributer.cs" />
-    <Compile Include="Controllers\Command\NeedLoginAttribute.cs" />
     <Compile Include="Controllers\IndexController.cs" />
     <Compile Include="Controllers\InfomationController.cs" />
     <Compile Include="Controllers\LoanCalculatorController.cs" />
@@ -240,6 +237,7 @@
     <Compile Include="Models\UserOrderViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\InfomationService.cs" />
+    <Compile Include="Service\PayHelper.cs" />
     <Compile Include="Service\RegionService.cs" />
     <Compile Include="Service\SocialSecurityService.cs" />
     <Compile Include="Service\UserAccountService.cs" />

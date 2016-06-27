@@ -11,7 +11,6 @@ using WYJK.Entity;
 
 namespace WYJK.HOME.Controllers
 {
-    [CusomterActionFilterAttributer]
     public class BaseController : Controller
     {
         public String WeekString = "";
