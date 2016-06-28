@@ -130,11 +130,21 @@ namespace WYJK.HOME.Controllers
             detail = userOderSv.GetOrderDetails(detail.OrderCode)[0];
             decimal totalMoney = detail.SocialSecurityAmount + detail.SocialSecurityServiceCost + detail.SocialSecurityFirstBacklogCost + detail.SocialSecurityFirstBacklogCost + detail.AccumulationFundServiceCost + detail.AccumulationFundFirstBacklogCost;
 
-            string url = $@"https://netpay.cmbchina.com/netpayment/BaseHttp.dll?TestPrePayC1?BranchID={PayHelper.BranchID}&CoNo={PayHelper.CoNo}&BillNo=100000&Amount=0.01&Date={DateTime.Now.ToString("yyyyMMdd")}&MerchantUrl={"http://localhost:65292/UserOrder/NoticeResult"}";
+            string url = $@"https://netpay.cmbchina.com/netpayment/BaseHttp.dll?TestPrePayC1?BranchID={PayHelper.BranchID}&CoNo={PayHelper.CoNo}&BillNo=100000&Amount={totalMoney}&Date={DateTime.Now.ToString("yyyyMMdd")}&MerchantUrl={"http://localhost:65292/UserOrder/NoticeResult"}";
 
             return Redirect(url);
         }
 
+        /// <summary>
+        /// 支付回调
+        /// </summary>
+        /// <param name="Succeed"></param>
+        /// <param name="CoNo"></param>
+        /// <param name="BillNo"></param>
+        /// <param name="Amount"></param>
+        /// <param name="Date"></param>
+        /// <param name="Msg"></param>
+        /// <returns></returns>
         public ActionResult NoticeResult(string Succeed,string CoNo,string BillNo,decimal Amount,string Date,string Msg)
         {
 
