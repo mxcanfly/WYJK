@@ -45,6 +45,22 @@ namespace WYJK.HOME.Controllers
             return View(page);
         }
 
+        /// <summary>
+        /// 订单详情
+        /// </summary>
+        /// <param name="orderCode"></param>
+        /// <returns></returns>
+        public ActionResult OrderDetail(string id)
+        {
+            //订单详情总计
+            OrderDetailForMobile detail = _orderService.GetOrderDetail(CommonHelper.CurrentUser.MemberID, id);
+            ViewBag.Detail = detail;
+
+            List<OrderDetaisViewModel> list = userOderSv.GetOrderDetails(id);
+
+            return View(list);
+        }
+
 
         /// <summary>
         /// 订单确认
@@ -119,41 +135,34 @@ namespace WYJK.HOME.Controllers
             return Redirect(url);
         }
 
-        /// <summary>
-        /// 订单详情
-        /// </summary>
-        /// <param name="orderCode"></param>
-        /// <returns></returns>
-        public ActionResult OrderDetail(string id)
+        public ActionResult NoticeResult(string Succeed,string CoNo,string BillNo,decimal Amount,string Date,string Msg)
         {
-            //订单详情总计
-            OrderDetailForMobile detail =_orderService.GetOrderDetail(CommonHelper.CurrentUser.MemberID, id);
-            ViewBag.Detail = detail;
 
-            List<OrderDetaisViewModel> list = userOderSv.GetOrderDetails(id);
-
-            return View(list);
-        }
-
-        public ActionResult NoticeResult()
-        {
             CMBCHINALib.FirmClient client = new CMBCHINALib.FirmClient();
-
+            //获取key路径
             string keyPath = Server.MapPath("/Libs/public.key");
-
-            string query = Request.Url.Query;
-
+            //获取返回的参数
+            string query = Request.Url.Query.Substring(1);
+            //检验收到通知内容的真实性（检验数字签名）
             short fromBank = client.exCheckInfoFromBank(keyPath, query);
 
-            if (fromBank == 0)//来自银行
+            string branchID = Msg.Substring(0, 4);
+            string cono = Msg.Substring(4, 6);
+
+            if (branchID == PayHelper.BranchID && cono == PayHelper.CoNo)
             {
-                //修改数据
-                //userOderSv.Payed(new Order { MemberID=CommonHelper.CurrentUser.MemberID, OrderCode });
+                userOderSv.Payed(new Order { MemberID=CommonHelper.CurrentUser.MemberID, OrderCode = "20160622101953869633" });
             }
-            else
-            {
-                string errorMsg = client.exGetLastErr(fromBank);
-            }
+
+            //if (fromBank == 0)//来自银行
+            //{
+            //    //修改数据
+            //    //userOderSv.Payed(new Order { MemberID=CommonHelper.CurrentUser.MemberID, OrderCode });
+            //}
+            //else
+            //{
+            //    string errorMsg = client.exGetLastErr(fromBank);
+            //}
 
             return Redirect("/UserOrder/Index");
         }

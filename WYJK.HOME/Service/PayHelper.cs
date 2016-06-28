@@ -13,6 +13,7 @@ namespace WYJK.HOME.Service
         //private static string BranchID = "0532";
         private static string MiYao = "Superman19810928";
 
+        //商户号
         public static string CoNo
         {
             get
@@ -21,6 +22,7 @@ namespace WYJK.HOME.Service
             }
         }
 
+        //商户开户分行号
         public static string BranchID
         {
             get
