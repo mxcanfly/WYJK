@@ -123,6 +123,11 @@ namespace WYJK.HOME.Controllers
             return View(detail);
         }
 
+        /// <summary>
+        /// 支付
+        /// </summary>
+        /// <param name="detail"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Pay(OrderDetaisViewModel detail)
         {
