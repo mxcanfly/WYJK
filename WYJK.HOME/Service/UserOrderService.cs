@@ -4,6 +4,8 @@ using System.Linq;
 using System.Transactions;
 using System.Web;
 using WYJK.Data;
+using WYJK.Data.IService;
+using WYJK.Data.ServiceImpl;
 using WYJK.Entity;
 using WYJK.Framework.EnumHelper;
 using WYJK.HOME.Models;
@@ -12,6 +14,14 @@ namespace WYJK.HOME.Service
 {
     public class UserOrderService
     {
+        private readonly IOrderService _orderService = new OrderService();
+
+        /// <summary>
+        /// 获取订单列表
+        /// </summary>
+        /// <param name="memberID"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
         public List<UserOrderViewModel> GetOrderList(int memberID, int? status)
         {
             string appendStr = "";
@@ -37,6 +47,20 @@ namespace WYJK.HOME.Service
         }
 
         /// <summary>
+        /// 获取一条订单
+        /// </summary>
+        /// <param name="orderCode"></param>
+        /// <returns></returns>
+        public OrderViewModel GetOrderByOrderCode(string orderCode)
+        {
+            string sql = $@"select *from [Order] where OrderCode = '{orderCode}' or OrderID='{orderCode}'";
+
+            return DbHelper.QuerySingle<OrderViewModel>(sql);
+        }
+        
+
+
+        /// <summary>
         /// 获取订单详情
         /// </summary>
         /// <param name="orderCode"></param>
@@ -58,6 +82,54 @@ namespace WYJK.HOME.Service
             return DbHelper.Query<OrderDetaisViewModel>(sql);
 
         }
+
+        /// <summary>
+        /// 生成订单
+        /// </summary>
+        /// <param name="model"></param>
+        public Dictionary<bool, string> CreateOrder(SocialSecurityPeopleViewModel model,out string errorMsg,out string orderCode)
+        {
+            Dictionary<bool, string> dic = null;
+            errorMsg = "";
+            orderCode = "";
+            ////首先判断是否有未支付订单，若有，则不能生成订单
+            //if (_orderService.IsExistsWaitingPayOrderByMemberID(CommonHelper.CurrentUser.MemberID))
+            //{
+            //    ViewBag.ErrorMessage = "有未支付的订单，请先进行支付";
+            //    return View();
+            //}
+            //判断所选参保人中有没有超过14号的
+            string sqlstr = $"select * from SocialSecurity where SocialSecurityPeopleID in({model.SocialSecurityPeopleID})";
+            List<SocialSecurity> socialSecurityList = DbHelper.Query<SocialSecurity>(sqlstr);
+            foreach (var socialSecurity in socialSecurityList)
+            {
+                if (socialSecurity.PayTime.Month < DateTime.Now.Month || (socialSecurity.PayTime.Month == DateTime.Now.Month && socialSecurity.PayTime.Day > 13))
+                {
+                    errorMsg = "参保人日期已失效，请修改";
+                    return dic;
+                }
+            }
+
+            string sqlstr1 = $"select * from AccumulationFund where SocialSecurityPeopleID in({model.SocialSecurityPeopleID})";
+            List<AccumulationFund> accumulationFundList = DbHelper.Query<AccumulationFund>(sqlstr1);
+            foreach (var accumulationFund in accumulationFundList)
+            {
+                if (accumulationFund.PayTime.Month < DateTime.Now.Month || (accumulationFund.PayTime.Month == DateTime.Now.Month && accumulationFund.PayTime.Day > 13))
+                {
+                    errorMsg = "参保人日期已失效，请修改";
+                    return dic;
+                }
+            }
+
+            orderCode = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000).ToString().PadLeft(3, '0');
+
+            dic = _orderService.GenerateOrder(model.SocialSecurityPeopleID.ToString(), CommonHelper.CurrentUser.MemberID, orderCode);
+
+            return dic;
+        }
+
+
+
 
         /// <summary>
         /// 支付后操作

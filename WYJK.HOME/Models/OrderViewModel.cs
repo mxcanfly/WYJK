@@ -8,7 +8,12 @@ namespace WYJK.HOME.Models
 {
     public class OrderViewModel:Order
     {
+        public string OrderID { get; set; }
+
+
         public decimal TotalMoney { get; set; }
+
+
 
     }
 }

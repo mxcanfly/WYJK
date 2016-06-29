@@ -83,35 +83,19 @@ namespace WYJK.HOME.Controllers
         [HttpPost]
         public ActionResult Create(SocialSecurityPeopleViewModel model)
         {
-            ////首先判断是否有未支付订单，若有，则不能生成订单
-            //if (_orderService.IsExistsWaitingPayOrderByMemberID(CommonHelper.CurrentUser.MemberID))
-            //{
-            //    ViewBag.ErrorMessage = "有未支付的订单，请先进行支付";
-            //}
-            //判断所选参保人中有没有超过14号的
-            string sqlstr = $"select * from SocialSecurity where SocialSecurityPeopleID in({model.SocialSecurityPeopleID})";
-            List<SocialSecurity> socialSecurityList = DbHelper.Query<SocialSecurity>(sqlstr);
-            foreach (var socialSecurity in socialSecurityList)
+            string errorMsg = "";
+            string orderCode = "";
+
+            Dictionary<bool,string> result = userOderSv.CreateOrder(model, out errorMsg, out orderCode);
+
+            if (!string.IsNullOrEmpty(errorMsg))//是否允许创建订单
             {
-                if (socialSecurity.PayTime.Month < DateTime.Now.Month || (socialSecurity.PayTime.Month == DateTime.Now.Month && socialSecurity.PayTime.Day > 13))
-                {
-                    ViewBag.ErrorMessage = "参保人日期已失效，请修改";
-                }
+                return Redirect("/UserOrder/Create/"+model.SocialSecurityPeopleID);
             }
-
-            string sqlstr1 = $"select * from AccumulationFund where SocialSecurityPeopleID in({model.SocialSecurityPeopleID})";
-            List<AccumulationFund> accumulationFundList = DbHelper.Query<AccumulationFund>(sqlstr1);
-            foreach (var accumulationFund in accumulationFundList)
+            if (!result.First().Key)//生成订单失败
             {
-                if (accumulationFund.PayTime.Month < DateTime.Now.Month || (accumulationFund.PayTime.Month == DateTime.Now.Month && accumulationFund.PayTime.Day > 13))
-                {
-                    ViewBag.ErrorMessage = "参保人日期已失效，请修改";
-                }
+                return Redirect("/UserOrder/Create/" + model.SocialSecurityPeopleID);
             }
-
-            string orderCode = DateTime.Now.ToString("yyyyMMddHHmmssfff") + new Random().Next(1000).ToString().PadLeft(3, '0');
-
-            Dictionary<bool, string> dic = _orderService.GenerateOrder(model.SocialSecurityPeopleID.ToString(), CommonHelper.CurrentUser.MemberID, orderCode);
 
             return Redirect("/UserOrder/Pay/"+orderCode);
         }
@@ -131,11 +115,15 @@ namespace WYJK.HOME.Controllers
         [HttpPost]
         public ActionResult Pay(OrderDetaisViewModel detail)
         {
+            //主订单
+            OrderViewModel order = userOderSv.GetOrderByOrderCode(detail.OrderCode);
+            order.OrderID = order.OrderID.PadLeft(10, '0');
+
             //订单详情
             detail = userOderSv.GetOrderDetails(detail.OrderCode)[0];
             decimal totalMoney = detail.SocialSecurityAmount + detail.SocialSecurityServiceCost + detail.SocialSecurityFirstBacklogCost + detail.SocialSecurityFirstBacklogCost + detail.AccumulationFundServiceCost + detail.AccumulationFundFirstBacklogCost;
 
-            string url = $@"https://netpay.cmbchina.com/netpayment/BaseHttp.dll?TestPrePayC1?BranchID={PayHelper.BranchID}&CoNo={PayHelper.CoNo}&BillNo=100000&Amount={totalMoney}&Date={DateTime.Now.ToString("yyyyMMdd")}&MerchantUrl={"http://localhost:65292/UserOrder/NoticeResult"}";
+            string url = $@"https://netpay.cmbchina.com/netpayment/BaseHttp.dll?TestPrePayC1?BranchID={PayHelper.BranchID}&CoNo={PayHelper.CoNo}&BillNo={order.OrderID}&Amount={totalMoney}&Date={DateTime.Now.ToString("yyyyMMdd")}&MerchantUrl={"http://localhost:65292/UserOrder/NoticeResult"}";
 
             return Redirect(url);
         }
@@ -164,9 +152,12 @@ namespace WYJK.HOME.Controllers
             string branchID = Msg.Substring(0, 4);
             string cono = Msg.Substring(4, 6);
 
-            if (branchID == PayHelper.BranchID && cono == PayHelper.CoNo)
+            if (branchID == PayHelper.BranchID && cono == PayHelper.CoNo)//返回的商户号与分支号与原先的匹配
             {
-                userOderSv.Payed(new Order { MemberID=CommonHelper.CurrentUser.MemberID, OrderCode = "20160622101953869633" });
+                //主订单
+                OrderViewModel order = userOderSv.GetOrderByOrderCode(BillNo.TrimStart(new char[] { '0' }));
+
+                userOderSv.Payed(new Order { MemberID=CommonHelper.CurrentUser.MemberID, OrderCode = order.OrderCode });
             }
 
             //if (fromBank == 0)//来自银行
