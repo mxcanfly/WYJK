@@ -22,6 +22,10 @@ namespace WYJK.HOME.Models
 
         public SocialSecurityCalculation Calculation { get; set; }
 
+        //支付方式
+        public string PaymentMethod { get; set; }
+
+
 
 
     }
