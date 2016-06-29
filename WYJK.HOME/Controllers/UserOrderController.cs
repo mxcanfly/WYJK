@@ -155,9 +155,9 @@ namespace WYJK.HOME.Controllers
             if (branchID == PayHelper.BranchID && cono == PayHelper.CoNo)//返回的商户号与分支号与原先的匹配
             {
                 //主订单
-                OrderViewModel order = userOderSv.GetOrderByOrderCode(BillNo.TrimStart(new char[] { '0' }));
+                OrderViewModel order = userOderSv.GetOrderByOrdeID(BillNo.TrimStart(new char[] { '0' }));
 
-                userOderSv.Payed(new Order { MemberID=CommonHelper.CurrentUser.MemberID, OrderCode = order.OrderCode });
+                //userOderSv.Payed(new Order { MemberID=CommonHelper.CurrentUser.MemberID, OrderCode = order.OrderCode });
             }
 
             //if (fromBank == 0)//来自银行

@@ -53,11 +53,22 @@ namespace WYJK.HOME.Service
         /// <returns></returns>
         public OrderViewModel GetOrderByOrderCode(string orderCode)
         {
-            string sql = $@"select *from [Order] where OrderCode = '{orderCode}' or OrderID='{orderCode}'";
+            string sql = $@"select *from [Order] where OrderCode = '{orderCode}'";
 
             return DbHelper.QuerySingle<OrderViewModel>(sql);
         }
-        
+
+        /// <summary>
+        /// 获取一条订单
+        /// </summary>
+        /// <param name="orderCode"></param>
+        /// <returns></returns>
+        public OrderViewModel GetOrderByOrdeID(string orderId)
+        {
+            string sql = $@"select *from [Order] where OrderID = '{orderId}'";
+
+            return DbHelper.QuerySingle<OrderViewModel>(sql);
+        }
 
 
         /// <summary>
