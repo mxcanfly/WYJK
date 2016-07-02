@@ -123,7 +123,7 @@ namespace WYJK.HOME.Controllers
             detail = userOderSv.GetOrderDetails(detail.OrderCode)[0];
             decimal totalMoney = detail.SocialSecurityAmount + detail.SocialSecurityServiceCost + detail.SocialSecurityFirstBacklogCost + detail.SocialSecurityFirstBacklogCost + detail.AccumulationFundServiceCost + detail.AccumulationFundFirstBacklogCost;
 
-            string url = $@"https://netpay.cmbchina.com/netpayment/BaseHttp.dll?TestPrePayC1?BranchID={PayHelper.BranchID}&CoNo={PayHelper.CoNo}&BillNo={order.OrderID}&Amount={totalMoney}&Date={DateTime.Now.ToString("yyyyMMdd")}&MerchantUrl={"http://localhost:65292/UserOrder/NoticeResult"}";
+            string url = $@"https://netpay.cmbchina.com/netpayment/BaseHttp.dll?PrePayC1?BranchID={PayHelper.BranchID}&CoNo={PayHelper.CoNo}&BillNo={order.OrderID}&Amount={0.01}&Date={DateTime.Now.ToString("yyyyMMdd")}&MerchantUrl={"http://localhost:65292/UserOrder/NoticeResult"}";
 
             return Redirect(url);
         }
@@ -157,7 +157,7 @@ namespace WYJK.HOME.Controllers
                 //主订单
                 OrderViewModel order = userOderSv.GetOrderByOrdeID(BillNo.TrimStart(new char[] { '0' }));
 
-                //userOderSv.Payed(new Order { MemberID=CommonHelper.CurrentUser.MemberID, OrderCode = order.OrderCode });
+                userOderSv.Payed(new Order { MemberID=CommonHelper.CurrentUser.MemberID, OrderCode = order.OrderCode });
             }
 
             //if (fromBank == 0)//来自银行

@@ -39,7 +39,8 @@ namespace WYJK.HOME.Service
 	                        SUM(OrderDetails.SocialSecurityAmount * OrderDetails.SocialSecuritypayMonth + OrderDetails.SocialSecurityServiceCost + OrderDetails.SocialSecurityFirstBacklogCost + OrderDetails.SocialSecurityBuCha + OrderDetails.AccumulationFundAmount * OrderDetails.AccumulationFundpayMonth + OrderDetails.AccumulationFundServiceCost + OrderDetails.AccumulationFundFirstBacklogCost) Amounts 
                           from[Order] right join OrderDetails on[Order].OrderCode = OrderDetails.OrderCode 
                           where[Order].MemberID = {memberID} {appendStr}
-                          group by[order].OrderCode,[Order].GenerateDate,[Order].Status ";
+                          group by[order].OrderCode,[Order].GenerateDate,[Order].Status 
+                            order by [order].GenerateDate desc";
 
             List<UserOrderViewModel> list = DbHelper.Query<UserOrderViewModel>(sql);
 

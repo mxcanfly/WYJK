@@ -68,7 +68,7 @@
                                     <div class="col-lg-4 col-lg-offset-8">
                                         @if (item.Status == 0)
                                         {
-                                            <a href="#" class="pull-left">立即付款</a>
+                                            <a href="/UserOrder/Pay/@item.OrderCode" class="pull-left">立即付款</a>
                                         }
                                         
                                         <a href="/UserOrder/OrderDetail/@item.OrderCode" class="pull-right text-muted"><span class="am-text-middle">详情</span><i class="glyphicon glyphicon-menu-right am-text-middle"></i></a>
