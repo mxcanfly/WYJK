@@ -216,7 +216,6 @@
     <Compile Include="Controllers\LoanCalculatorController.cs" />
     <Compile Include="Controllers\LoanController.cs" />
     <Compile Include="Controllers\UserAccountController.cs" />
-    <Compile Include="Controllers\UserApplyController.cs" />
     <Compile Include="Controllers\UserApplyWithDrawController.cs" />
     <Compile Include="Controllers\UserLoanController.cs" />
     <Compile Include="Controllers\UserInsuranceController.cs" />
@@ -277,7 +276,6 @@
     <Content Include="Views\UserInsurance\Add3.cshtml" />
     <Content Include="Views\UserInsurance\Add2.cshtml" />
     <Content Include="Views\UserLoan\Index.cshtml" />
-    <Content Include="Views\UserApply\Index.cshtml" />
     <Content Include="Views\Index\Insurance.cshtml" />
     <Content Include="Views\Index\Loan.cshtml" />
     <Content Include="Views\Index\About.cshtml" />
