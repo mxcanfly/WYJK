@@ -1,6 +1,6 @@
-﻿
+﻿@model WYJK.HOME.Models.DrawCash
 @{
-    ViewBag.Title = "WithDraw";
+    ViewBag.Title = "提现";
     Layout = "~/Views/User/_Layout_user.cshtml";
 }
 
@@ -12,40 +12,43 @@
             </h3>
         </div>
         <div class="panel-body">
-            <form action="" class="form-horizontal">
+            @using (Html.BeginForm("WithDraw", "UserAccount", FormMethod.Post,new { @class = "form-horizontal" }))
+            {
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">账户余额</label>
                     <div class="col-sm-6">
-                        <p class="form-control-static">137</p>
+                        <p class="form-control-static">@CommonHelper.CurrentUser.Account</p>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">冻结金额</label>
                     <div class="col-sm-6">
-                        <p class="form-control-static">0</p>
+                        <p class="form-control-static">@Html.DisplayFor(m=>m.FrozenMoney)</p>
+                        @Html.HiddenFor(m=>m.FrozenMoney)
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">可提取余额</label>
                     <div class="col-sm-6">
-                        <p class="form-control-static">2000</p>
+                        <p class="form-control-static">@Html.DisplayFor(m => m.LeftAccount)</p>
+                        @Html.HiddenFor(m => m.LeftAccount)
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">提现金额</label>
                     <div class="col-sm-6">
-                        <input type="text" name="" id="" value="" class="form-control" placeholder="请输入提现金额" />
+                        @Html.TextBoxFor(m=>m.Money,new {@class="form-control" ,placeholder="请输入提现金额" })
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-lg-offset-2 col-lg-3">
-                        <button type="button" class="btn btn-info bg-lightblue btn-block">取消</button>
+                        <button type="reset" class="btn btn-info bg-lightblue btn-block">取消</button>
                     </div>
                     <div class="col-lg-3">
-                        <button type="button" class="btn btn-info bg-lightblue btn-block">提现</button>
+                        <button type="submit" class="btn btn-info bg-lightblue btn-block">提现</button>
                     </div>
                 </div>
-            </form>
+            }
         </div>
     </div>
 </div>

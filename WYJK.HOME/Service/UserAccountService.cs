@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Transactions;
 using System.Web;
 using WYJK.Data;
@@ -9,6 +10,7 @@ using WYJK.Data.IServices;
 using WYJK.Data.ServiceImpl;
 using WYJK.Entity;
 using WYJK.Framework.EnumHelper;
+using WYJK.HOME.Models;
 
 namespace WYJK.HOME.Service
 {
@@ -124,6 +126,92 @@ left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = Soci
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// 获取提现/申请列表
+        /// </summary>
+        /// <param name="drawCash"></param>
+        /// <param name="applyStatus"></param>
+        /// <returns></returns>
+        public List<DrawCash> GetDrawCashRecord(DrawCash drawCash,int? applyStatus)
+        {
+            List<DrawCash> list = new List<Models.DrawCash>();
+
+            StringBuilder strBd = new StringBuilder();
+            strBd.Append($@"select *from DrawCashwhere MemberId = {drawCash.MemberId} ");
+
+            if (applyStatus != null)
+            {
+                strBd.Append($" and ApplyStatus = {applyStatus.Value}");
+            }
+            
+            return DbHelper.Query<DrawCash>(strBd.ToString());
+        }
+
+        /// <summary>
+        /// 获取最新的提现申请
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        public DrawCash GetLastestDrawCash(int memberId)
+        {
+            string sql = $@"select 
+	                            top 1 * 
+                            from DrawCash
+	                            where MemberId = {memberId} and ApplyStatus = 0
+	                            order by ApplyTime desc";
+            
+            return DbHelper.QuerySingle<DrawCash>(sql);
+        }
+
+        /// <summary>
+        /// 提现申请
+        /// </summary>
+        /// <param name="drawCash"></param>
+        public int DrawCash(DrawCash drawCash)
+        {
+            int num = 0;
+
+            using (TransactionScope transaction = new TransactionScope())
+            {
+                try
+                {
+                    string sql = $@"insert into DrawCash
+	                                    (
+	                                    MemberId,
+	                                    Money,
+	                                    ApplyTime,
+	                                    ApplyStatus,
+	                                    AgreeTime,
+	                                    LeftAccount
+	                                    )
+                                    values
+	                                    (
+	                                    {drawCash.MemberId},
+	                                    {drawCash.Money},
+	                                    GETDATE(),
+	                                    {drawCash.ApplyStatus},
+	                                    GETDATE(),
+	                                    {drawCash.LeftAccount}
+	                                    )";
+
+                    num = DbHelper.ExecuteSqlCommand(sql,null);
+                    
+
+                    transaction.Complete();
+                }
+                catch (Exception ex)
+                {
+                }
+                finally
+                {
+                    transaction.Dispose();
+                }
+
+            }
+
+            return num;
         }
 
     }

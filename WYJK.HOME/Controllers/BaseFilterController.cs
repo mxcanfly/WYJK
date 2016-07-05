@@ -20,6 +20,13 @@ namespace WYJK.HOME.Controllers
             base.OnActionExecuting(filterContext);
         }
 
+
+        protected void assignMessage(string msg, bool success)
+        {
+            TempData["Message"] = msg;
+            TempData["MessageType"] = success;
+        }
+
     }
 
 }

@@ -227,6 +227,7 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CommonHelper.cs" />
+    <Compile Include="Models\DrawCash.cs" />
     <Compile Include="Models\InsuranceViewModel.cs" />
     <Compile Include="Models\MemberLoanAuditViewModel.cs" />
     <Compile Include="Models\OrderDetaisViewModel.cs" />
