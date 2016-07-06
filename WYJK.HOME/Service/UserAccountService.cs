@@ -141,6 +141,15 @@ left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = Soci
             StringBuilder strBd = new StringBuilder();
             strBd.Append($@"select *from DrawCash where MemberId = {drawCash.MemberId} ");
 
+            if (!string.IsNullOrEmpty(drawCash.StartTime))
+            {
+                strBd.Append($" and ApplyTime >= '{drawCash.StartTime}'");
+            }
+            if (!string.IsNullOrEmpty(drawCash.EndTime))
+            {
+                strBd.Append($" and ApplyTime <= '{drawCash.EndTime}'");
+            }
+
             if (applyStatus != null)
             {
                 strBd.Append($" and ApplyStatus = {applyStatus.Value}");
