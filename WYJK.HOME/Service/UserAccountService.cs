@@ -139,7 +139,7 @@ left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = Soci
             List<DrawCash> list = new List<Models.DrawCash>();
 
             StringBuilder strBd = new StringBuilder();
-            strBd.Append($@"select *from DrawCashwhere MemberId = {drawCash.MemberId} ");
+            strBd.Append($@"select *from DrawCash where MemberId = {drawCash.MemberId} ");
 
             if (applyStatus != null)
             {
@@ -183,7 +183,6 @@ left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = Soci
 	                                    Money,
 	                                    ApplyTime,
 	                                    ApplyStatus,
-	                                    AgreeTime,
 	                                    LeftAccount
 	                                    )
                                     values
@@ -192,7 +191,6 @@ left join SocialSecurityPeople on AccumulationFund.SocialSecurityPeopleID = Soci
 	                                    {drawCash.Money},
 	                                    GETDATE(),
 	                                    {drawCash.ApplyStatus},
-	                                    GETDATE(),
 	                                    {drawCash.LeftAccount}
 	                                    )";
 

@@ -238,6 +238,8 @@
     <Compile Include="Models\UserLoginAttribute.cs" />
     <Compile Include="Models\UserOrderPageResult.cs" />
     <Compile Include="Models\UserOrderViewModel.cs" />
+    <Compile Include="Models\UserWithDrawPageModel.cs" />
+    <Compile Include="Models\UserWithDrawPageResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\InfomationService.cs" />
     <Compile Include="Service\PayHelper.cs" />

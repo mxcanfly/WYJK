@@ -21,9 +21,13 @@ namespace WYJK.HOME.Models
 
         public decimal FrozenMoney { get; set; }
 
-
+        /// <summary>
+        /// 申请时间
+        /// </summary>
         public DateTime ApplyTime { get; set; }
 
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
 
         public int ApplyStatus { get; set; }
 

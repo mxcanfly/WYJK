@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WYJK.Entity;
 using WYJK.HOME.Models;
 using WYJK.HOME.Service;
 
@@ -12,31 +13,57 @@ namespace WYJK.HOME.Controllers
     {
         UserAccountService accountSv = new UserAccountService();
 
-        public ActionResult Index()
+        public ActionResult Index(UserWithDrawPageModel parameter)
         {
+            #region 体现
             DrawCash drawCash = accountSv.GetLastestDrawCash(CommonHelper.CurrentUser.MemberID);
+            //可提金额
+            ViewBag.LeftAccount = drawCash == null ? CommonHelper.CurrentUser.Account : drawCash.LeftAccount;
+            #endregion
 
+            #region 列表
 
+            DrawCash drawCashSearch = new DrawCash {
+                MemberId = CommonHelper.CurrentUser.MemberID,
+                StartTime = parameter.StartTime,
+                EndTime = parameter.EndTime
+            };
 
+            List<DrawCash> list = accountSv.GetDrawCashRecord(drawCashSearch,null);
 
+            var c = list.Skip(parameter.SkipCount - 1).Take(parameter.PageSize);
 
-            return View();
+            UserWithDrawPageResult<DrawCash> page = new UserWithDrawPageResult<DrawCash>
+            {
+                PageIndex = parameter.PageIndex,
+                PageSize = parameter.PageSize,
+                TotalItemCount = list.Count,
+                Items = c,
+                Parameter = parameter
+            };
+            #endregion
+
+            return View(page);
         }
 
         [HttpPost]
-        public ActionResult WithDraw(DrawCash drawCash)
+        public ActionResult WithDraw(decimal leftAccount,decimal money)
         {
+            DrawCash drawCash = new DrawCash();
+
             drawCash.MemberId = CommonHelper.CurrentUser.MemberID;
-
             drawCash.ApplyStatus = 0;//审核中
+            drawCash.Money = money;//取现金额
 
-            if (drawCash.Money > drawCash.LeftAccount)
+
+            if (money > leftAccount)
             {
                 assignMessage("提现金额不能大于可提现余额", false);
-                return RedirectToAction("WithDraw");
+                return RedirectToAction("Index");
             }
 
-            drawCash.LeftAccount = CommonHelper.CurrentUser.Account - drawCash.FrozenMoney - drawCash.Money;
+            drawCash.LeftAccount = leftAccount - drawCash.Money;
+
             int num = accountSv.DrawCash(drawCash);
 
             if (num > 0)//提现申请成功
@@ -48,7 +75,7 @@ namespace WYJK.HOME.Controllers
                 assignMessage("提现失败", false);
             }
 
-            return RedirectToAction("WithDraw");
+            return RedirectToAction("Index");
         }
     }
 }

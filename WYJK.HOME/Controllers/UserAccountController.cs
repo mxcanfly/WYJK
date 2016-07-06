@@ -91,7 +91,7 @@ namespace WYJK.HOME.Controllers
                 return RedirectToAction("WithDraw");
             }
 
-            drawCash.LeftAccount = CommonHelper.CurrentUser.Account - drawCash.FrozenMoney - drawCash.Money;
+            drawCash.LeftAccount = drawCash.LeftAccount - drawCash.Money;
             int num = accountSv.DrawCash(drawCash);
 
             if (num > 0)//提现申请成功
