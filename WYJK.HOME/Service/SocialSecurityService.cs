@@ -15,6 +15,8 @@ namespace WYJK.HOME.Service
 {
     public class SocialSecurityService
     {
+        ISocialSecurityService _socialSecurity = new WYJK.Data.ServiceImpl.SocialSecurityService();
+
         #region 用户借款条件考察
 
 
@@ -201,6 +203,97 @@ namespace WYJK.HOME.Service
                         where MemberID = {memberId} and ba.Type = {type}";
 
             return DbHelper.Query<SocialSecurityPeopleViewModel>(sql);
+
+        }
+
+        /// <summary>
+        /// 获取用户名下的参保人
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        public List<SocialSecurity> GetSocialSecurityPersons(int memberId)
+        {
+            string sql = $@"select 
+	                            ssp.SocialSecurityPeopleID,
+	                            ssp.SocialSecurityPeopleName
+                            from SocialSecurityPeople ssp
+	                            inner join SocialSecurity ss on ssp.SocialSecurityPeopleID = ss.SocialSecurityPeopleID
+                            where MemberID = {memberId}";
+
+            return DbHelper.Query<SocialSecurity>(sql);
+
+        }
+
+        /// <summary>
+        /// 获取参保人详情
+        /// </summary>
+        /// <param name="socialId"></param>
+        /// <returns></returns>
+        public SocialSecurityViewModel GetSocialSecurity(int socialId)
+        {
+            string sql = $@"select 
+	                        ssp.SocialSecurityPeopleID,
+	                        ssp.IdentityCard,
+	                        ss.SocialSecurityBase,
+	                        ssp.HouseholdProperty,
+	                        ss.InsuranceArea
+                        from SocialSecurityPeople ssp
+	                        inner join SocialSecurity ss on ssp.SocialSecurityPeopleID = ss.SocialSecurityPeopleID
+                        where ssp.SocialSecurityPeopleID = {socialId}";
+
+            SocialSecurityViewModel vm = DbHelper.QuerySingle<SocialSecurityViewModel>(sql);
+            vm.SocialAccumulationDict = SocialAccumulationBase(vm.InsuranceArea, vm.HouseholdProperty);
+            return vm;
+        }
+
+        /// <summary>
+        /// 获取社保公积金基数
+        /// </summary>
+        /// <param name="area"></param>
+        /// <param name="householdProperty"></param>
+        /// <returns></returns>
+        public Dictionary<string, decimal> SocialAccumulationBase(string area,string householdProperty)
+        {
+            EnterpriseSocialSecurity model = _socialSecurity.GetDefaultEnterpriseSocialSecurityByArea(area, householdProperty);
+
+            decimal minBase = 0;
+            decimal maxBase = 0;
+            decimal aFMinBase = 0;
+            decimal aFMaxBase = 0;
+
+
+            if (model != null)
+            {
+                minBase = Math.Round(model.SocialAvgSalary * (model.MinSocial / 100));
+                maxBase = Math.Round(model.SocialAvgSalary * (model.MaxSocial / 100));
+                aFMinBase = model.MinAccumulationFund;
+                aFMaxBase = model.MaxAccumulationFund;
+            }
+
+            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            dict["MinBase"] = minBase;
+            dict["MaxBase"] = maxBase;
+            dict["AFMinBase"] = aFMinBase;
+            dict["AFMaxBase"] = aFMaxBase;
+
+            return dict;
+        }
+
+        /// <summary>
+        /// 获取用户名下的公积金参保人
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        public List<AccumulationFund> GetAccumulationFundPersons(int memberId)
+        {
+            string sql = $@"select 
+	                            ssp.SocialSecurityPeopleID,
+	                            ssp.SocialSecurityPeopleName
+                            from SocialSecurityPeople ssp
+	                            inner join AccumulationFund af on ssp.SocialSecurityPeopleID = af.SocialSecurityPeopleID
+                            where ssp.MemberID = {memberId}";
+
+            return DbHelper.Query<AccumulationFund>(sql);
 
         }
 

@@ -322,8 +322,27 @@ namespace WYJK.HOME.Controllers
         /// <returns></returns>
         public ActionResult ChangeSB()
         {
+            List<SocialSecurity> list = localSocialSv.GetSocialSecurityPersons(CommonHelper.CurrentUser.MemberID);
+            list.Insert(0,new SocialSecurity { SocialSecurityPeopleID = 0,SocialSecurityPeopleName="请选择参保人" });
+            SelectList sl = new SelectList(list, "SocialSecurityPeopleID", "SocialSecurityPeopleName");
+            ViewBag.SocialSecurityPersons = sl.AsEnumerable();
+
+
             return View();
         }
+
+        /// <summary>
+        /// 获取参保详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult SocialSecurityDetail(int id)
+        {
+            SocialSecurityViewModel socialSecurity = localSocialSv.GetSocialSecurity(id);
+
+            return Json(socialSecurity, JsonRequestBehavior.AllowGet);
+        }
+
 
         /// <summary>
         /// 公积金基数变更
