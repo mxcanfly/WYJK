@@ -10,8 +10,13 @@ namespace WYJK.HOME.Models
     public class SocialSecurityViewModel:SocialSecurity
     {
         public string IdentityCard { get; set; }
-        
+
+        public decimal AccumulationFundBase { get; set; }
+
         public Dictionary<string,decimal> SocialAccumulationDict { get; set; }
+
+        public AdjustingBase AdjustBase { get; set; }
+
 
     }
 }

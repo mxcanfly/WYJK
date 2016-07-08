@@ -39,7 +39,10 @@
                                     </div>
                                 </dd>
                                 <dd class="row am-padding-vertical-sm">
-                                    <div class="col-lg-6 col-lg-offset-6">
+                                    <div class="col-lg-6">
+                                        变更状态：@EnumExt.GetEnumCustomDescription((BaseAuditEnum)Convert.ToInt32(item.Status))
+                                    </div>
+                                    <div class="col-lg-6">
                                         变更后基数：<span class="orange">@item.BaseAdjusted</span>
                                     </div>
                                 </dd>

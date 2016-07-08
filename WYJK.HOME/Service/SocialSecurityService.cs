@@ -197,10 +197,11 @@ namespace WYJK.HOME.Service
 	                        ssp.IdentityCard,
 	                        ssp.HouseholdProperty,
 	                        ba.CurrentBase,
-	                        ba.BaseAdjusted 
+	                        ba.BaseAdjusted,
+                            ba.Status 
                         from BaseAudit ba
 	                        left join SocialSecurityPeople ssp on ba.SocialSecurityPeopleID = ssp.SocialSecurityPeopleID
-                        where MemberID = {memberId} and ba.Type = {type}";
+                        where MemberID = {memberId} and ba.Type = {type} order by ba.ApplyDate desc";
 
             return DbHelper.Query<SocialSecurityPeopleViewModel>(sql);
 
@@ -223,6 +224,7 @@ namespace WYJK.HOME.Service
             return DbHelper.Query<SocialSecurity>(sql);
 
         }
+
 
         /// <summary>
         /// 获取参保人详情
@@ -284,7 +286,7 @@ namespace WYJK.HOME.Service
         /// </summary>
         /// <param name="memberId"></param>
         /// <returns></returns>
-        public List<AccumulationFund> GetAccumulationFundPersons(int memberId)
+        public List<SocialSecurity> GetAccumulationFundPersons(int memberId)
         {
             string sql = $@"select 
 	                            ssp.SocialSecurityPeopleID,
@@ -293,8 +295,32 @@ namespace WYJK.HOME.Service
 	                            inner join AccumulationFund af on ssp.SocialSecurityPeopleID = af.SocialSecurityPeopleID
                             where ssp.MemberID = {memberId}";
 
-            return DbHelper.Query<AccumulationFund>(sql);
+            return DbHelper.Query<SocialSecurity>(sql);
 
+        }
+
+        /// <summary>
+        /// 获取参保人详情
+        /// </summary>
+        /// <param name="socialId"></param>
+        /// <returns></returns>
+        public SocialSecurityViewModel GetAccumulationFundDetail(int socialId)
+        {
+            string sql = $@"select 
+	                            ac.SocialSecurityPeopleID,
+	                            ssp.SocialSecurityPeopleName,
+	                            ssp.IdentityCard,
+	                            ac.AccumulationFundArea,
+	                            ac.AccumulationFundBase,
+	                            ssp.HouseholdProperty
+                            from AccumulationFund ac
+	                            inner join SocialSecurityPeople ssp on ac.SocialSecurityPeopleID = ssp.SocialSecurityPeopleID 
+	
+                            where ssp.SocialSecurityPeopleID = {socialId}	";
+
+            SocialSecurityViewModel vm = DbHelper.QuerySingle<SocialSecurityViewModel>(sql);
+            vm.SocialAccumulationDict = SocialAccumulationBase(vm.InsuranceArea, vm.HouseholdProperty);
+            return vm;
         }
 
     }

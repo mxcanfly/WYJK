@@ -327,7 +327,6 @@ namespace WYJK.HOME.Controllers
             SelectList sl = new SelectList(list, "SocialSecurityPeopleID", "SocialSecurityPeopleName");
             ViewBag.SocialSecurityPersons = sl.AsEnumerable();
 
-
             return View();
         }
 
@@ -343,6 +342,27 @@ namespace WYJK.HOME.Controllers
             return Json(socialSecurity, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult ChangeSB(SocialSecurity ss)
+        {
+
+
+            AdjustingBaseParameter adjustParam = new AdjustingBaseParameter();
+            adjustParam.SocialSecurityBaseAdjusted = ss.SocialSecurityBase;
+            adjustParam.SocialSecurityPeopleID = ss.SocialSecurityPeopleID;
+            adjustParam.IsPaySocialSecurity = true;
+
+            if(socialSv.AddAdjustingBase(adjustParam))
+            {
+                assignMessage("变更成功", true);
+                return RedirectToAction("RecSB");
+            }
+
+            assignMessage("变更失败", false);
+
+            return View();
+        }
+
 
         /// <summary>
         /// 公积金基数变更
@@ -350,6 +370,47 @@ namespace WYJK.HOME.Controllers
         /// <returns></returns>
         public ActionResult ChangeFund()
         {
+            List<SocialSecurity> list = localSocialSv.GetAccumulationFundPersons(CommonHelper.CurrentUser.MemberID);
+            list.Insert(0, new SocialSecurity { SocialSecurityPeopleID = 0, SocialSecurityPeopleName = "请选择参保人" });
+            SelectList sl = new SelectList(list, "SocialSecurityPeopleID", "SocialSecurityPeopleName");
+            ViewBag.SocialSecurityPersons = sl.AsEnumerable();
+
+            return View();
+        }
+
+        /// <summary>
+        /// 获取参保详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult AccumulationFundDetail(int id)
+        {
+            SocialSecurityViewModel socialSecurity = localSocialSv.GetAccumulationFundDetail(id);
+
+            return Json(socialSecurity, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 公积金基数变更
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ChangeFund(AccumulationFund af)
+        {
+            AdjustingBaseParameter adjustParam = new AdjustingBaseParameter();
+            adjustParam.AccumulationFundBaseAdjusted = af.AccumulationFundBase;
+            adjustParam.SocialSecurityPeopleID = af.SocialSecurityPeopleID;
+            adjustParam.IsPayAccumulationFund = true;
+
+            if (socialSv.AddAdjustingBase(adjustParam))
+            {
+                assignMessage("变更成功", true);
+                return RedirectToAction("RecFund");
+            }
+
+            assignMessage("变更失败", false);
+
             return View();
         }
 
