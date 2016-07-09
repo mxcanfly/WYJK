@@ -345,7 +345,16 @@ namespace WYJK.HOME.Controllers
         [HttpPost]
         public ActionResult ChangeSB(SocialSecurity ss)
         {
+            SocialSecurityViewModel socialSecurity = localSocialSv.GetSocialSecurity(ss.SocialSecurityPeopleID);
+            Dictionary<string,decimal> dict = socialSecurity.SocialAccumulationDict;
+            decimal minBase = dict["MinBase"];
+            decimal maxBase = dict["MaxBase"];
 
+            if (ss.SocialSecurityBase < minBase || ss.SocialSecurityBase > maxBase)
+            {
+                assignMessage("基数范围错误", false);
+                return RedirectToAction("ChangeSB"); ;
+            }
 
             AdjustingBaseParameter adjustParam = new AdjustingBaseParameter();
             adjustParam.SocialSecurityBaseAdjusted = ss.SocialSecurityBase;
@@ -360,7 +369,7 @@ namespace WYJK.HOME.Controllers
 
             assignMessage("变更失败", false);
 
-            return View();
+            return RedirectToAction("ChangeSB");
         }
 
 
@@ -398,6 +407,18 @@ namespace WYJK.HOME.Controllers
         [HttpPost]
         public ActionResult ChangeFund(AccumulationFund af)
         {
+            SocialSecurityViewModel socialSecurity = localSocialSv.GetAccumulationFundDetail(af.SocialSecurityPeopleID);
+            Dictionary<string, decimal> dict = socialSecurity.SocialAccumulationDict;
+            decimal minBase = dict["AFMinBase"];
+            decimal maxBase = dict["AFMaxBase"];
+
+            if (af.AccumulationFundBase < minBase || af.AccumulationFundBase > maxBase)
+            {
+                assignMessage("基数范围错误", false);
+                return RedirectToAction("ChangeFund");
+            }
+
+
             AdjustingBaseParameter adjustParam = new AdjustingBaseParameter();
             adjustParam.AccumulationFundBaseAdjusted = af.AccumulationFundBase;
             adjustParam.SocialSecurityPeopleID = af.SocialSecurityPeopleID;
@@ -411,7 +432,7 @@ namespace WYJK.HOME.Controllers
 
             assignMessage("变更失败", false);
 
-            return View();
+            return RedirectToAction("ChangeFund");
         }
 
         /// <summary>
